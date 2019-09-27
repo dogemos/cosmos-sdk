@@ -1,230 +1,152 @@
 package keeper
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/cosmos/cosmos-sdk/x/distribution/types"
 )
 
-// check whether a delegator distribution info exists
-func (k Keeper) HasDelegationDistInfo(ctx sdk.Context, delAddr sdk.AccAddress,
-	valOperatorAddr sdk.ValAddress) (has bool) {
-	store := ctx.KVStore(k.storeKey)
-	return store.Has(GetDelegationDistInfoKey(delAddr, valOperatorAddr))
+// initialize starting info for a new delegation
+func (k Keeper) initializeDelegation(ctx sdk.Context, val sdk.ValAddress, del sdk.AccAddress) {
+	// period has already been incremented - we want to store the period ended by this delegation action
+	previousPeriod := k.GetValidatorCurrentRewards(ctx, val).Period - 1
+
+	// increment reference count for the period we're going to track
+	k.incrementReferenceCount(ctx, val, previousPeriod)
+
+	validator := k.stakingKeeper.Validator(ctx, val)
+	delegation := k.stakingKeeper.Delegation(ctx, del, val)
+
+	// calculate delegation stake in tokens
+	// we don't store directly, so multiply delegation shares * (tokens per share)
+	// note: necessary to truncate so we don't allow withdrawing more rewards than owed
+	stake := validator.ShareTokensTruncated(delegation.GetShares())
+	k.SetDelegatorStartingInfo(ctx, val, del, types.NewDelegatorStartingInfo(previousPeriod, stake, uint64(ctx.BlockHeight())))
 }
 
-// get the delegator distribution info
-func (k Keeper) GetDelegationDistInfo(ctx sdk.Context, delAddr sdk.AccAddress,
-	valOperatorAddr sdk.ValAddress) (ddi types.DelegationDistInfo) {
-
-	store := ctx.KVStore(k.storeKey)
-
-	b := store.Get(GetDelegationDistInfoKey(delAddr, valOperatorAddr))
-	if b == nil {
-		panic("Stored delegation-distribution info should not have been nil")
+// calculate the rewards accrued by a delegation between two periods
+func (k Keeper) calculateDelegationRewardsBetween(ctx sdk.Context, val sdk.Validator,
+	startingPeriod, endingPeriod uint64, stake sdk.Dec) (rewards sdk.DecCoins) {
+	// sanity check
+	if startingPeriod > endingPeriod {
+		panic("startingPeriod cannot be greater than endingPeriod")
 	}
 
-	k.cdc.MustUnmarshalBinaryLengthPrefixed(b, &ddi)
+	// sanity check
+	if stake.LT(sdk.ZeroDec()) {
+		panic("stake should not be negative")
+	}
+
+	// return staking * (ending - starting)
+	starting := k.GetValidatorHistoricalRewards(ctx, val.GetOperator(), startingPeriod)
+	ending := k.GetValidatorHistoricalRewards(ctx, val.GetOperator(), endingPeriod)
+	difference := ending.CumulativeRewardRatio.Sub(starting.CumulativeRewardRatio)
+	if difference.IsAnyNegative() {
+		panic("negative rewards should not be possible")
+	}
+	// note: necessary to truncate so we don't allow withdrawing more rewards than owed
+	rewards = difference.MulDecTruncate(stake)
 	return
 }
 
-// set the delegator distribution info
-func (k Keeper) SetDelegationDistInfo(ctx sdk.Context, ddi types.DelegationDistInfo) {
-	store := ctx.KVStore(k.storeKey)
-	b := k.cdc.MustMarshalBinaryLengthPrefixed(ddi)
-	store.Set(GetDelegationDistInfoKey(ddi.DelegatorAddr, ddi.ValOperatorAddr), b)
-}
+// calculate the total rewards accrued by a delegation
+func (k Keeper) calculateDelegationRewards(ctx sdk.Context, val sdk.Validator, del sdk.Delegation, endingPeriod uint64) (rewards sdk.DecCoins) {
+	// fetch starting info for delegation
+	startingInfo := k.GetDelegatorStartingInfo(ctx, del.GetValidatorAddr(), del.GetDelegatorAddr())
 
-// remove a delegator distribution info
-func (k Keeper) RemoveDelegationDistInfo(ctx sdk.Context, delAddr sdk.AccAddress,
-	valOperatorAddr sdk.ValAddress) {
-
-	store := ctx.KVStore(k.storeKey)
-	store.Delete(GetDelegationDistInfoKey(delAddr, valOperatorAddr))
-}
-
-// remove all delegation distribution infos
-func (k Keeper) RemoveDelegationDistInfos(ctx sdk.Context) {
-	store := ctx.KVStore(k.storeKey)
-	iter := sdk.KVStorePrefixIterator(store, DelegationDistInfoKey)
-	defer iter.Close()
-	for ; iter.Valid(); iter.Next() {
-		store.Delete(iter.Key())
+	if startingInfo.Height == uint64(ctx.BlockHeight()) {
+		// started this height, no rewards yet
+		return
 	}
-}
 
-// iterate over all the validator distribution infos
-func (k Keeper) IterateDelegationDistInfos(ctx sdk.Context,
-	fn func(index int64, distInfo types.DelegationDistInfo) (stop bool)) {
+	startingPeriod := startingInfo.PreviousPeriod
+	stake := startingInfo.Stake
 
-	store := ctx.KVStore(k.storeKey)
-	iter := sdk.KVStorePrefixIterator(store, DelegationDistInfoKey)
-	defer iter.Close()
-	index := int64(0)
-	for ; iter.Valid(); iter.Next() {
-		var ddi types.DelegationDistInfo
-		k.cdc.MustUnmarshalBinaryLengthPrefixed(iter.Value(), &ddi)
-		if fn(index, ddi) {
-			return
-		}
-		index++
+	// iterate through slashes and withdraw with calculated staking for sub-intervals
+	// these offsets are dependent on *when* slashes happen - namely, in BeginBlock, after rewards are allocated...
+	// slashes which happened in the first block would have been before this delegation existed,
+	// UNLESS they were slashes of a redelegation to this validator which was itself slashed
+	// (from a fault committed by the redelegation source validator) earlier in the same BeginBlock
+	startingHeight := startingInfo.Height
+	// slashes this block happened after reward allocation, but we have to account for them for the stake sanity check below
+	endingHeight := uint64(ctx.BlockHeight())
+	if endingHeight > startingHeight {
+		k.IterateValidatorSlashEventsBetween(ctx, del.GetValidatorAddr(), startingHeight, endingHeight,
+			func(height uint64, event types.ValidatorSlashEvent) (stop bool) {
+				endingPeriod := event.ValidatorPeriod
+				if endingPeriod > startingPeriod {
+					rewards = rewards.Add(k.calculateDelegationRewardsBetween(ctx, val, startingPeriod, endingPeriod, stake))
+					// note: necessary to truncate so we don't allow withdrawing more rewards than owed
+					stake = stake.MulTruncate(sdk.OneDec().Sub(event.Fraction))
+					startingPeriod = endingPeriod
+				}
+				return false
+			},
+		)
 	}
-}
 
-//___________________________________________________________________________________________
-
-// get the delegator withdraw address, return the delegator address if not set
-func (k Keeper) GetDelegatorWithdrawAddr(ctx sdk.Context, delAddr sdk.AccAddress) sdk.AccAddress {
-	store := ctx.KVStore(k.storeKey)
-
-	b := store.Get(GetDelegatorWithdrawAddrKey(delAddr))
-	if b == nil {
-		return delAddr
+	// a stake sanity check - recalculated final stake should be less than or equal to current stake
+	// here we cannot use Equals because stake is truncated when multiplied by slash fractions
+	// we could only use equals if we had arbitrary-precision rationals
+	currentStake := val.ShareTokens(del.GetShares())
+	if stake.GT(currentStake) {
+		panic(fmt.Sprintf("calculated final stake for delegator %s greater than current stake: %s, %s",
+			del.GetDelegatorAddr(), stake, currentStake))
 	}
-	return sdk.AccAddress(b)
+
+	// calculate rewards for final period
+	rewards = rewards.Add(k.calculateDelegationRewardsBetween(ctx, val, startingPeriod, endingPeriod, stake))
+
+	return rewards
 }
 
-// set the delegator withdraw address
-func (k Keeper) SetDelegatorWithdrawAddr(ctx sdk.Context, delAddr, withdrawAddr sdk.AccAddress) {
-	store := ctx.KVStore(k.storeKey)
-	store.Set(GetDelegatorWithdrawAddrKey(delAddr), withdrawAddr.Bytes())
-}
+func (k Keeper) withdrawDelegationRewards(ctx sdk.Context, val sdk.Validator, del sdk.Delegation) sdk.Error {
 
-// remove a delegator withdraw info
-func (k Keeper) RemoveDelegatorWithdrawAddr(ctx sdk.Context, delAddr, withdrawAddr sdk.AccAddress) {
-	store := ctx.KVStore(k.storeKey)
-	store.Delete(GetDelegatorWithdrawAddrKey(delAddr))
-}
-
-//___________________________________________________________________________________________
-
-// return all rewards for a delegation
-func (k Keeper) withdrawDelegationReward(ctx sdk.Context,
-	delAddr sdk.AccAddress, valAddr sdk.ValAddress) (types.FeePool,
-	types.ValidatorDistInfo, types.DelegationDistInfo, types.DecCoins) {
-
-	wc := k.GetWithdrawContext(ctx, valAddr)
-	valInfo := k.GetValidatorDistInfo(ctx, valAddr)
-	delInfo := k.GetDelegationDistInfo(ctx, delAddr, valAddr)
-	validator := k.stakeKeeper.Validator(ctx, valAddr)
-	delegation := k.stakeKeeper.Delegation(ctx, delAddr, valAddr)
-
-	delInfo, valInfo, feePool, withdraw := delInfo.WithdrawRewards(wc, valInfo,
-		validator.GetDelegatorShares(), delegation.GetShares())
-
-	return feePool, valInfo, delInfo, withdraw
-}
-
-// get all rewards for all delegations of a delegator
-func (k Keeper) currentDelegationReward(ctx sdk.Context, delAddr sdk.AccAddress,
-	valAddr sdk.ValAddress) types.DecCoins {
-
-	wc := k.GetWithdrawContext(ctx, valAddr)
-
-	valInfo := k.GetValidatorDistInfo(ctx, valAddr)
-	delInfo := k.GetDelegationDistInfo(ctx, delAddr, valAddr)
-	validator := k.stakeKeeper.Validator(ctx, valAddr)
-	delegation := k.stakeKeeper.Delegation(ctx, delAddr, valAddr)
-
-	estimation := delInfo.CurrentRewards(wc, valInfo,
-		validator.GetDelegatorShares(), delegation.GetShares())
-
-	return estimation
-}
-
-//___________________________________________________________________________________________
-
-// withdraw all rewards for a single delegation
-// NOTE: This gets called "onDelegationSharesModified",
-// meaning any changes to bonded coins
-func (k Keeper) WithdrawToDelegator(ctx sdk.Context, feePool types.FeePool,
-	delAddr sdk.AccAddress, amount types.DecCoins) {
-
-	withdrawAddr := k.GetDelegatorWithdrawAddr(ctx, delAddr)
-	coinsToAdd, change := amount.TruncateDecimal()
-	feePool.CommunityPool = feePool.CommunityPool.Plus(change)
-	k.SetFeePool(ctx, feePool)
-	_, _, err := k.bankKeeper.AddCoins(ctx, withdrawAddr, coinsToAdd)
-	if err != nil {
-		panic(err)
-	}
-}
-
-//___________________________________________________________________________________________
-
-// withdraw all rewards for a single delegation
-// NOTE: This gets called "onDelegationSharesModified",
-// meaning any changes to bonded coins
-func (k Keeper) WithdrawDelegationReward(ctx sdk.Context, delAddr sdk.AccAddress,
-	valAddr sdk.ValAddress) sdk.Error {
-
-	if !k.HasDelegationDistInfo(ctx, delAddr, valAddr) {
+	// check existence of delegator starting info
+	if !k.HasDelegatorStartingInfo(ctx, del.GetValidatorAddr(), del.GetDelegatorAddr()) {
 		return types.ErrNoDelegationDistInfo(k.codespace)
 	}
 
-	feePool, valInfo, delInfo, withdraw := k.withdrawDelegationReward(ctx, delAddr, valAddr)
+	// end current period and calculate rewards
+	endingPeriod := k.incrementValidatorPeriod(ctx, val)
+	rewardsRaw := k.calculateDelegationRewards(ctx, val, del, endingPeriod)
+	outstanding := k.GetValidatorOutstandingRewards(ctx, del.GetValidatorAddr())
 
-	k.SetValidatorDistInfo(ctx, valInfo)
-	k.SetDelegationDistInfo(ctx, delInfo)
-	k.WithdrawToDelegator(ctx, feePool, delAddr, withdraw)
+	// defensive edge case may happen on the very final digits
+	// of the decCoins due to operation order of the distribution mechanism.
+	rewards := rewardsRaw.Intersect(outstanding)
+	if !rewards.IsEqual(rewardsRaw) {
+		logger := ctx.Logger().With("module", "x/distr")
+		logger.Info(fmt.Sprintf("missing rewards rounding error, delegator %v"+
+			"withdrawing rewards from validator %v, should have received %v, got %v",
+			val.GetOperator(), del.GetDelegatorAddr(), rewardsRaw, rewards))
+	}
+
+	// decrement reference count of starting period
+	startingInfo := k.GetDelegatorStartingInfo(ctx, del.GetValidatorAddr(), del.GetDelegatorAddr())
+	startingPeriod := startingInfo.PreviousPeriod
+	k.decrementReferenceCount(ctx, del.GetValidatorAddr(), startingPeriod)
+
+	// truncate coins, return remainder to community pool
+	coins, remainder := rewards.TruncateDecimal()
+
+	k.SetValidatorOutstandingRewards(ctx, del.GetValidatorAddr(), outstanding.Sub(rewards))
+	feePool := k.GetFeePool(ctx)
+	feePool.CommunityPool = feePool.CommunityPool.Add(remainder)
+	k.SetFeePool(ctx, feePool)
+
+	// add coins to user account
+	if !coins.IsZero() {
+		withdrawAddr := k.GetDelegatorWithdrawAddr(ctx, del.GetDelegatorAddr())
+		if _, _, err := k.bankKeeper.AddCoins(ctx, withdrawAddr, coins); err != nil {
+			return err
+		}
+	}
+
+	// remove delegator starting info
+	k.DeleteDelegatorStartingInfo(ctx, del.GetValidatorAddr(), del.GetDelegatorAddr())
 
 	return nil
-}
-
-// current rewards for a single delegation
-func (k Keeper) CurrentDelegationReward(ctx sdk.Context, delAddr sdk.AccAddress,
-	valAddr sdk.ValAddress) (sdk.Coins, sdk.Error) {
-
-	if !k.HasDelegationDistInfo(ctx, delAddr, valAddr) {
-		return sdk.Coins{}, types.ErrNoDelegationDistInfo(k.codespace)
-	}
-	estCoins := k.currentDelegationReward(ctx, delAddr, valAddr)
-	trucate, _ := estCoins.TruncateDecimal()
-	return trucate, nil
-}
-
-//___________________________________________________________________________________________
-
-// return all rewards for all delegations of a delegator
-func (k Keeper) WithdrawDelegationRewardsAll(ctx sdk.Context, delAddr sdk.AccAddress) {
-	withdraw := k.withdrawDelegationRewardsAll(ctx, delAddr)
-	feePool := k.GetFeePool(ctx)
-	k.WithdrawToDelegator(ctx, feePool, delAddr, withdraw)
-}
-
-func (k Keeper) withdrawDelegationRewardsAll(ctx sdk.Context,
-	delAddr sdk.AccAddress) types.DecCoins {
-
-	withdraw := types.DecCoins{}
-
-	// iterate over all the delegations
-	operationAtDelegation := func(_ int64, del sdk.Delegation) (stop bool) {
-		valAddr := del.GetValidatorAddr()
-		feePool, valInfo, delInfo, diWithdraw := k.withdrawDelegationReward(ctx, delAddr, valAddr)
-		withdraw = withdraw.Plus(diWithdraw)
-
-		k.SetFeePool(ctx, feePool)
-		k.SetValidatorDistInfo(ctx, valInfo)
-		k.SetDelegationDistInfo(ctx, delInfo)
-
-		return false
-	}
-
-	k.stakeKeeper.IterateDelegations(ctx, delAddr, operationAtDelegation)
-	return withdraw
-}
-
-// get all rewards for all delegations of a delegator
-func (k Keeper) CurrentDelegationRewardsAll(ctx sdk.Context,
-	delAddr sdk.AccAddress) types.DecCoins {
-
-	// iterate over all the delegations
-	total := types.DecCoins{}
-	operationAtDelegation := func(_ int64, del sdk.Delegation) (stop bool) {
-		valAddr := del.GetValidatorAddr()
-		est := k.currentDelegationReward(ctx, delAddr, valAddr)
-		total = total.Plus(est)
-		return false
-	}
-	k.stakeKeeper.IterateDelegations(ctx, delAddr, operationAtDelegation)
-	return total
 }

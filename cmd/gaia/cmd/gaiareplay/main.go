@@ -7,13 +7,14 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/cosmos/cosmos-sdk/store"
+
 	cpm "github.com/otiai10/copy"
 	"github.com/spf13/cobra"
 
 	abci "github.com/tendermint/tendermint/abci/types"
 	bcm "github.com/tendermint/tendermint/blockchain"
 	cmn "github.com/tendermint/tendermint/libs/common"
-	dbm "github.com/tendermint/tendermint/libs/db"
 	"github.com/tendermint/tendermint/proxy"
 	tmsm "github.com/tendermint/tendermint/state"
 	tm "github.com/tendermint/tendermint/types"
@@ -21,6 +22,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/cmd/gaia/app"
 	"github.com/cosmos/cosmos-sdk/server"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 var (
@@ -70,7 +72,7 @@ func run(rootDir string) {
 	// App DB
 	// appDB := dbm.NewMemDB()
 	fmt.Println("Opening app database")
-	appDB, err := dbm.NewGoLevelDB("application", dataDir)
+	appDB, err := sdk.NewLevelDB("application", dataDir)
 	if err != nil {
 		panic(err)
 	}
@@ -78,14 +80,14 @@ func run(rootDir string) {
 	// TM DB
 	// tmDB := dbm.NewMemDB()
 	fmt.Println("Opening tendermint state database")
-	tmDB, err := dbm.NewGoLevelDB("state", dataDir)
+	tmDB, err := sdk.NewLevelDB("state", dataDir)
 	if err != nil {
 		panic(err)
 	}
 
 	// Blockchain DB
 	fmt.Println("Opening blockstore database")
-	bcDB, err := dbm.NewGoLevelDB("blockstore", dataDir)
+	bcDB, err := sdk.NewLevelDB("blockstore", dataDir)
 	if err != nil {
 		panic(err)
 	}
@@ -106,7 +108,7 @@ func run(rootDir string) {
 	fmt.Println("Creating application")
 	myapp := app.NewGaiaApp(
 		ctx.Logger, appDB, traceStoreWriter, true,
-		baseapp.SetPruning("everything"), // nothing
+		baseapp.SetPruning(store.PruneEverything), // nothing
 	)
 
 	// Genesis

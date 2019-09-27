@@ -1,20 +1,20 @@
 package gov
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/mock"
-	stakeTypes "github.com/cosmos/cosmos-sdk/x/stake/types"
 )
 
 var (
-	coinsPos         = sdk.Coins{sdk.NewInt64Coin(stakeTypes.DefaultBondDenom, 1000)}
-	coinsZero        = sdk.Coins{}
-	coinsPosNotAtoms = sdk.Coins{sdk.NewInt64Coin("foo", 10000)}
-	coinsMulti       = sdk.Coins{sdk.NewInt64Coin(stakeTypes.DefaultBondDenom, 1000), sdk.NewInt64Coin("foo", 10000)}
+	coinsPos         = sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, 1000))
+	coinsZero        = sdk.NewCoins()
+	coinsPosNotAtoms = sdk.NewCoins(sdk.NewInt64Coin("foo", 10000))
+	coinsMulti       = sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, 1000), sdk.NewInt64Coin("foo", 10000))
 )
 
 func init() {
@@ -23,7 +23,7 @@ func init() {
 
 // test ValidateBasic for MsgCreateValidator
 func TestMsgSubmitProposal(t *testing.T) {
-	_, addrs, _, _ := mock.CreateGenAccounts(1, sdk.Coins{})
+	_, addrs, _, _ := mock.CreateGenAccounts(1, sdk.NewCoins())
 	tests := []struct {
 		title, description string
 		proposalType       ProposalKind
@@ -40,6 +40,8 @@ func TestMsgSubmitProposal(t *testing.T) {
 		{"Test Proposal", "the purpose of this proposal is to test", ProposalTypeText, sdk.AccAddress{}, coinsPos, false},
 		{"Test Proposal", "the purpose of this proposal is to test", ProposalTypeText, addrs[0], coinsZero, true},
 		{"Test Proposal", "the purpose of this proposal is to test", ProposalTypeText, addrs[0], coinsMulti, true},
+		{strings.Repeat("#", MaxTitleLength*2), "the purpose of this proposal is to test", ProposalTypeText, addrs[0], coinsMulti, false},
+		{"Test Proposal", strings.Repeat("#", MaxDescriptionLength*2), ProposalTypeText, addrs[0], coinsMulti, false},
 	}
 
 	for i, tc := range tests {
@@ -52,9 +54,18 @@ func TestMsgSubmitProposal(t *testing.T) {
 	}
 }
 
+func TestMsgDepositGetSignBytes(t *testing.T) {
+	addr := sdk.AccAddress("addr1")
+	msg := NewMsgDeposit(addr, 0, coinsPos)
+	res := msg.GetSignBytes()
+
+	expected := `{"type":"cosmos-sdk/MsgDeposit","value":{"amount":[{"amount":"1000","denom":"stake"}],"depositor":"cosmos1v9jxgu33kfsgr5","proposal_id":"0"}}`
+	require.Equal(t, expected, string(res))
+}
+
 // test ValidateBasic for MsgDeposit
 func TestMsgDeposit(t *testing.T) {
-	_, addrs, _, _ := mock.CreateGenAccounts(1, sdk.Coins{})
+	_, addrs, _, _ := mock.CreateGenAccounts(1, sdk.NewCoins())
 	tests := []struct {
 		proposalID    uint64
 		depositorAddr sdk.AccAddress
@@ -79,7 +90,7 @@ func TestMsgDeposit(t *testing.T) {
 
 // test ValidateBasic for MsgDeposit
 func TestMsgVote(t *testing.T) {
-	_, addrs, _, _ := mock.CreateGenAccounts(1, sdk.Coins{})
+	_, addrs, _, _ := mock.CreateGenAccounts(1, sdk.NewCoins())
 	tests := []struct {
 		proposalID uint64
 		voterAddr  sdk.AccAddress

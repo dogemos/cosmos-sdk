@@ -3,10 +3,15 @@ package types
 import (
 	"encoding/binary"
 	"encoding/json"
+	"fmt"
 	"time"
 
-	tcmd "github.com/tendermint/tendermint/cmd/tendermint/commands"
-	tmtypes "github.com/tendermint/tendermint/types"
+	dbm "github.com/tendermint/tendermint/libs/db"
+)
+
+var (
+	// This is set at compile time. Could be cleveldb, defaults is goleveldb.
+	DBBackend = ""
 )
 
 // SortedJSON takes any JSON and returns it sorted by keys. Also, all white-spaces
@@ -62,21 +67,16 @@ func ParseTimeBytes(bz []byte) (time.Time, error) {
 	return t.UTC().Round(0), nil
 }
 
-// DefaultChainID returns the chain ID from the genesis file if present. An
-// error is returned if the file cannot be read or parsed.
-//
-// TODO: This should be removed and the chainID should always be provided by
-// the end user.
-func DefaultChainID() (string, error) {
-	cfg, err := tcmd.ParseConfig()
-	if err != nil {
-		return "", err
+// NewLevelDB instantiate a new LevelDB instance according to DBBackend.
+func NewLevelDB(name, dir string) (db dbm.DB, err error) {
+	backend := dbm.GoLevelDBBackend
+	if DBBackend == string(dbm.CLevelDBBackend) {
+		backend = dbm.CLevelDBBackend
 	}
-
-	doc, err := tmtypes.GenesisDocFromFile(cfg.GenesisFile())
-	if err != nil {
-		return "", err
-	}
-
-	return doc.ChainID, nil
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("couldn't create db: %v", r)
+		}
+	}()
+	return dbm.NewDB(name, backend, dir), err
 }

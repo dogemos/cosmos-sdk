@@ -7,16 +7,16 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/cosmos/cosmos-sdk/client/context"
-	"github.com/cosmos/cosmos-sdk/client/utils"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 )
 
 func registerQueryRoutes(cliCtx context.CLIContext, r *mux.Router, cdc *codec.Codec) {
 	r.HandleFunc(
 		"/slashing/validators/{validatorPubKey}/signing_info",
-		signingInfoHandlerFn(cliCtx, "slashing", cdc),
+		signingInfoHandlerFn(cliCtx, slashing.StoreKey, cdc),
 	).Methods("GET")
 
 	r.HandleFunc(
@@ -33,7 +33,7 @@ func signingInfoHandlerFn(cliCtx context.CLIContext, storeName string, cdc *code
 
 		pk, err := sdk.GetConsPubKeyBech32(vars["validatorPubKey"])
 		if err != nil {
-			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
@@ -41,7 +41,7 @@ func signingInfoHandlerFn(cliCtx context.CLIContext, storeName string, cdc *code
 
 		res, err := cliCtx.QueryStore(key, storeName)
 		if err != nil {
-			utils.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
@@ -54,11 +54,11 @@ func signingInfoHandlerFn(cliCtx context.CLIContext, storeName string, cdc *code
 
 		err = cdc.UnmarshalBinaryLengthPrefixed(res, &signingInfo)
 		if err != nil {
-			utils.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		utils.PostProcessResponse(w, cdc, signingInfo, cliCtx.Indent)
+		rest.PostProcessResponse(w, cdc, signingInfo, cliCtx.Indent)
 	}
 }
 
@@ -68,10 +68,10 @@ func queryParamsHandlerFn(cdc *codec.Codec, cliCtx context.CLIContext) http.Hand
 
 		res, err := cliCtx.QueryWithData(route, nil)
 		if err != nil {
-			utils.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		utils.PostProcessResponse(w, cdc, res, cliCtx.Indent)
+		rest.PostProcessResponse(w, cdc, res, cliCtx.Indent)
 	}
 }

@@ -2,54 +2,61 @@ package simulation
 
 import (
 	"errors"
-	"fmt"
 	"math/big"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	"github.com/cosmos/cosmos-sdk/x/mock/simulation"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
 )
 
 // SimulateDeductFee
 func SimulateDeductFee(m auth.AccountKeeper, f auth.FeeCollectionKeeper) simulation.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context,
-		accs []simulation.Account, event func(string)) (
-		action string, fOp []simulation.FutureOperation, err error) {
+		accs []simulation.Account) (
+		opMsg simulation.OperationMsg, fOps []simulation.FutureOperation, err error) {
 
 		account := simulation.RandomAcc(r, accs)
 		stored := m.GetAccount(ctx, account.Address)
 		initCoins := stored.GetCoins()
+		opMsg = simulation.NewOperationMsgBasic("auth", "deduct_fee", "", false, nil)
 
 		if len(initCoins) == 0 {
-			event(fmt.Sprintf("auth/SimulateDeductFee/false"))
-			return action, nil, nil
+			return opMsg, nil, nil
 		}
 
 		denomIndex := r.Intn(len(initCoins))
-		amt, err := randPositiveInt(r, initCoins[denomIndex].Amount)
+		randCoin := initCoins[denomIndex]
+
+		amt, err := randPositiveInt(r, randCoin.Amount)
 		if err != nil {
-			event(fmt.Sprintf("auth/SimulateDeductFee/false"))
-			return action, nil, nil
+			return opMsg, nil, nil
 		}
 
-		coins := sdk.Coins{sdk.NewCoin(initCoins[denomIndex].Denom, amt)}
-		err = stored.SetCoins(initCoins.Minus(coins))
-		if err != nil {
+		// Create a random fee and verify the fees are within the account's spendable
+		// balance.
+		fees := sdk.Coins{sdk.NewCoin(randCoin.Denom, amt)}
+		spendableCoins := stored.SpendableCoins(ctx.BlockHeader().Time)
+		if _, hasNeg := spendableCoins.SafeSub(fees); hasNeg {
+			return opMsg, nil, nil
+		}
+
+		// get the new account balance
+		newCoins, hasNeg := initCoins.SafeSub(fees)
+		if hasNeg {
+			return opMsg, nil, nil
+		}
+
+		if err := stored.SetCoins(newCoins); err != nil {
 			panic(err)
 		}
+
 		m.SetAccount(ctx, stored)
-		if !coins.IsNotNegative() {
-			panic("setting negative fees")
-		}
+		f.AddCollectedFees(ctx, fees)
 
-		f.AddCollectedFees(ctx, coins)
-
-		event(fmt.Sprintf("auth/SimulateDeductFee/true"))
-
-		action = "TestDeductFee"
-		return action, nil, nil
+		opMsg.OK = true
+		return opMsg, nil, nil
 	}
 }
 

@@ -1,93 +1,50 @@
 package lcd
 
 import (
+	"encoding/base64"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
 	"regexp"
+	"strings"
 	"testing"
 	"time"
 
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 
-	ctypes "github.com/tendermint/tendermint/rpc/core/types"
-
-	client "github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/keys"
+	clienttx "github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/cmd/gaia/app"
-
 	"github.com/cosmos/cosmos-sdk/crypto/keys/mintkey"
-	tests "github.com/cosmos/cosmos-sdk/tests"
+	"github.com/cosmos/cosmos-sdk/tests"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	authrest "github.com/cosmos/cosmos-sdk/x/auth/client/rest"
+	"github.com/cosmos/cosmos-sdk/x/bank"
+	dclcommon "github.com/cosmos/cosmos-sdk/x/distribution/client/common"
+	distrrest "github.com/cosmos/cosmos-sdk/x/distribution/client/rest"
 	"github.com/cosmos/cosmos-sdk/x/gov"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
-	"github.com/cosmos/cosmos-sdk/x/stake"
-	stakeTypes "github.com/cosmos/cosmos-sdk/x/stake/types"
+	"github.com/cosmos/cosmos-sdk/x/staking"
 )
 
 const (
 	name1 = "test1"
 	name2 = "test2"
 	name3 = "test3"
+	memo  = "LCD test tx"
 	pw    = app.DefaultKeyPass
 	altPw = "12345678901"
 )
 
+var fees = sdk.Coins{sdk.NewInt64Coin(sdk.DefaultBondDenom, 5)}
+
 func init() {
 	mintkey.BcryptSecurityParameter = 1
 	version.Version = os.Getenv("VERSION")
-}
-
-func TestKeys(t *testing.T) {
-	addr, _ := CreateAddr(t, name1, pw, GetKeyBase(t))
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr})
-	defer cleanup()
-
-	// get new seed
-	seed := getKeysSeed(t, port)
-
-	// recover key
-	doRecoverKey(t, port, name2, pw, seed)
-
-	// add key
-	resp := doKeysPost(t, port, name3, pw, seed)
-
-	addrBech32 := addr.String()
-	addr2Bech32 := resp.Address
-	_, err := sdk.AccAddressFromBech32(addr2Bech32)
-	require.NoError(t, err, "Failed to return a correct bech32 address")
-
-	// test if created account is the correct account
-	expectedInfo, _ := GetKeyBase(t).CreateKey(name3, seed, pw)
-	expectedAccount := sdk.AccAddress(expectedInfo.GetPubKey().Address().Bytes())
-	require.Equal(t, expectedAccount.String(), addr2Bech32)
-
-	// existing keys
-	keys := getKeys(t, port)
-	require.Equal(t, name1, keys[0].Name, "Did not serve keys name correctly")
-	require.Equal(t, addrBech32, keys[0].Address, "Did not serve keys Address correctly")
-	require.Equal(t, name2, keys[1].Name, "Did not serve keys name correctly")
-	require.Equal(t, addr2Bech32, keys[1].Address, "Did not serve keys Address correctly")
-
-	// select key
-	key := getKey(t, port, name3)
-	require.Equal(t, name3, key.Name, "Did not serve keys name correctly")
-	require.Equal(t, addr2Bech32, key.Address, "Did not serve keys Address correctly")
-
-	// update key
-	updateKey(t, port, name3, pw, altPw, false)
-
-	// here it should say unauthorized as we changed the password before
-	updateKey(t, port, name3, pw, altPw, true)
-
-	// delete key
-	deleteKey(t, port, name3, altPw)
 }
 
 func TestVersion(t *testing.T) {
@@ -96,7 +53,7 @@ func TestVersion(t *testing.T) {
 		t.SkipNow()
 	}
 
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{})
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{}, true)
 	defer cleanup()
 
 	// node info
@@ -106,7 +63,7 @@ func TestVersion(t *testing.T) {
 	reg, err := regexp.Compile(`\d+\.\d+\.\d+.*`)
 	require.Nil(t, err)
 	match := reg.MatchString(body)
-	require.True(t, match, body, fmt.Sprintf("%s", body))
+	require.True(t, match, body, body)
 
 	// node info
 	res, body = Request(t, port, "GET", "/node_version", nil)
@@ -119,14 +76,14 @@ func TestVersion(t *testing.T) {
 }
 
 func TestNodeStatus(t *testing.T) {
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{})
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{}, true)
 	defer cleanup()
 	getNodeInfo(t, port)
 	getSyncStatus(t, port, false)
 }
 
 func TestBlock(t *testing.T) {
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{})
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{}, true)
 	defer cleanup()
 	getBlock(t, port, -1, false)
 	getBlock(t, port, 2, false)
@@ -134,18 +91,20 @@ func TestBlock(t *testing.T) {
 }
 
 func TestValidators(t *testing.T) {
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{})
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{}, true)
 	defer cleanup()
 	resultVals := getValidatorSets(t, port, -1, false)
-	require.Contains(t, resultVals.Validators[0].Address.String(), "cosmosvaloper")
+	require.Contains(t, resultVals.Validators[0].Address.String(), "cosmosvalcons")
 	require.Contains(t, resultVals.Validators[0].PubKey, "cosmosvalconspub")
 	getValidatorSets(t, port, 2, false)
 	getValidatorSets(t, port, 10000000, true)
 }
 
 func TestCoinSend(t *testing.T) {
-	addr, seed := CreateAddr(t, name1, pw, GetKeyBase(t))
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr})
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, seed := CreateAddr(t, name1, pw, kb)
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
 	defer cleanup()
 
 	bz, err := hex.DecodeString("8FA6AB57AD6870F6B5B2E57735F38F2F30E73CB6")
@@ -160,121 +119,211 @@ func TestCoinSend(t *testing.T) {
 	initialBalance := acc.GetCoins()
 
 	// create TX
-	receiveAddr, resultTx := doTransfer(t, port, seed, name1, pw, addr)
+	receiveAddr, resultTx := doTransfer(t, port, seed, name1, memo, pw, addr, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	// check if tx was committed
-	require.Equal(t, uint32(0), resultTx.CheckTx.Code)
-	require.Equal(t, uint32(0), resultTx.DeliverTx.Code)
+	require.Equal(t, uint32(0), resultTx.Code)
 
 	// query sender
 	acc = getAccount(t, port, addr)
 	coins := acc.GetCoins()
-	mycoins := coins[0]
+	expectedBalance := initialBalance[0].Sub(fees[0])
 
-	require.Equal(t, stakeTypes.DefaultBondDenom, mycoins.Denom)
-	require.Equal(t, initialBalance[0].Amount.SubRaw(1), mycoins.Amount)
+	require.Equal(t, sdk.DefaultBondDenom, coins[0].Denom)
+	require.Equal(t, expectedBalance.Amount.SubRaw(1), coins[0].Amount)
+	expectedBalance = coins[0]
 
 	// query receiver
-	acc = getAccount(t, port, receiveAddr)
-	coins = acc.GetCoins()
-	mycoins = coins[0]
-
-	require.Equal(t, stakeTypes.DefaultBondDenom, mycoins.Denom)
-	require.Equal(t, int64(1), mycoins.Amount.Int64())
+	acc2 := getAccount(t, port, receiveAddr)
+	coins2 := acc2.GetCoins()
+	require.Equal(t, sdk.DefaultBondDenom, coins2[0].Denom)
+	require.Equal(t, int64(1), coins2[0].Amount.Int64())
 
 	// test failure with too little gas
-	res, body, _ = doTransferWithGas(t, port, seed, name1, pw, addr, "100", 0, false, false)
+	res, body, _ = doTransferWithGas(t, port, seed, name1, memo, pw, addr, "100", 0, false, true, fees)
 	require.Equal(t, http.StatusInternalServerError, res.StatusCode, body)
+	require.Nil(t, err)
 
 	// test failure with negative gas
-	res, body, _ = doTransferWithGas(t, port, seed, name1, pw, addr, "-200", 0, false, false)
+	res, body, _ = doTransferWithGas(t, port, seed, name1, memo, pw, addr, "-200", 0, false, false, fees)
+	require.Equal(t, http.StatusBadRequest, res.StatusCode, body)
+
+	// test failure with negative adjustment
+	res, body, _ = doTransferWithGas(t, port, seed, name1, memo, pw, addr, "10000", -0.1, true, false, fees)
 	require.Equal(t, http.StatusBadRequest, res.StatusCode, body)
 
 	// test failure with 0 gas
-	res, body, _ = doTransferWithGas(t, port, seed, name1, pw, addr, "0", 0, false, false)
+	res, body, _ = doTransferWithGas(t, port, seed, name1, memo, pw, addr, "0", 0, false, true, fees)
 	require.Equal(t, http.StatusInternalServerError, res.StatusCode, body)
 
 	// test failure with wrong adjustment
-	res, body, _ = doTransferWithGas(t, port, seed, name1, pw, addr, "simulate", 0.1, false, false)
+	res, body, _ = doTransferWithGas(t, port, seed, name1, memo, pw, addr, client.GasFlagAuto, 0.1, false, true, fees)
+
 	require.Equal(t, http.StatusInternalServerError, res.StatusCode, body)
 
 	// run simulation and test success with estimated gas
-	res, body, _ = doTransferWithGas(t, port, seed, name1, pw, addr, "", 0, true, false)
+	res, body, _ = doTransferWithGas(
+		t, port, seed, name1, memo, pw, addr, "10000", 1.0, true, false, fees,
+	)
 	require.Equal(t, http.StatusOK, res.StatusCode, body)
-	var responseBody struct {
-		GasEstimate int64 `json:"gas_estimate"`
-	}
-	require.Nil(t, json.Unmarshal([]byte(body), &responseBody))
-	res, body, _ = doTransferWithGas(t, port, seed, name1, pw, addr, fmt.Sprintf("%v", responseBody.GasEstimate), 0, false, false)
+
+	var gasEstResp rest.GasEstimateResponse
+	require.Nil(t, cdc.UnmarshalJSON([]byte(body), &gasEstResp))
+	require.NotZero(t, gasEstResp.GasEstimate)
+
+	acc = getAccount(t, port, addr)
+	require.Equal(t, expectedBalance.Amount, acc.GetCoins().AmountOf(sdk.DefaultBondDenom))
+
+	// run successful tx
+	gas := fmt.Sprintf("%d", gasEstResp.GasEstimate)
+	res, body, _ = doTransferWithGas(t, port, seed, name1, memo, pw, addr, gas, 1.0, false, true, fees)
 	require.Equal(t, http.StatusOK, res.StatusCode, body)
+
+	err = cdc.UnmarshalJSON([]byte(body), &resultTx)
+	require.Nil(t, err)
+
+	tests.WaitForHeight(resultTx.Height+1, port)
+	require.Equal(t, uint32(0), resultTx.Code)
+
+	acc = getAccount(t, port, addr)
+	expectedBalance = expectedBalance.Sub(fees[0])
+	require.Equal(t, expectedBalance.Amount.SubRaw(1), acc.GetCoins().AmountOf(sdk.DefaultBondDenom))
+}
+
+func TestCoinSendAccAuto(t *testing.T) {
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, seed := CreateAddr(t, name1, pw, kb)
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
+	defer cleanup()
+
+	acc := getAccount(t, port, addr)
+	initialBalance := acc.GetCoins()
+
+	// send a transfer tx without specifying account number and sequence
+	res, body, _ := doTransferWithGasAccAuto(
+		t, port, seed, name1, memo, pw, addr, "200000", 1.0, false, true, fees,
+	)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+
+	// query sender
+	acc = getAccount(t, port, addr)
+	coins := acc.GetCoins()
+	expectedBalance := initialBalance[0].Sub(fees[0])
+
+	require.Equal(t, sdk.DefaultBondDenom, coins[0].Denom)
+	require.Equal(t, expectedBalance.Amount.SubRaw(1), coins[0].Amount)
+}
+
+func TestCoinMultiSendGenerateOnly(t *testing.T) {
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, seed := CreateAddr(t, name1, pw, kb)
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
+	defer cleanup()
+
+	// generate only
+	res, body, _ := doTransferWithGas(t, port, seed, "", memo, "", addr, "200000", 1, false, false, fees)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+
+	var stdTx auth.StdTx
+	require.Nil(t, cdc.UnmarshalJSON([]byte(body), &stdTx))
+	require.Equal(t, len(stdTx.Msgs), 1)
+	require.Equal(t, stdTx.GetMsgs()[0].Route(), "bank")
+	require.Equal(t, stdTx.GetMsgs()[0].GetSigners(), []sdk.AccAddress{addr})
+	require.Equal(t, 0, len(stdTx.Signatures))
+	require.Equal(t, memo, stdTx.Memo)
+	require.NotZero(t, stdTx.Fee.Gas)
+	require.IsType(t, stdTx.GetMsgs()[0], bank.MsgSend{})
+	require.Equal(t, addr, stdTx.GetMsgs()[0].(bank.MsgSend).FromAddress)
 }
 
 func TestCoinSendGenerateSignAndBroadcast(t *testing.T) {
-	addr, seed := CreateAddr(t, name1, pw, GetKeyBase(t))
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr})
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, seed := CreateAddr(t, name1, pw, kb)
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
+
 	defer cleanup()
 	acc := getAccount(t, port, addr)
 
-	// generate TX
-	res, body, _ := doTransferWithGas(t, port, seed, name1, pw, addr, "simulate", 0, false, true)
+	// simulate tx
+	res, body, _ := doTransferWithGas(
+		t, port, seed, name1, memo, "", addr, client.GasFlagAuto, 1.0, true, false, fees,
+	)
 	require.Equal(t, http.StatusOK, res.StatusCode, body)
-	var msg auth.StdTx
-	require.Nil(t, cdc.UnmarshalJSON([]byte(body), &msg))
-	require.Equal(t, len(msg.Msgs), 1)
-	require.Equal(t, msg.Msgs[0].Route(), "bank")
-	require.Equal(t, msg.Msgs[0].GetSigners(), []sdk.AccAddress{addr})
-	require.Equal(t, 0, len(msg.Signatures))
-	gasEstimate := msg.Fee.Gas
-	accnum := acc.GetAccountNumber()
-	sequence := acc.GetSequence()
 
-	// sign tx
-	var signedMsg auth.StdTx
+	var gasEstResp rest.GasEstimateResponse
+	require.Nil(t, cdc.UnmarshalJSON([]byte(body), &gasEstResp))
+	require.NotZero(t, gasEstResp.GasEstimate)
 
-	payload := authrest.SignBody{
-		Tx:               msg,
-		LocalAccountName: name1,
-		Password:         pw,
-		ChainID:          viper.GetString(client.FlagChainID),
-		AccountNumber:    accnum,
-		Sequence:         sequence,
-	}
-	json, err := cdc.MarshalJSON(payload)
-	require.Nil(t, err)
-	res, body = Request(t, port, "POST", "/tx/sign", json)
+	// generate tx
+	gas := fmt.Sprintf("%d", gasEstResp.GasEstimate)
+	res, body, _ = doTransferWithGas(t, port, seed, name1, memo, "", addr, gas, 1, false, false, fees)
 	require.Equal(t, http.StatusOK, res.StatusCode, body)
-	require.Nil(t, cdc.UnmarshalJSON([]byte(body), &signedMsg))
-	require.Equal(t, len(msg.Msgs), len(signedMsg.Msgs))
-	require.Equal(t, msg.Msgs[0].Type(), signedMsg.Msgs[0].Type())
-	require.Equal(t, msg.Msgs[0].GetSigners(), signedMsg.Msgs[0].GetSigners())
-	require.Equal(t, 1, len(signedMsg.Signatures))
 
-	// broadcast tx
-	broadcastPayload := struct {
-		Tx     auth.StdTx `json:"tx"`
-		Return string     `json:"return"`
-	}{Tx: signedMsg, Return: "block"}
-	json, err = cdc.MarshalJSON(broadcastPayload)
-	require.Nil(t, err)
-	res, body = Request(t, port, "POST", "/tx/broadcast", json)
-	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	var tx auth.StdTx
+	require.Nil(t, cdc.UnmarshalJSON([]byte(body), &tx))
+	require.Equal(t, len(tx.Msgs), 1)
+	require.Equal(t, tx.Msgs[0].Route(), "bank")
+	require.Equal(t, tx.Msgs[0].GetSigners(), []sdk.AccAddress{addr})
+	require.Equal(t, 0, len(tx.Signatures))
+	require.Equal(t, memo, tx.Memo)
+	require.NotZero(t, tx.Fee.Gas)
+
+	gasEstimate := int64(tx.Fee.Gas)
+	_, body = signAndBroadcastGenTx(t, port, name1, pw, body, acc, 1.0, false)
 
 	// check if tx was committed
-	var resultTx ctypes.ResultBroadcastTxCommit
-	require.Nil(t, cdc.UnmarshalJSON([]byte(body), &resultTx))
-	require.Equal(t, uint32(0), resultTx.CheckTx.Code)
-	require.Equal(t, uint32(0), resultTx.DeliverTx.Code)
-	require.Equal(t, gasEstimate, uint64(resultTx.DeliverTx.GasWanted))
-	require.Equal(t, gasEstimate, uint64(resultTx.DeliverTx.GasUsed))
+	var txResp sdk.TxResponse
+	require.Nil(t, cdc.UnmarshalJSON([]byte(body), &txResp))
+	require.Equal(t, uint32(0), txResp.Code)
+	require.Equal(t, gasEstimate, txResp.GasWanted)
+}
+
+func TestEncodeTx(t *testing.T) {
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, seed := CreateAddr(t, name1, pw, kb)
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
+	defer cleanup()
+
+	res, body, _ := doTransferWithGas(t, port, seed, name1, memo, "", addr, "2", 1, false, false, fees)
+	var tx auth.StdTx
+	cdc.UnmarshalJSON([]byte(body), &tx)
+
+	req := clienttx.EncodeReq{Tx: tx}
+	encodedJSON, _ := cdc.MarshalJSON(req)
+	res, body = Request(t, port, "POST", "/txs/encode", encodedJSON)
+
+	// Make sure it came back ok, and that we can decode it back to the transaction
+	// 200 response.
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	encodeResp := struct {
+		Tx string `json:"tx"`
+	}{}
+
+	require.Nil(t, cdc.UnmarshalJSON([]byte(body), &encodeResp))
+
+	// verify that the base64 decodes
+	decodedBytes, err := base64.StdEncoding.DecodeString(encodeResp.Tx)
+	require.Nil(t, err)
+
+	// check that the transaction decodes as expected
+	var decodedTx auth.StdTx
+	require.Nil(t, cdc.UnmarshalBinaryLengthPrefixed(decodedBytes, &decodedTx))
+	require.Equal(t, memo, decodedTx.Memo)
 }
 
 func TestTxs(t *testing.T) {
-	addr, seed := CreateAddr(t, name1, pw, GetKeyBase(t))
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr})
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, seed := CreateAddr(t, name1, pw, kb)
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
 	defer cleanup()
 
-	var emptyTxs []tx.Info
+	var emptyTxs []sdk.TxResponse
 	txs := getTransactions(t, port)
 	require.Equal(t, emptyTxs, txs)
 
@@ -290,12 +339,12 @@ func TestTxs(t *testing.T) {
 	require.Equal(t, emptyTxs, txs)
 
 	// create tx
-	receiveAddr, resultTx := doTransfer(t, port, seed, name1, pw, addr)
+	receiveAddr, resultTx := doTransfer(t, port, seed, name1, memo, pw, addr, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	// check if tx is queryable
-	tx := getTransaction(t, port, resultTx.Hash.String())
-	require.Equal(t, resultTx.Hash, tx.Hash)
+	tx := getTransaction(t, port, resultTx.TxHash)
+	require.Equal(t, resultTx.TxHash, tx.TxHash)
 
 	// query sender
 	txs = getTransactions(t, port, fmt.Sprintf("sender=%s", addr.String()))
@@ -306,31 +355,49 @@ func TestTxs(t *testing.T) {
 	txs = getTransactions(t, port, fmt.Sprintf("recipient=%s", receiveAddr.String()))
 	require.Len(t, txs, 1)
 	require.Equal(t, resultTx.Height, txs[0].Height)
+
+	// query transaction that doesn't exist
+	validTxHash := "9ADBECAAD8DACBEC3F4F535704E7CF715C765BDCEDBEF086AFEAD31BA664FB0B"
+	res, body := getTransactionRequest(t, port, validTxHash)
+	require.True(t, strings.Contains(body, validTxHash))
+	require.Equal(t, http.StatusNotFound, res.StatusCode)
+
+	// bad query string
+	res, body = getTransactionRequest(t, port, "badtxhash")
+	require.True(t, strings.Contains(body, "encoding/hex"))
+	require.Equal(t, http.StatusInternalServerError, res.StatusCode)
 }
 
 func TestPoolParamsQuery(t *testing.T) {
-	addr, _ := CreateAddr(t, name1, pw, GetKeyBase(t))
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr})
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, _ := CreateAddr(t, name1, pw, kb)
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
 	defer cleanup()
 
-	defaultParams := stake.DefaultParams()
+	defaultParams := staking.DefaultParams()
 
-	params := getStakeParams(t, port)
+	params := getStakingParams(t, port)
 	require.True(t, defaultParams.Equal(params))
 
-	pool := getStakePool(t, port)
+	pool := getStakingPool(t, port)
 
-	initialPool := stake.InitialPool()
-	initialPool.LooseTokens = initialPool.LooseTokens.Add(sdk.NewDec(100))
-	initialPool.BondedTokens = initialPool.BondedTokens.Add(sdk.NewDec(100))     // Delegate tx on GaiaAppGenState
-	initialPool.LooseTokens = initialPool.LooseTokens.Add(sdk.NewDec(int64(50))) // freeFermionsAcc = 50 on GaiaAppGenState
+	initialPool := staking.InitialPool()
+	tokens := sdk.TokensFromTendermintPower(100)
+	freeTokens := sdk.TokensFromTendermintPower(50)
+	initialPool.NotBondedTokens = initialPool.NotBondedTokens.Add(tokens)
+	initialPool.BondedTokens = initialPool.BondedTokens.Add(tokens)           // Delegate tx on GaiaAppGenState
+	initialPool.NotBondedTokens = initialPool.NotBondedTokens.Add(freeTokens) // freeTokensPerAcc = 50 on GaiaAppGenState
 
 	require.Equal(t, initialPool.BondedTokens, pool.BondedTokens)
-	require.Equal(t, initialPool.LooseTokens, pool.LooseTokens)
+
+	//TODO include this test once REST for distribution is online, need to include distribution tokens from inflation
+	//     for this equality to make sense
+	//require.Equal(t, initialPool.NotBondedTokens, pool.NotBondedTokens)
 }
 
 func TestValidatorsQuery(t *testing.T) {
-	cleanup, valPubKeys, operAddrs, port := InitializeTestLCD(t, 1, []sdk.AccAddress{})
+	cleanup, valPubKeys, operAddrs, port := InitializeTestLCD(t, 1, []sdk.AccAddress{}, true)
 	defer cleanup()
 
 	require.Equal(t, 1, len(valPubKeys))
@@ -346,37 +413,44 @@ func TestValidatorsQuery(t *testing.T) {
 		foundVal = true
 	}
 
-	require.True(t, foundVal, "pk %v, operator %v", operAddrs[0], validators[0].OperatorAddr)
+	require.True(t, foundVal, "pk %v, operator %v", operAddrs[0], validators[0].OperatorAddress)
 }
 
 func TestValidatorQuery(t *testing.T) {
-	cleanup, valPubKeys, operAddrs, port := InitializeTestLCD(t, 1, []sdk.AccAddress{})
+	cleanup, valPubKeys, operAddrs, port := InitializeTestLCD(t, 1, []sdk.AccAddress{}, true)
 	defer cleanup()
 	require.Equal(t, 1, len(valPubKeys))
 	require.Equal(t, 1, len(operAddrs))
 
 	validator := getValidator(t, port, operAddrs[0])
-	require.Equal(t, validator.OperatorAddr, operAddrs[0], "The returned validator does not hold the correct data")
+	require.Equal(t, validator.OperatorAddress, operAddrs[0], "The returned validator does not hold the correct data")
 }
 
 func TestBonding(t *testing.T) {
-	addr, _ := CreateAddr(t, name1, pw, GetKeyBase(t))
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, _ := CreateAddr(t, name1, pw, kb)
 
-	cleanup, valPubKeys, operAddrs, port := InitializeTestLCD(t, 2, []sdk.AccAddress{addr})
+	cleanup, valPubKeys, operAddrs, port := InitializeTestLCD(t, 2, []sdk.AccAddress{addr}, false)
+	tests.WaitForHeight(1, port)
 	defer cleanup()
 
 	require.Equal(t, 2, len(valPubKeys))
 	require.Equal(t, 2, len(operAddrs))
 
-	amt := sdk.NewDec(60)
+	amt := sdk.TokensFromTendermintPower(60)
+	amtDec := amt.ToDec()
 	validator := getValidator(t, port, operAddrs[0])
 
+	acc := getAccount(t, port, addr)
+	initialBalance := acc.GetCoins()
+
 	// create bond TX
-	resultTx := doDelegate(t, port, name1, pw, addr, operAddrs[0], 60)
+	delTokens := sdk.TokensFromTendermintPower(60)
+	resultTx := doDelegate(t, port, name1, pw, addr, operAddrs[0], delTokens, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
-	require.Equal(t, uint32(0), resultTx.CheckTx.Code)
-	require.Equal(t, uint32(0), resultTx.DeliverTx.Code)
+	require.Equal(t, uint32(0), resultTx.Code)
 
 	// query tx
 	txs := getTransactions(t, port,
@@ -386,18 +460,20 @@ func TestBonding(t *testing.T) {
 	require.Len(t, txs, 1)
 	require.Equal(t, resultTx.Height, txs[0].Height)
 
-	acc := getAccount(t, port, addr)
+	// verify balance
+	acc = getAccount(t, port, addr)
 	coins := acc.GetCoins()
-
-	require.Equal(t, int64(40), coins.AmountOf(stakeTypes.DefaultBondDenom).Int64())
+	expectedBalance := initialBalance[0].Sub(fees[0])
+	require.Equal(t, expectedBalance.Amount.Sub(delTokens), coins.AmountOf(sdk.DefaultBondDenom))
+	expectedBalance = coins[0]
 
 	// query delegation
 	bond := getDelegation(t, port, addr, operAddrs[0])
-	require.Equal(t, amt, bond.Shares)
+	require.Equal(t, amtDec, bond.Shares)
 
 	delegatorDels := getDelegatorDelegations(t, port, addr)
 	require.Len(t, delegatorDels, 1)
-	require.Equal(t, amt, delegatorDels[0].Shares)
+	require.Equal(t, amtDec, delegatorDels[0].Shares)
 
 	// query all delegations to validator
 	bonds := getValidatorDelegations(t, port, operAddrs[0])
@@ -405,23 +481,29 @@ func TestBonding(t *testing.T) {
 
 	bondedValidators := getDelegatorValidators(t, port, addr)
 	require.Len(t, bondedValidators, 1)
-	require.Equal(t, operAddrs[0], bondedValidators[0].OperatorAddr)
-	require.Equal(t, validator.DelegatorShares.Add(amt).String(), bondedValidators[0].DelegatorShares.String())
+	require.Equal(t, operAddrs[0], bondedValidators[0].OperatorAddress)
+	require.Equal(t, validator.DelegatorShares.Add(amtDec).String(), bondedValidators[0].DelegatorShares.String())
 
 	bondedValidator := getDelegatorValidator(t, port, addr, operAddrs[0])
-	require.Equal(t, operAddrs[0], bondedValidator.OperatorAddr)
+	require.Equal(t, operAddrs[0], bondedValidator.OperatorAddress)
 
 	// testing unbonding
-	resultTx = doBeginUnbonding(t, port, name1, pw, addr, operAddrs[0], 30)
+	unbondingTokens := sdk.TokensFromTendermintPower(30)
+	resultTx = doUndelegate(t, port, name1, pw, addr, operAddrs[0], unbondingTokens, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
-	require.Equal(t, uint32(0), resultTx.CheckTx.Code)
-	require.Equal(t, uint32(0), resultTx.DeliverTx.Code)
+	require.Equal(t, uint32(0), resultTx.Code)
 
 	// sender should have not received any coins as the unbonding has only just begun
 	acc = getAccount(t, port, addr)
 	coins = acc.GetCoins()
-	require.Equal(t, int64(40), coins.AmountOf(stakeTypes.DefaultBondDenom).Int64())
+	expectedBalance = expectedBalance.Sub(fees[0])
+	require.True(t,
+		expectedBalance.Amount.LT(coins.AmountOf(sdk.DefaultBondDenom)) ||
+			expectedBalance.Amount.Equal(coins.AmountOf(sdk.DefaultBondDenom)),
+		"should get tokens back from automatic withdrawal after an unbonding delegation",
+	)
+	expectedBalance = coins[0]
 
 	// query tx
 	txs = getTransactions(t, port,
@@ -431,15 +513,25 @@ func TestBonding(t *testing.T) {
 	require.Len(t, txs, 1)
 	require.Equal(t, resultTx.Height, txs[0].Height)
 
-	unbonding := getUndelegation(t, port, addr, operAddrs[0])
-	require.Equal(t, "30", unbonding.Balance.Amount.String())
+	ubd := getUnbondingDelegation(t, port, addr, operAddrs[0])
+	require.Len(t, ubd.Entries, 1)
+	require.Equal(t, delTokens.QuoRaw(2), ubd.Entries[0].Balance)
 
 	// test redelegation
-	resultTx = doBeginRedelegation(t, port, name1, pw, addr, operAddrs[0], operAddrs[1], 30)
+	rdTokens := sdk.TokensFromTendermintPower(30)
+	resultTx = doBeginRedelegation(t, port, name1, pw, addr, operAddrs[0], operAddrs[1], rdTokens, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
-	require.Equal(t, uint32(0), resultTx.CheckTx.Code)
-	require.Equal(t, uint32(0), resultTx.DeliverTx.Code)
+	require.Equal(t, uint32(0), resultTx.Code)
+
+	// verify balance after paying fees
+	acc = getAccount(t, port, addr)
+	expectedBalance = expectedBalance.Sub(fees[0])
+	require.True(t,
+		expectedBalance.Amount.LT(coins.AmountOf(sdk.DefaultBondDenom)) ||
+			expectedBalance.Amount.Equal(coins.AmountOf(sdk.DefaultBondDenom)),
+		"should get tokens back from automatic withdrawal after an unbonding delegation",
+	)
 
 	// query tx
 	txs = getTransactions(t, port,
@@ -453,23 +545,38 @@ func TestBonding(t *testing.T) {
 	// query delegations, unbondings and redelegations from validator and delegator
 	delegatorDels = getDelegatorDelegations(t, port, addr)
 	require.Len(t, delegatorDels, 1)
-	require.Equal(t, "30.0000000000", delegatorDels[0].GetShares().String())
+	require.Equal(t, operAddrs[1], delegatorDels[0].ValidatorAddress)
+
+	// because the second validator never signs during these tests, if this
+	// this test takes a long time to run,  eventually this second validator
+	// will get slashed, meaning that it's exchange rate is no-longer 1-to-1,
+	// hence we utilize the exchange rate in the following test
+
+	validator2 := getValidator(t, port, operAddrs[1])
+	delTokensAfterRedelegation := validator2.ShareTokens(delegatorDels[0].GetShares())
+	require.Equal(t, rdTokens.ToDec(), delTokensAfterRedelegation)
+
+	redelegation := getRedelegations(t, port, addr, operAddrs[0], operAddrs[1])
+	require.Len(t, redelegation, 1)
+	require.Len(t, redelegation[0].Entries, 1)
 
 	delegatorUbds := getDelegatorUnbondingDelegations(t, port, addr)
 	require.Len(t, delegatorUbds, 1)
-	require.Equal(t, "30", delegatorUbds[0].Balance.Amount.String())
+	require.Len(t, delegatorUbds[0].Entries, 1)
+	require.Equal(t, rdTokens, delegatorUbds[0].Entries[0].Balance)
 
-	delegatorReds := getDelegatorRedelegations(t, port, addr)
+	delegatorReds := getRedelegations(t, port, addr, nil, nil)
 	require.Len(t, delegatorReds, 1)
-	require.Equal(t, "30", delegatorReds[0].Balance.Amount.String())
+	require.Len(t, delegatorReds[0].Entries, 1)
 
 	validatorUbds := getValidatorUnbondingDelegations(t, port, operAddrs[0])
 	require.Len(t, validatorUbds, 1)
-	require.Equal(t, "30", validatorUbds[0].Balance.Amount.String())
+	require.Len(t, validatorUbds[0].Entries, 1)
+	require.Equal(t, rdTokens, validatorUbds[0].Entries[0].Balance)
 
-	validatorReds := getValidatorRedelegations(t, port, operAddrs[0])
+	validatorReds := getRedelegations(t, port, nil, operAddrs[0], nil)
 	require.Len(t, validatorReds, 1)
-	require.Equal(t, "30", validatorReds[0].Balance.Amount.String())
+	require.Len(t, validatorReds[0].Entries, 1)
 
 	// TODO Undonding status not currently implemented
 	// require.Equal(t, sdk.Unbonding, bondedValidators[0].Status)
@@ -489,54 +596,81 @@ func TestBonding(t *testing.T) {
 }
 
 func TestSubmitProposal(t *testing.T) {
-	addr, seed := CreateAddr(t, name1, pw, GetKeyBase(t))
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr})
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, seed := CreateAddr(t, name1, pw, kb)
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
 	defer cleanup()
 
+	acc := getAccount(t, port, addr)
+	initialBalance := acc.GetCoins()
+
 	// create SubmitProposal TX
-	resultTx := doSubmitProposal(t, port, seed, name1, pw, addr, 5)
+	proposalTokens := sdk.TokensFromTendermintPower(5)
+	resultTx := doSubmitProposal(t, port, seed, name1, pw, addr, proposalTokens, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	// check if tx was committed
-	require.Equal(t, uint32(0), resultTx.CheckTx.Code)
-	require.Equal(t, uint32(0), resultTx.DeliverTx.Code)
+	require.Equal(t, uint32(0), resultTx.Code)
 
 	var proposalID uint64
-	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.DeliverTx.GetData(), &proposalID)
+	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.Data, &proposalID)
+
+	// verify balance
+	acc = getAccount(t, port, addr)
+	expectedBalance := initialBalance[0].Sub(fees[0])
+	require.Equal(t, expectedBalance.Amount.Sub(proposalTokens), acc.GetCoins().AmountOf(sdk.DefaultBondDenom))
 
 	// query proposal
 	proposal := getProposal(t, port, proposalID)
 	require.Equal(t, "Test", proposal.GetTitle())
 
-	// query tx
-	txs := getTransactions(t, port, fmt.Sprintf("action=submit_proposal&proposer=%s", addr))
-	require.Len(t, txs, 1)
-	require.Equal(t, resultTx.Height, txs[0].Height)
+	proposer := getProposer(t, port, proposalID)
+	require.Equal(t, addr.String(), proposer.Proposer)
+	require.Equal(t, proposalID, proposer.ProposalID)
 }
 
 func TestDeposit(t *testing.T) {
-	addr, seed := CreateAddr(t, name1, pw, GetKeyBase(t))
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr})
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, seed := CreateAddr(t, name1, pw, kb)
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
 	defer cleanup()
 
+	acc := getAccount(t, port, addr)
+	initialBalance := acc.GetCoins()
+
 	// create SubmitProposal TX
-	resultTx := doSubmitProposal(t, port, seed, name1, pw, addr, 5)
+	proposalTokens := sdk.TokensFromTendermintPower(5)
+	resultTx := doSubmitProposal(t, port, seed, name1, pw, addr, proposalTokens, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	// check if tx was committed
-	require.Equal(t, uint32(0), resultTx.CheckTx.Code)
-	require.Equal(t, uint32(0), resultTx.DeliverTx.Code)
+	require.Equal(t, uint32(0), resultTx.Code)
 
 	var proposalID uint64
-	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.DeliverTx.GetData(), &proposalID)
+	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.Data, &proposalID)
+
+	// verify balance
+	acc = getAccount(t, port, addr)
+	coins := acc.GetCoins()
+	expectedBalance := initialBalance[0].Sub(fees[0])
+	require.Equal(t, expectedBalance.Amount.Sub(proposalTokens), coins.AmountOf(sdk.DefaultBondDenom))
+	expectedBalance = coins[0]
 
 	// query proposal
 	proposal := getProposal(t, port, proposalID)
 	require.Equal(t, "Test", proposal.GetTitle())
 
 	// create SubmitProposal TX
-	resultTx = doDeposit(t, port, seed, name1, pw, addr, proposalID, 5)
+	depositTokens := sdk.TokensFromTendermintPower(5)
+	resultTx = doDeposit(t, port, seed, name1, pw, addr, proposalID, depositTokens, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
+
+	// verify balance after deposit and fee
+	acc = getAccount(t, port, addr)
+	expectedBalance = expectedBalance.Sub(fees[0])
+	require.Equal(t, expectedBalance.Amount.Sub(depositTokens), acc.GetCoins().AmountOf(sdk.DefaultBondDenom))
 
 	// query tx
 	txs := getTransactions(t, port, fmt.Sprintf("action=deposit&depositor=%s", addr))
@@ -544,45 +678,58 @@ func TestDeposit(t *testing.T) {
 	require.Equal(t, resultTx.Height, txs[0].Height)
 
 	// query proposal
+	totalCoins := sdk.Coins{sdk.NewCoin(sdk.DefaultBondDenom, sdk.TokensFromTendermintPower(10))}
 	proposal = getProposal(t, port, proposalID)
-	require.True(t, proposal.GetTotalDeposit().IsEqual(sdk.Coins{sdk.NewInt64Coin(stakeTypes.DefaultBondDenom, 10)}))
+	require.True(t, proposal.GetTotalDeposit().IsEqual(totalCoins))
 
 	// query deposit
 	deposit := getDeposit(t, port, proposalID, addr)
-	require.True(t, deposit.Amount.IsEqual(sdk.Coins{sdk.NewInt64Coin(stakeTypes.DefaultBondDenom, 10)}))
+	require.True(t, deposit.Amount.IsEqual(totalCoins))
 }
 
 func TestVote(t *testing.T) {
-	addr, seed := CreateAddr(t, name1, pw, GetKeyBase(t))
-	cleanup, _, operAddrs, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr})
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, seed := CreateAddr(t, name1, pw, kb)
+	cleanup, _, operAddrs, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
 	defer cleanup()
 
+	acc := getAccount(t, port, addr)
+	initialBalance := acc.GetCoins()
+
 	// create SubmitProposal TX
-	resultTx := doSubmitProposal(t, port, seed, name1, pw, addr, 5)
+	proposalTokens := sdk.TokensFromTendermintPower(10)
+	resultTx := doSubmitProposal(t, port, seed, name1, pw, addr, proposalTokens, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	// check if tx was committed
-	require.Equal(t, uint32(0), resultTx.CheckTx.Code)
-	require.Equal(t, uint32(0), resultTx.DeliverTx.Code)
+	require.Equal(t, uint32(0), resultTx.Code)
 
 	var proposalID uint64
-	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.DeliverTx.GetData(), &proposalID)
+	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.Data, &proposalID)
+
+	// verify balance
+	acc = getAccount(t, port, addr)
+	coins := acc.GetCoins()
+	expectedBalance := initialBalance[0].Sub(fees[0])
+	require.Equal(t, expectedBalance.Amount.Sub(proposalTokens), coins.AmountOf(sdk.DefaultBondDenom))
+	expectedBalance = coins[0]
 
 	// query proposal
 	proposal := getProposal(t, port, proposalID)
 	require.Equal(t, "Test", proposal.GetTitle())
-
-	// deposit
-	resultTx = doDeposit(t, port, seed, name1, pw, addr, proposalID, 5)
-	tests.WaitForHeight(resultTx.Height+1, port)
-
-	// query proposal
-	proposal = getProposal(t, port, proposalID)
 	require.Equal(t, gov.StatusVotingPeriod, proposal.GetStatus())
 
 	// vote
-	resultTx = doVote(t, port, seed, name1, pw, addr, proposalID)
+	resultTx = doVote(t, port, seed, name1, pw, addr, proposalID, "Yes", fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
+
+	// verify balance after vote and fee
+	acc = getAccount(t, port, addr)
+	coins = acc.GetCoins()
+	expectedBalance = expectedBalance.Sub(fees[0])
+	require.Equal(t, expectedBalance.Amount, coins.AmountOf(sdk.DefaultBondDenom))
+	expectedBalance = coins[0]
 
 	// query tx
 	txs := getTransactions(t, port, fmt.Sprintf("action=vote&voter=%s", addr))
@@ -594,23 +741,42 @@ func TestVote(t *testing.T) {
 	require.Equal(t, gov.OptionYes, vote.Option)
 
 	tally := getTally(t, port, proposalID)
-	require.Equal(t, sdk.ZeroDec(), tally.Yes, "tally should be 0 as the address is not bonded")
+	require.Equal(t, sdk.ZeroInt(), tally.Yes, "tally should be 0 as the address is not bonded")
 
 	// create bond TX
-	resultTx = doDelegate(t, port, name1, pw, addr, operAddrs[0], 60)
+	delTokens := sdk.TokensFromTendermintPower(60)
+	resultTx = doDelegate(t, port, name1, pw, addr, operAddrs[0], delTokens, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
-	// vote
-	resultTx = doVote(t, port, seed, name1, pw, addr, proposalID)
-	tests.WaitForHeight(resultTx.Height+1, port)
+	// verify balance
+	acc = getAccount(t, port, addr)
+	coins = acc.GetCoins()
+	expectedBalance = expectedBalance.Sub(fees[0])
+	require.Equal(t, expectedBalance.Amount.Sub(delTokens), coins.AmountOf(sdk.DefaultBondDenom))
+	expectedBalance = coins[0]
 
 	tally = getTally(t, port, proposalID)
-	require.Equal(t, sdk.NewDec(60), tally.Yes, "tally should be equal to the amount delegated")
+	require.Equal(t, delTokens, tally.Yes, "tally should be equal to the amount delegated")
+
+	// change vote option
+	resultTx = doVote(t, port, seed, name1, pw, addr, proposalID, "No", fees)
+	tests.WaitForHeight(resultTx.Height+1, port)
+
+	// verify balance
+	acc = getAccount(t, port, addr)
+	expectedBalance = expectedBalance.Sub(fees[0])
+	require.Equal(t, expectedBalance.Amount, acc.GetCoins().AmountOf(sdk.DefaultBondDenom))
+
+	tally = getTally(t, port, proposalID)
+	require.Equal(t, sdk.ZeroInt(), tally.Yes, "tally should be 0 the user changed the option")
+	require.Equal(t, delTokens, tally.No, "tally should be equal to the amount delegated")
 }
 
 func TestUnjail(t *testing.T) {
-	addr, _ := CreateAddr(t, name1, pw, GetKeyBase(t))
-	cleanup, valPubKeys, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr})
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, _ := CreateAddr(t, name1, pw, kb)
+	cleanup, valPubKeys, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
 	defer cleanup()
 
 	// XXX: any less than this and it fails
@@ -624,38 +790,40 @@ func TestUnjail(t *testing.T) {
 }
 
 func TestProposalsQuery(t *testing.T) {
-	addrs, seeds, names, passwords := CreateAddrs(t, GetKeyBase(t), 2)
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addrs, seeds, names, passwords := CreateAddrs(t, kb, 2)
 
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addrs[0], addrs[1]})
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addrs[0], addrs[1]}, true)
 	defer cleanup()
 
 	depositParam := getDepositParam(t, port)
-	halfMinDeposit := depositParam.MinDeposit.AmountOf(stakeTypes.DefaultBondDenom).Int64() / 2
+	halfMinDeposit := depositParam.MinDeposit.AmountOf(sdk.DefaultBondDenom).QuoRaw(2)
 	getVotingParam(t, port)
 	getTallyingParam(t, port)
 
 	// Addr1 proposes (and deposits) proposals #1 and #2
-	resultTx := doSubmitProposal(t, port, seeds[0], names[0], passwords[0], addrs[0], halfMinDeposit)
+	resultTx := doSubmitProposal(t, port, seeds[0], names[0], passwords[0], addrs[0], halfMinDeposit, fees)
 	var proposalID1 uint64
-	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.DeliverTx.GetData(), &proposalID1)
+	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.Data, &proposalID1)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
-	resultTx = doSubmitProposal(t, port, seeds[0], names[0], passwords[0], addrs[0], halfMinDeposit)
+	resultTx = doSubmitProposal(t, port, seeds[0], names[0], passwords[0], addrs[0], halfMinDeposit, fees)
 	var proposalID2 uint64
-	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.DeliverTx.GetData(), &proposalID2)
+	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.Data, &proposalID2)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	// Addr2 proposes (and deposits) proposals #3
-	resultTx = doSubmitProposal(t, port, seeds[1], names[1], passwords[1], addrs[1], halfMinDeposit)
+	resultTx = doSubmitProposal(t, port, seeds[1], names[1], passwords[1], addrs[1], halfMinDeposit, fees)
 	var proposalID3 uint64
-	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.DeliverTx.GetData(), &proposalID3)
+	cdc.MustUnmarshalBinaryLengthPrefixed(resultTx.Data, &proposalID3)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	// Addr2 deposits on proposals #2 & #3
-	resultTx = doDeposit(t, port, seeds[1], names[1], passwords[1], addrs[1], proposalID2, halfMinDeposit)
+	resultTx = doDeposit(t, port, seeds[1], names[1], passwords[1], addrs[1], proposalID2, halfMinDeposit, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
-	resultTx = doDeposit(t, port, seeds[1], names[1], passwords[1], addrs[1], proposalID3, halfMinDeposit)
+	resultTx = doDeposit(t, port, seeds[1], names[1], passwords[1], addrs[1], proposalID3, halfMinDeposit, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	// check deposits match proposal and individual deposits
@@ -677,7 +845,8 @@ func TestProposalsQuery(t *testing.T) {
 	require.Equal(t, deposit, deposits[0])
 
 	// increasing the amount of the deposit should update the existing one
-	resultTx = doDeposit(t, port, seeds[0], names[0], passwords[0], addrs[0], proposalID1, 1)
+	depositTokens := sdk.TokensFromTendermintPower(1)
+	resultTx = doDeposit(t, port, seeds[0], names[0], passwords[0], addrs[0], proposalID1, depositTokens, fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	deposits = getDeposits(t, port, proposalID1)
@@ -695,13 +864,13 @@ func TestProposalsQuery(t *testing.T) {
 	require.Equal(t, proposalID3, proposals[1].GetProposalID())
 
 	// Addr1 votes on proposals #2 & #3
-	resultTx = doVote(t, port, seeds[0], names[0], passwords[0], addrs[0], proposalID2)
+	resultTx = doVote(t, port, seeds[0], names[0], passwords[0], addrs[0], proposalID2, "Yes", fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
-	resultTx = doVote(t, port, seeds[0], names[0], passwords[0], addrs[0], proposalID3)
+	resultTx = doVote(t, port, seeds[0], names[0], passwords[0], addrs[0], proposalID3, "Yes", fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	// Addr2 votes on proposal #3
-	resultTx = doVote(t, port, seeds[1], names[1], passwords[1], addrs[1], proposalID3)
+	resultTx = doVote(t, port, seeds[1], names[1], passwords[1], addrs[1], proposalID3, "Yes", fees)
 	tests.WaitForHeight(resultTx.Height+1, port)
 
 	// Test query all proposals
@@ -745,7 +914,7 @@ func TestProposalsQuery(t *testing.T) {
 }
 
 func TestSlashingGetParams(t *testing.T) {
-	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{})
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{}, true)
 	defer cleanup()
 
 	res, body := Request(t, port, "GET", "/slashing/parameters", nil)
@@ -754,4 +923,88 @@ func TestSlashingGetParams(t *testing.T) {
 	var params slashing.Params
 	err := cdc.UnmarshalJSON([]byte(body), &params)
 	require.NoError(t, err)
+}
+
+func TestDistributionGetParams(t *testing.T) {
+	cleanup, _, _, port := InitializeTestLCD(t, 1, []sdk.AccAddress{}, true)
+	defer cleanup()
+
+	res, body := Request(t, port, "GET", "/distribution/parameters", nil)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	require.NoError(t, cdc.UnmarshalJSON([]byte(body), &dclcommon.PrettyParams{}))
+}
+
+func TestDistributionFlow(t *testing.T) {
+	kb, err := keys.NewKeyBaseFromDir(InitClientHome(t, ""))
+	require.NoError(t, err)
+	addr, seed := CreateAddr(t, name1, pw, kb)
+	cleanup, _, valAddrs, port := InitializeTestLCD(t, 1, []sdk.AccAddress{addr}, true)
+	defer cleanup()
+
+	valAddr := valAddrs[0]
+	operAddr := sdk.AccAddress(valAddr)
+
+	var rewards sdk.DecCoins
+	res, body := Request(t, port, "GET", fmt.Sprintf("/distribution/validators/%s/outstanding_rewards", valAddr), nil)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	require.NoError(t, cdc.UnmarshalJSON([]byte(body), &rewards))
+
+	var valDistInfo distrrest.ValidatorDistInfo
+	res, body = Request(t, port, "GET", "/distribution/validators/"+valAddr.String(), nil)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	require.NoError(t, cdc.UnmarshalJSON([]byte(body), &valDistInfo))
+	require.Equal(t, valDistInfo.OperatorAddress.String(), sdk.AccAddress(valAddr).String())
+
+	// Delegate some coins
+	delTokens := sdk.TokensFromTendermintPower(60)
+	resultTx := doDelegate(t, port, name1, pw, addr, valAddr, delTokens, fees)
+	tests.WaitForHeight(resultTx.Height+1, port)
+	require.Equal(t, uint32(0), resultTx.Code)
+
+	// send some coins
+	_, resultTx = doTransfer(t, port, seed, name1, memo, pw, addr, fees)
+	tests.WaitForHeight(resultTx.Height+5, port)
+	require.Equal(t, uint32(0), resultTx.Code)
+
+	// Query outstanding rewards changed
+	res, body = Request(t, port, "GET", fmt.Sprintf("/distribution/validators/%s/outstanding_rewards", valAddr), nil)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	require.NoError(t, cdc.UnmarshalJSON([]byte(body), &rewards))
+
+	// Query validator distribution info
+	res, body = Request(t, port, "GET", "/distribution/validators/"+valAddr.String(), nil)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+
+	require.NoError(t, cdc.UnmarshalJSON([]byte(body), &valDistInfo))
+
+	// Query validator's rewards
+	res, body = Request(t, port, "GET", fmt.Sprintf("/distribution/validators/%s/rewards", valAddr), nil)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	require.NoError(t, cdc.UnmarshalJSON([]byte(body), &rewards))
+
+	// Query self-delegation
+	res, body = Request(t, port, "GET", fmt.Sprintf("/distribution/delegators/%s/rewards/%s", operAddr, valAddr), nil)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	require.NoError(t, cdc.UnmarshalJSON([]byte(body), &rewards))
+
+	// Query delegation
+	res, body = Request(t, port, "GET", fmt.Sprintf("/distribution/delegators/%s/rewards/%s", addr, valAddr), nil)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	require.NoError(t, cdc.UnmarshalJSON([]byte(body), &rewards))
+
+	// Query delegator's rewards total
+	res, body = Request(t, port, "GET", fmt.Sprintf("/distribution/delegators/%s/rewards", operAddr), nil)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	require.NoError(t, cdc.UnmarshalJSON([]byte(body), &rewards))
+
+	// Query delegator's withdrawal address
+	var withdrawAddr string
+	res, body = Request(t, port, "GET", fmt.Sprintf("/distribution/delegators/%s/withdraw_address", operAddr), nil)
+	require.Equal(t, http.StatusOK, res.StatusCode, body)
+	require.NoError(t, cdc.UnmarshalJSON([]byte(body), &withdrawAddr))
+	require.Equal(t, operAddr.String(), withdrawAddr)
+
+	// Withdraw delegator's rewards
+	resultTx = doWithdrawDelegatorAllRewards(t, port, seed, name1, pw, addr, fees)
+	require.Equal(t, uint32(0), resultTx.Code)
 }

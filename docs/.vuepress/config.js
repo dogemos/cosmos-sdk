@@ -19,11 +19,14 @@ module.exports = {
       indexName: 'cosmos_network',
       debug: false
     },
-    nav: [{ text: "Back to Cosmos", link: "https://cosmos.network" }],
+    nav: [
+      { text: "Back to Cosmos", link: "https://cosmos.network" },
+      { text: "RPC", link: "https://cosmos.network/rpc/" }
+    ],
     sidebar: [
       {
         title: "Overview",
-        collapsable: false,
+        collapsable: true,
         children: [
           "/intro/",
           "/intro/sdk-app-architecture",
@@ -32,22 +35,25 @@ module.exports = {
       },
       {
         title: "Gaia",
-        collapsable: false,
+        collapsable: true,
         children: [
+          "/gaia/what-is-gaia",
           "/gaia/installation",
-          "/gaia/join-testnet",
+          "/gaia/join-mainnet",
           "/gaia/validators/validator-setup",
           "/gaia/validators/overview",
           "/gaia/validators/security",
           "/gaia/validators/validator-faq",
-          "/gaia/deploy-testnet",
+          "/gaia/delegator-guide-cli",
           "/gaia/ledger",
-          "/gaia/gaiacli"
+          "/gaia/gaiacli",
+          "/gaia/join-testnet",
+          "/gaia/deploy-testnet"
         ]
       },
       {
         title: "Tutorial",
-        collapsable: false,
+        collapsable: true,
         children: [
           "/tutorial/",
           "/tutorial/app-design",
@@ -69,7 +75,7 @@ module.exports = {
       },
       {
         title: "Clients",
-        collapsable: false,
+        collapsable: true,
         children: [
       	  "/clients/",
           "/clients/cli",

@@ -1,10 +1,12 @@
 package cli
 
 import (
-	"github.com/cosmos/cosmos-sdk/client/utils"
 	"os"
 	"time"
 
+	"github.com/cosmos/cosmos-sdk/client/utils"
+
+	bam "github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -44,8 +46,8 @@ func IBCRelayCmd(cdc *codec.Codec) *cobra.Command {
 		cdc:       cdc,
 		decoder:   context.GetAccountDecoder(cdc),
 		ibcStore:  "ibc",
-		mainStore: "main",
-		accStore:  "acc",
+		mainStore: bam.MainStoreKey,
+		accStore:  auth.StoreKey,
 
 		logger: log.NewTMLogger(log.NewSyncWriter(os.Stdout)),
 	}
@@ -80,11 +82,7 @@ func (c relayCommander) runIBCRelay(cmd *cobra.Command, args []string) {
 	toChainID := viper.GetString(FlagToChainID)
 	toChainNode := viper.GetString(FlagToChainNode)
 
-	address, err := context.NewCLIContext().GetFromAddress()
-	if err != nil {
-		panic(err)
-	}
-
+	address := context.NewCLIContext().GetFromAddress()
 	c.address = address
 
 	c.loop(fromChainID, fromChainNode, toChainID, toChainNode)
@@ -94,10 +92,7 @@ func (c relayCommander) runIBCRelay(cmd *cobra.Command, args []string) {
 func (c relayCommander) loop(fromChainID, fromChainNode, toChainID, toChainNode string) {
 	cliCtx := context.NewCLIContext()
 
-	name, err := cliCtx.GetFromName()
-	if err != nil {
-		panic(err)
-	}
+	name := cliCtx.GetFromName()
 	passphrase, err := keys.ReadPassphraseFromStdin(name)
 	if err != nil {
 		panic(err)
@@ -196,7 +191,7 @@ func (c relayCommander) refine(bz []byte, ibcSeq, accSeq uint64, passphrase stri
 		panic(err)
 	}
 
-	msg := ibc.IBCReceiveMsg{
+	msg := ibc.MsgIBCReceive{
 		IBCPacket: packet,
 		Relayer:   c.address,
 		Sequence:  ibcSeq,
@@ -205,11 +200,7 @@ func (c relayCommander) refine(bz []byte, ibcSeq, accSeq uint64, passphrase stri
 	txBldr := authtxb.NewTxBuilderFromCLI().WithSequence(accSeq).WithTxEncoder(utils.GetTxEncoder(c.cdc))
 	cliCtx := context.NewCLIContext()
 
-	name, err := cliCtx.GetFromName()
-	if err != nil {
-		panic(err)
-	}
-
+	name := cliCtx.GetFromName()
 	res, err := txBldr.BuildAndSign(name, passphrase, []sdk.Msg{msg})
 	if err != nil {
 		panic(err)
