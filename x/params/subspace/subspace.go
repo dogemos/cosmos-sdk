@@ -1,6 +1,7 @@
 package subspace
 
 import (
+	"fmt"
 	"reflect"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -144,7 +145,7 @@ func (s Subspace) Modified(ctx sdk.Context, key []byte) bool {
 func (s Subspace) checkType(store sdk.KVStore, key []byte, param interface{}) {
 	attr, ok := s.table.m[string(key)]
 	if !ok {
-		panic("Parameter not registered")
+		panic(fmt.Sprintf("parameter %s not registered", string(key)))
 	}
 
 	ty := attr.ty
@@ -176,6 +177,32 @@ func (s Subspace) Set(ctx sdk.Context, key []byte, param interface{}) {
 
 }
 
+// Update stores raw parameter bytes. It returns error if the stored parameter
+// has a different type from the input. It also sets to the transient store to
+// record change.
+func (s Subspace) Update(ctx sdk.Context, key []byte, param []byte) error {
+	attr, ok := s.table.m[string(key)]
+	if !ok {
+		panic(fmt.Sprintf("parameter %s not registered", string(key)))
+	}
+
+	ty := attr.ty
+	dest := reflect.New(ty).Interface()
+	s.GetIfExists(ctx, key, dest)
+	err := s.cdc.UnmarshalJSON(param, dest)
+	if err != nil {
+		return err
+	}
+
+	s.Set(ctx, key, dest)
+
+	// TODO: Remove; seems redundant as Set already does this.
+	tStore := s.transientStore(ctx)
+	tStore.Set(key, []byte{})
+
+	return nil
+}
+
 // SetWithSubkey set a parameter with a key and subkey
 // Checks parameter type only over the key
 func (s Subspace) SetWithSubkey(ctx sdk.Context, key []byte, subkey []byte, param interface{}) {
@@ -193,6 +220,31 @@ func (s Subspace) SetWithSubkey(ctx sdk.Context, key []byte, subkey []byte, para
 
 	tstore := s.transientStore(ctx)
 	tstore.Set(newkey, []byte{})
+}
+
+// UpdateWithSubkey stores raw parameter bytes  with a key and subkey. It checks
+// the parameter type only over the key.
+func (s Subspace) UpdateWithSubkey(ctx sdk.Context, key []byte, subkey []byte, param []byte) error {
+	concatkey := concatKeys(key, subkey)
+
+	attr, ok := s.table.m[string(concatkey)]
+	if !ok {
+		return fmt.Errorf("parameter %s not registered", string(key))
+	}
+
+	ty := attr.ty
+	dest := reflect.New(ty).Interface()
+	s.GetWithSubkeyIfExists(ctx, key, subkey, dest)
+	err := s.cdc.UnmarshalJSON(param, dest)
+	if err != nil {
+		return err
+	}
+
+	s.SetWithSubkey(ctx, key, subkey, dest)
+	tStore := s.transientStore(ctx)
+	tStore.Set(concatkey, []byte{})
+
+	return nil
 }
 
 // Get to ParamSet

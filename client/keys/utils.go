@@ -2,13 +2,18 @@ package keys
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"path/filepath"
 
+	"github.com/99designs/keyring"
 	"github.com/spf13/viper"
 	"github.com/tendermint/tendermint/libs/cli"
+	"gopkg.in/yaml.v2"
 
-	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/crypto/keys"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // available output formats.
@@ -22,58 +27,9 @@ const (
 
 type bechKeyOutFn func(keyInfo keys.Info) (keys.KeyOutput, error)
 
-// GetKeyInfo returns key info for a given name. An error is returned if the
-// keybase cannot be retrieved or getting the info fails.
-func GetKeyInfo(name string) (keys.Info, error) {
-	keybase, err := NewKeyBaseFromHomeFlag()
-	if err != nil {
-		return nil, err
-	}
-
-	return keybase.Get(name)
-}
-
-// GetPassphrase returns a passphrase for a given name. It will first retrieve
-// the key info for that name if the type is local, it'll fetch input from
-// STDIN. Otherwise, an empty passphrase is returned. An error is returned if
-// the key info cannot be fetched or reading from STDIN fails.
-func GetPassphrase(name string) (string, error) {
-	var passphrase string
-
-	keyInfo, err := GetKeyInfo(name)
-	if err != nil {
-		return passphrase, err
-	}
-
-	// we only need a passphrase for locally stored keys
-	// TODO: (ref: #864) address security concerns
-	if keyInfo.GetType() == keys.TypeLocal {
-		passphrase, err = ReadPassphraseFromStdin(name)
-		if err != nil {
-			return passphrase, err
-		}
-	}
-
-	return passphrase, nil
-}
-
-// ReadPassphraseFromStdin attempts to read a passphrase from STDIN return an
-// error upon failure.
-func ReadPassphraseFromStdin(name string) (string, error) {
-	buf := client.BufferStdin()
-	prompt := fmt.Sprintf("Password to sign with '%s':", name)
-
-	passphrase, err := client.GetPassword(prompt, buf)
-	if err != nil {
-		return passphrase, fmt.Errorf("Error reading passphrase: %v", err)
-	}
-
-	return passphrase, nil
-}
-
 // NewKeyBaseFromHomeFlag initializes a Keybase based on the configuration.
 func NewKeyBaseFromHomeFlag() (keys.Keybase, error) {
-	rootDir := viper.GetString(cli.HomeFlag)
+	rootDir := viper.GetString(flags.FlagHome)
 	return NewKeyBaseFromDir(rootDir)
 }
 
@@ -85,26 +41,21 @@ func NewKeyBaseFromDir(rootDir string) (keys.Keybase, error) {
 // NewInMemoryKeyBase returns a storage-less keybase.
 func NewInMemoryKeyBase() keys.Keybase { return keys.NewInMemory() }
 
+// NewKeyBaseFromHomeFlag initializes a keyring based on configuration.
+func NewKeyringFromHomeFlag(input io.Reader) (keys.Keybase, error) {
+	return NewKeyringFromDir(viper.GetString(flags.FlagHome), input)
+}
+
+// NewKeyBaseFromDir initializes a keybase at a particular dir.
+func NewKeyringFromDir(rootDir string, input io.Reader) (keys.Keybase, error) {
+	if os.Getenv("COSMOS_SDK_TEST_KEYRING") != "" {
+		return keys.NewTestKeyring(sdk.GetConfig().GetKeyringServiceName(), rootDir)
+	}
+	return keys.NewKeyring(sdk.GetConfig().GetKeyringServiceName(), rootDir, input)
+}
+
 func getLazyKeyBaseFromDir(rootDir string) (keys.Keybase, error) {
 	return keys.New(defaultKeyDBName, filepath.Join(rootDir, "keys")), nil
-}
-
-func printKeyTextHeader() {
-	fmt.Printf("NAME:\tTYPE:\tADDRESS:\t\t\t\t\tPUBKEY:\n")
-}
-
-func printMultiSigKeyTextHeader() {
-	fmt.Printf("WEIGHT:\tTHRESHOLD:\tADDRESS:\t\t\t\t\tPUBKEY:\n")
-}
-
-func printMultiSigKeyInfo(keyInfo keys.Info, bechKeyOut bechKeyOutFn) {
-	ko, err := bechKeyOut(keyInfo)
-	if err != nil {
-		panic(err)
-	}
-
-	printMultiSigKeyTextHeader()
-	printMultiSigKeyOutput(ko)
 }
 
 func printKeyInfo(keyInfo keys.Info, bechKeyOut bechKeyOutFn) {
@@ -115,13 +66,12 @@ func printKeyInfo(keyInfo keys.Info, bechKeyOut bechKeyOutFn) {
 
 	switch viper.Get(cli.OutputFlag) {
 	case OutputFormatText:
-		printKeyTextHeader()
-		printKeyOutput(ko)
+		printTextInfos([]keys.KeyOutput{ko})
 
 	case OutputFormatJSON:
 		var out []byte
 		var err error
-		if viper.GetBool(client.FlagIndentResponse) {
+		if viper.GetBool(flags.FlagIndentResponse) {
 			out, err = cdc.MarshalJSONIndent(ko, "", "  ")
 		} else {
 			out, err = cdc.MarshalJSON(ko)
@@ -142,16 +92,13 @@ func printInfos(infos []keys.Info) {
 
 	switch viper.Get(cli.OutputFlag) {
 	case OutputFormatText:
-		printKeyTextHeader()
-		for _, ko := range kos {
-			printKeyOutput(ko)
-		}
+		printTextInfos(kos)
 
 	case OutputFormatJSON:
 		var out []byte
 		var err error
 
-		if viper.GetBool(client.FlagIndentResponse) {
+		if viper.GetBool(flags.FlagIndentResponse) {
 			out, err = cdc.MarshalJSONIndent(kos, "", "  ")
 		} else {
 			out, err = cdc.MarshalJSON(kos)
@@ -160,18 +107,16 @@ func printInfos(infos []keys.Info) {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(string(out))
+		fmt.Printf("%s", out)
 	}
 }
 
-func printKeyOutput(ko keys.KeyOutput) {
-	fmt.Printf("%s\t%s\t%s\t%s\n", ko.Name, ko.Type, ko.Address, ko.PubKey)
-}
-
-func printMultiSigKeyOutput(ko keys.KeyOutput) {
-	for _, pk := range ko.PubKeys {
-		fmt.Printf("%d\t%d\t\t%s\t%s\n", pk.Weight, ko.Threshold, pk.Address, pk.PubKey)
+func printTextInfos(kos []keys.KeyOutput) {
+	out, err := yaml.Marshal(&kos)
+	if err != nil {
+		panic(err)
 	}
+	fmt.Println(string(out))
 }
 
 func printKeyAddress(info keys.Info, bechKeyOut bechKeyOutFn) {
@@ -190,4 +135,9 @@ func printPubKey(info keys.Info, bechKeyOut bechKeyOutFn) {
 	}
 
 	fmt.Println(ko.PubKey)
+}
+
+func isRunningUnattended() bool {
+	backends := keyring.AvailableBackends()
+	return len(backends) == 2 && backends[1] == keyring.BackendType("file")
 }

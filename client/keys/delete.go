@@ -3,15 +3,12 @@ package keys
 import (
 	"bufio"
 	"errors"
-	"fmt"
-	"os"
 
-	"github.com/spf13/viper"
-
-	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/input"
 	"github.com/cosmos/cosmos-sdk/crypto/keys"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -27,8 +24,7 @@ func deleteKeyCommand() *cobra.Command {
 
 Note that removing offline or ledger keys will remove
 only the public key references stored locally, i.e.
-private keys stored in a ledger device cannot be deleted with
-gaiacli.
+private keys stored in a ledger device cannot be deleted with the CLI.
 `,
 		RunE: runDeleteCmd,
 		Args: cobra.ExactArgs(1),
@@ -43,8 +39,9 @@ gaiacli.
 
 func runDeleteCmd(cmd *cobra.Command, args []string) error {
 	name := args[0]
+	buf := bufio.NewReader(cmd.InOrStdin())
 
-	kb, err := NewKeyBaseFromHomeFlag()
+	kb, err := NewKeyringFromHomeFlag(buf)
 	if err != nil {
 		return err
 	}
@@ -54,40 +51,31 @@ func runDeleteCmd(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	buf := client.BufferStdin()
 	if info.GetType() == keys.TypeLedger || info.GetType() == keys.TypeOffline {
+		// confirm deletion, unless -y is passed
 		if !viper.GetBool(flagYes) {
 			if err := confirmDeletion(buf); err != nil {
 				return err
 			}
 		}
+
 		if err := kb.Delete(name, "", true); err != nil {
 			return err
 		}
-		fmt.Fprintln(os.Stderr, "Public key reference deleted")
+		cmd.PrintErrln("Public key reference deleted")
 		return nil
 	}
 
-	// skip passphrase check if run with --force
-	skipPass := viper.GetBool(flagForce)
-	var oldpass string
-	if !skipPass {
-		if oldpass, err = client.GetPassword(
-			"DANGER - enter password to permanently delete key:", buf); err != nil {
-			return err
-		}
-	}
-
-	err = kb.Delete(name, oldpass, skipPass)
-	if err != nil {
+	// old password and skip flag arguments are ignored
+	if err := kb.Delete(name, "", true); err != nil {
 		return err
 	}
-	fmt.Fprintln(os.Stderr, "Key deleted forever (uh oh!)")
+	cmd.PrintErrln("Key deleted forever (uh oh!)")
 	return nil
 }
 
 func confirmDeletion(buf *bufio.Reader) error {
-	answer, err := client.GetConfirmation("Key reference will be deleted. Continue?", buf)
+	answer, err := input.GetConfirmation("Key reference will be deleted. Continue?", buf)
 	if err != nil {
 		return err
 	}

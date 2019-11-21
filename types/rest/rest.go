@@ -3,15 +3,41 @@
 package rest
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
+	"github.com/tendermint/tendermint/types"
+
+	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
+
+const (
+	DefaultPage  = 1
+	DefaultLimit = 30 // should be consistent with tendermint/tendermint/rpc/core/pipe.go:19
+)
+
+// ResponseWithHeight defines a response object type that wraps an original
+// response with a height.
+type ResponseWithHeight struct {
+	Height int64           `json:"height"`
+	Result json.RawMessage `json:"result"`
+}
+
+// NewResponseWithHeight creates a new ResponseWithHeight instance
+func NewResponseWithHeight(height int64, result json.RawMessage) ResponseWithHeight {
+	return ResponseWithHeight{
+		Height: height,
+		Result: result,
+	}
+}
 
 // GasEstimateResponse defines a response definition for tx gas estimation.
 type GasEstimateResponse struct {
@@ -187,21 +213,51 @@ func ParseFloat64OrReturnBadRequest(w http.ResponseWriter, s string, defaultIfEm
 	return n, true
 }
 
-// PostProcessResponse performs post processing for a REST response.
-func PostProcessResponse(w http.ResponseWriter, cdc *codec.Codec, response interface{}, indent bool) {
-	var output []byte
+// ParseQueryHeightOrReturnBadRequest sets the height to execute a query if set by the http request.
+// It returns false if there was an error parsing the height.
+func ParseQueryHeightOrReturnBadRequest(w http.ResponseWriter, cliCtx context.CLIContext, r *http.Request) (context.CLIContext, bool) {
+	heightStr := r.FormValue("height")
+	if heightStr != "" {
+		height, err := strconv.ParseInt(heightStr, 10, 64)
+		if err != nil {
+			WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return cliCtx, false
+		}
 
-	switch response.(type) {
+		if height < 0 {
+			WriteErrorResponse(w, http.StatusBadRequest, "height must be equal or greater than zero")
+			return cliCtx, false
+		}
+
+		if height > 0 {
+			cliCtx = cliCtx.WithHeight(height)
+		}
+	} else {
+		cliCtx = cliCtx.WithHeight(0)
+	}
+
+	return cliCtx, true
+}
+
+// PostProcessResponseBare post processes a body similar to PostProcessResponse
+// except it does not wrap the body and inject the height.
+func PostProcessResponseBare(w http.ResponseWriter, cliCtx context.CLIContext, body interface{}) {
+	var (
+		resp []byte
+		err  error
+	)
+
+	switch b := body.(type) {
 	case []byte:
-		output = response.([]byte)
+		resp = b
 
 	default:
-		var err error
-		if indent {
-			output, err = cdc.MarshalJSONIndent(response, "", "  ")
+		if cliCtx.Indent {
+			resp, err = cliCtx.Codec.MarshalJSONIndent(body, "", "  ")
 		} else {
-			output, err = cdc.MarshalJSON(response)
+			resp, err = cliCtx.Codec.MarshalJSON(body)
 		}
+
 		if err != nil {
 			WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 			return
@@ -209,5 +265,113 @@ func PostProcessResponse(w http.ResponseWriter, cdc *codec.Codec, response inter
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	_, _ = w.Write(resp)
+}
+
+// PostProcessResponse performs post processing for a REST response. The result
+// returned to clients will contain two fields, the height at which the resource
+// was queried at and the original result.
+func PostProcessResponse(w http.ResponseWriter, cliCtx context.CLIContext, resp interface{}) {
+	var result []byte
+
+	if cliCtx.Height < 0 {
+		WriteErrorResponse(w, http.StatusInternalServerError, fmt.Errorf("negative height in response").Error())
+		return
+	}
+
+	switch res := resp.(type) {
+	case []byte:
+		result = res
+
+	default:
+		var err error
+		if cliCtx.Indent {
+			result, err = cliCtx.Codec.MarshalJSONIndent(resp, "", "  ")
+		} else {
+			result, err = cliCtx.Codec.MarshalJSON(resp)
+		}
+
+		if err != nil {
+			WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+
+	wrappedResp := NewResponseWithHeight(cliCtx.Height, result)
+
+	var (
+		output []byte
+		err    error
+	)
+
+	if cliCtx.Indent {
+		output, err = cliCtx.Codec.MarshalJSONIndent(wrappedResp, "", "  ")
+	} else {
+		output, err = cliCtx.Codec.MarshalJSON(wrappedResp)
+	}
+
+	if err != nil {
+		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(output)
+}
+
+// ParseHTTPArgsWithLimit parses the request's URL and returns a slice containing
+// all arguments pairs. It separates page and limit used for pagination where a
+// default limit can be provided.
+func ParseHTTPArgsWithLimit(r *http.Request, defaultLimit int) (tags []string, page, limit int, err error) {
+	tags = make([]string, 0, len(r.Form))
+	for key, values := range r.Form {
+		if key == "page" || key == "limit" {
+			continue
+		}
+		var value string
+		value, err = url.QueryUnescape(values[0])
+		if err != nil {
+			return tags, page, limit, err
+		}
+
+		var tag string
+		if key == types.TxHeightKey {
+			tag = fmt.Sprintf("%s=%s", key, value)
+		} else {
+			tag = fmt.Sprintf("%s='%s'", key, value)
+		}
+		tags = append(tags, tag)
+	}
+
+	pageStr := r.FormValue("page")
+	if pageStr == "" {
+		page = DefaultPage
+	} else {
+		page, err = strconv.Atoi(pageStr)
+		if err != nil {
+			return tags, page, limit, err
+		} else if page <= 0 {
+			return tags, page, limit, errors.New("page must greater than 0")
+		}
+	}
+
+	limitStr := r.FormValue("limit")
+	if limitStr == "" {
+		limit = defaultLimit
+	} else {
+		limit, err = strconv.Atoi(limitStr)
+		if err != nil {
+			return tags, page, limit, err
+		} else if limit <= 0 {
+			return tags, page, limit, errors.New("limit must greater than 0")
+		}
+	}
+
+	return tags, page, limit, nil
+}
+
+// ParseHTTPArgs parses the request's URL and returns a slice containing all
+// arguments pairs. It separates page and limit used for pagination.
+func ParseHTTPArgs(r *http.Request) (tags []string, page, limit int, err error) {
+	return ParseHTTPArgsWithLimit(r, DefaultLimit)
 }

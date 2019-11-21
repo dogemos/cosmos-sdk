@@ -8,14 +8,15 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
+	"github.com/cosmos/cosmos-sdk/x/supply/exported"
 )
 
 const msgRoute = "testMsg"
 
 var (
-	numAccts                       = 2
-	genCoins                       = sdk.Coins{sdk.NewInt64Coin("foocoin", 77)}
-	accs, addrs, pubKeys, privKeys = CreateGenAccounts(numAccts, genCoins)
+	numAccts                 = 2
+	genCoins                 = sdk.Coins{sdk.NewInt64Coin("foocoin", 77)}
+	accs, addrs, _, privKeys = CreateGenAccounts(numAccts, genCoins)
 )
 
 // testMsg is a mock transaction that has a validation which can fail.
@@ -51,6 +52,7 @@ func getMockApp(t *testing.T) *App {
 func TestCheckAndDeliverGenTx(t *testing.T) {
 	mApp := getMockApp(t)
 	mApp.Cdc.RegisterConcrete(testMsg{}, "mock/testMsg", nil)
+	mApp.Cdc.RegisterInterface((*exported.ModuleAccountI)(nil), nil)
 
 	SetGenesis(mApp, accs)
 	ctxCheck := mApp.BaseApp.NewContext(true, abci.Header{})
@@ -75,7 +77,8 @@ func TestCheckAndDeliverGenTx(t *testing.T) {
 		true, false, privKeys[1],
 	)
 
-	require.Equal(t, sdk.CodeUnauthorized, res.Code, res.Log)
+	// Will fail on SetPubKey decorator
+	require.Equal(t, sdk.CodeInvalidPubKey, res.Code, res.Log)
 	require.Equal(t, sdk.CodespaceRoot, res.Codespace)
 
 	// Resigning the tx with the correct privKey should result in an OK result
@@ -90,6 +93,7 @@ func TestCheckAndDeliverGenTx(t *testing.T) {
 func TestCheckGenTx(t *testing.T) {
 	mApp := getMockApp(t)
 	mApp.Cdc.RegisterConcrete(testMsg{}, "mock/testMsg", nil)
+	mApp.Cdc.RegisterInterface((*exported.ModuleAccountI)(nil), nil)
 
 	SetGenesis(mApp, accs)
 

@@ -5,17 +5,17 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
 
-	"strings"
-
-	amino "github.com/tendermint/go-amino"
 	tmclient "github.com/tendermint/tendermint/rpc/client"
 	ctypes "github.com/tendermint/tendermint/rpc/core/types"
 	rpcclient "github.com/tendermint/tendermint/rpc/lib/client"
+
+	"github.com/cosmos/cosmos-sdk/codec"
 )
 
 // Wait for the next tendermint block from the Tendermint RPC
@@ -68,10 +68,10 @@ func waitForHeightTM(height int64, url string) {
 			panic(err)
 		}
 
-		if resBlock.Block != nil &&
-			resBlock.Block.Height >= height {
+		if resBlock.Block != nil && resBlock.Block.Height >= height {
 			return
 		}
+
 		time.Sleep(time.Millisecond * 100)
 	}
 }
@@ -96,8 +96,10 @@ func StatusOK(statusCode int) bool {
 func waitForHeight(height int64, url string) {
 	var res *http.Response
 	var err error
+
 	for {
-		res, err = http.Get(url)
+		// Since this is in a testing file we are accepting nolint to be passed
+		res, err = http.Get(url) // nolint:gosec
 		if err != nil {
 			panic(err)
 		}
@@ -106,21 +108,20 @@ func waitForHeight(height int64, url string) {
 		if err != nil {
 			panic(err)
 		}
-		err = res.Body.Close()
-		if err != nil {
+
+		if err = res.Body.Close(); err != nil {
 			panic(err)
 		}
 
 		var resultBlock ctypes.ResultBlock
-		err = cdc.UnmarshalJSON(body, &resultBlock)
-		if err != nil {
+		if err = cdc.UnmarshalJSON(body, &resultBlock); err != nil {
 			panic(err)
 		}
 
-		if resultBlock.Block != nil &&
-			resultBlock.Block.Height >= height {
+		if resultBlock.Block != nil && resultBlock.Block.Height >= height {
 			return
 		}
+
 		time.Sleep(time.Millisecond * 100)
 	}
 }
@@ -150,7 +151,7 @@ func WaitForStart(url string) {
 		time.Sleep(time.Millisecond * 100)
 
 		var res *http.Response
-		res, err = http.Get(url)
+		res, err = http.Get(url) // nolint:gosec
 		if err != nil || res == nil {
 			continue
 		}
@@ -209,8 +210,10 @@ func NewTestCaseDir(t *testing.T) (string, func()) {
 	return dir, func() { os.RemoveAll(dir) }
 }
 
-var cdc = amino.NewCodec()
+var cdc = codec.New()
 
 func init() {
 	ctypes.RegisterAmino(cdc)
 }
+
+//DONTCOVER

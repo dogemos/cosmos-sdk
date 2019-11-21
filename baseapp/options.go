@@ -1,10 +1,10 @@
-// nolint: golint
 package baseapp
 
 import (
 	"fmt"
+	"io"
 
-	dbm "github.com/tendermint/tendermint/libs/db"
+	dbm "github.com/tendermint/tm-db"
 
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -28,11 +28,35 @@ func SetMinGasPrices(gasPricesStr string) func(*BaseApp) {
 	return func(bap *BaseApp) { bap.setMinGasPrices(gasPrices) }
 }
 
+// SetHaltHeight returns a BaseApp option function that sets the halt block height.
+func SetHaltHeight(blockHeight uint64) func(*BaseApp) {
+	return func(bap *BaseApp) { bap.setHaltHeight(blockHeight) }
+}
+
+// SetHaltTime returns a BaseApp option function that sets the halt block time.
+func SetHaltTime(haltTime uint64) func(*BaseApp) {
+	return func(bap *BaseApp) { bap.setHaltTime(haltTime) }
+}
+
+// SetInterBlockCache provides a BaseApp option function that sets the
+// inter-block cache.
+func SetInterBlockCache(cache sdk.MultiStorePersistentCache) func(*BaseApp) {
+	return func(app *BaseApp) { app.setInterBlockCache(cache) }
+}
+
 func (app *BaseApp) SetName(name string) {
 	if app.sealed {
 		panic("SetName() on sealed BaseApp")
 	}
 	app.name = name
+}
+
+// SetAppVersion sets the application's version string.
+func (app *BaseApp) SetAppVersion(v string) {
+	if app.sealed {
+		panic("SetAppVersion() on sealed BaseApp")
+	}
+	app.appVersion = v
 }
 
 func (app *BaseApp) SetDB(db dbm.DB) {
@@ -96,4 +120,18 @@ func (app *BaseApp) SetFauxMerkleMode() {
 		panic("SetFauxMerkleMode() on sealed BaseApp")
 	}
 	app.fauxMerkleMode = true
+}
+
+// SetCommitMultiStoreTracer sets the store tracer on the BaseApp's underlying
+// CommitMultiStore.
+func (app *BaseApp) SetCommitMultiStoreTracer(w io.Writer) {
+	app.cms.SetTracer(w)
+}
+
+// SetStoreLoader allows us to customize the rootMultiStore initialization.
+func (app *BaseApp) SetStoreLoader(loader StoreLoader) {
+	if app.sealed {
+		panic("SetStoreLoader() on sealed BaseApp")
+	}
+	app.storeLoader = loader
 }

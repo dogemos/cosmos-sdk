@@ -10,24 +10,22 @@ import (
 type (
 	// Commission defines a commission parameters for a given validator.
 	Commission struct {
-		Rate          sdk.Dec   `json:"rate"`            // the commission rate charged to delegators, as a fraction
-		MaxRate       sdk.Dec   `json:"max_rate"`        // maximum commission rate which this validator can ever charge, as a fraction
-		MaxChangeRate sdk.Dec   `json:"max_change_rate"` // maximum daily increase of the validator commission, as a fraction
-		UpdateTime    time.Time `json:"update_time"`     // the last time the commission rate was changed
+		CommissionRates `json:"commission_rates" yaml:"commission_rates"`
+		UpdateTime      time.Time `json:"update_time" yaml:"update_time"` // the last time the commission rate was changed
 	}
 
-	// CommissionMsg defines a commission message to be used for creating a
+	// CommissionRates defines the initial commission rates to be used for creating a
 	// validator.
-	CommissionMsg struct {
-		Rate          sdk.Dec `json:"rate"`            // the commission rate charged to delegators, as a fraction
-		MaxRate       sdk.Dec `json:"max_rate"`        // maximum commission rate which validator can ever charge, as a fraction
-		MaxChangeRate sdk.Dec `json:"max_change_rate"` // maximum daily increase of the validator commission, as a fraction
+	CommissionRates struct {
+		Rate          sdk.Dec `json:"rate" yaml:"rate"`                       // the commission rate charged to delegators, as a fraction
+		MaxRate       sdk.Dec `json:"max_rate" yaml:"max_rate"`               // maximum commission rate which validator can ever charge, as a fraction
+		MaxChangeRate sdk.Dec `json:"max_change_rate" yaml:"max_change_rate"` // maximum daily increase of the validator commission, as a fraction
 	}
 )
 
-// NewCommissionMsg returns an initialized validator commission message.
-func NewCommissionMsg(rate, maxRate, maxChangeRate sdk.Dec) CommissionMsg {
-	return CommissionMsg{
+// NewCommissionRates returns an initialized validator commission rates.
+func NewCommissionRates(rate, maxRate, maxChangeRate sdk.Dec) CommissionRates {
+	return CommissionRates{
 		Rate:          rate,
 		MaxRate:       maxRate,
 		MaxChangeRate: maxChangeRate,
@@ -37,10 +35,8 @@ func NewCommissionMsg(rate, maxRate, maxChangeRate sdk.Dec) CommissionMsg {
 // NewCommission returns an initialized validator commission.
 func NewCommission(rate, maxRate, maxChangeRate sdk.Dec) Commission {
 	return Commission{
-		Rate:          rate,
-		MaxRate:       maxRate,
-		MaxChangeRate: maxChangeRate,
-		UpdateTime:    time.Unix(0, 0).UTC(),
+		CommissionRates: NewCommissionRates(rate, maxRate, maxChangeRate),
+		UpdateTime:      time.Unix(0, 0).UTC(),
 	}
 }
 
@@ -48,10 +44,8 @@ func NewCommission(rate, maxRate, maxChangeRate sdk.Dec) Commission {
 // update time which should be the current block BFT time.
 func NewCommissionWithTime(rate, maxRate, maxChangeRate sdk.Dec, updatedAt time.Time) Commission {
 	return Commission{
-		Rate:          rate,
-		MaxRate:       maxRate,
-		MaxChangeRate: maxChangeRate,
-		UpdateTime:    updatedAt,
+		CommissionRates: NewCommissionRates(rate, maxRate, maxChangeRate),
+		UpdateTime:      updatedAt,
 	}
 }
 
@@ -73,9 +67,9 @@ func (c Commission) String() string {
 
 // Validate performs basic sanity validation checks of initial commission
 // parameters. If validation fails, an SDK error is returned.
-func (c Commission) Validate() sdk.Error {
+func (c CommissionRates) Validate() sdk.Error {
 	switch {
-	case c.MaxRate.LT(sdk.ZeroDec()):
+	case c.MaxRate.IsNegative():
 		// max rate cannot be negative
 		return ErrCommissionNegative(DefaultCodespace)
 
@@ -83,7 +77,7 @@ func (c Commission) Validate() sdk.Error {
 		// max rate cannot be greater than 1
 		return ErrCommissionHuge(DefaultCodespace)
 
-	case c.Rate.LT(sdk.ZeroDec()):
+	case c.Rate.IsNegative():
 		// rate cannot be negative
 		return ErrCommissionNegative(DefaultCodespace)
 
@@ -91,7 +85,7 @@ func (c Commission) Validate() sdk.Error {
 		// rate cannot be greater than the max rate
 		return ErrCommissionGTMaxRate(DefaultCodespace)
 
-	case c.MaxChangeRate.LT(sdk.ZeroDec()):
+	case c.MaxChangeRate.IsNegative():
 		// change rate cannot be negative
 		return ErrCommissionChangeRateNegative(DefaultCodespace)
 
@@ -111,7 +105,7 @@ func (c Commission) ValidateNewRate(newRate sdk.Dec, blockTime time.Time) sdk.Er
 		// new rate cannot be changed more than once within 24 hours
 		return ErrCommissionUpdateTime(DefaultCodespace)
 
-	case newRate.LT(sdk.ZeroDec()):
+	case newRate.IsNegative():
 		// new rate cannot be negative
 		return ErrCommissionNegative(DefaultCodespace)
 
@@ -119,8 +113,7 @@ func (c Commission) ValidateNewRate(newRate sdk.Dec, blockTime time.Time) sdk.Er
 		// new rate cannot be greater than the max rate
 		return ErrCommissionGTMaxRate(DefaultCodespace)
 
-		// TODO: why do we need an absolute value, do we care if the validator decreases their rate rapidly?
-	case newRate.Sub(c.Rate).Abs().GT(c.MaxChangeRate):
+	case newRate.Sub(c.Rate).GT(c.MaxChangeRate):
 		// new rate % points change cannot be greater than the max change rate
 		return ErrCommissionGTMaxChangeRate(DefaultCodespace)
 	}

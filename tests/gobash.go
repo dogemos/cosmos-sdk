@@ -8,14 +8,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	cmn "github.com/tendermint/tendermint/libs/common"
 )
 
 // ExecuteT executes the command, pipes any input to STDIN and return STDOUT,
 // logging STDOUT/STDERR to t.
-// nolint: errcheck
 func ExecuteT(t *testing.T, cmd, input string) (stdout, stderr string) {
-	t.Log("Running", cmn.Cyan(cmd))
+	t.Log("Running", cmd)
 
 	// split cmd to name and args
 	split := strings.Split(cmd, " ")
@@ -43,23 +41,23 @@ func ExecuteT(t *testing.T, cmd, input string) (stdout, stderr string) {
 	proc.Wait()
 
 	if len(outbz) > 0 {
-		t.Log("Stdout:", cmn.Green(string(outbz)))
+		t.Log("Stdout:", string(outbz))
 	}
 
 	if len(errbz) > 0 {
-		t.Log("Stderr:", cmn.Red(string(errbz)))
+		t.Log("Stderr:", string(errbz))
 	}
 
 	stdout = strings.Trim(string(outbz), "\n")
 	stderr = strings.Trim(string(errbz), "\n")
 
-	return
+	return stdout, stderr
 }
 
 // Execute the command, launch goroutines to log stdout/err to t.
 // Caller should wait for .Wait() or .Stop() to terminate.
 func GoExecuteT(t *testing.T, cmd string) (proc *Process) {
-	t.Log("Running", cmn.Cyan(cmd))
+	t.Log("Running", cmd)
 
 	// Split cmd to name and args.
 	split := strings.Split(cmd, " ")
@@ -77,7 +75,7 @@ func GoExecuteT(t *testing.T, cmd string) (proc *Process) {
 
 // Same as GoExecuteT but spawns a go routine to ReadAll off stdout.
 func GoExecuteTWithStdout(t *testing.T, cmd string) (proc *Process) {
-	t.Log("Running", cmn.Cyan(cmd))
+	t.Log("Running", cmd)
 
 	// Split cmd to name and args.
 	split := strings.Split(cmd, " ")

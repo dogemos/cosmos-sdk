@@ -15,21 +15,46 @@ const defaultConfigTemplate = `# This is a TOML config file.
 
 # The minimum gas prices a validator is willing to accept for processing a
 # transaction. A transaction's fees must meet the minimum of any denomination
-# specified in this config (e.g. 0.01photino;0.0001stake).
+# specified in this config (e.g. 0.25token1;0.0001token2).
 minimum-gas-prices = "{{ .BaseConfig.MinGasPrices }}"
+
+# HaltHeight contains a non-zero block height at which a node will gracefully
+# halt and shutdown that can be used to assist upgrades and testing.
+#
+# Note: State will not be committed on the corresponding height and any logs
+# indicating such can be safely ignored.
+halt-height = {{ .BaseConfig.HaltHeight }}
+
+# HaltTime contains a non-zero minimum block time (in Unix seconds) at which
+# a node will gracefully halt and shutdown that can be used to assist upgrades
+# and testing.
+#
+# Note: State will not be committed on the corresponding height and any logs
+# indicating such can be safely ignored.
+halt-time = {{ .BaseConfig.HaltTime }}
+
+# InterBlockCache enables inter-block caching.
+inter-block-cache = {{ .BaseConfig.InterBlockCache }}
+
+# Pruning sets the pruning strategy: syncable, nothing, everything
+# syncable: only those states not needed for state syncing will be deleted (keeps last 100 + every 10000th)
+# nothing: all historic states will be saved, nothing will be deleted (i.e. archiving node)
+# everything: all saved states will be deleted, storing only the current state
+pruning = "{{ .BaseConfig.Pruning }}"
 `
 
 var configTemplate *template.Template
 
 func init() {
 	var err error
-	tmpl := template.New("gaiaConfigFileTemplate")
+	tmpl := template.New("appConfigFileTemplate")
 	if configTemplate, err = tmpl.Parse(defaultConfigTemplate); err != nil {
 		panic(err)
 	}
 }
 
-// ParseConfig retrieves the default environment configuration for Gaia.
+// ParseConfig retrieves the default environment configuration for the
+// application.
 func ParseConfig() (*Config, error) {
 	conf := DefaultConfig()
 	err := viper.Unmarshal(conf)

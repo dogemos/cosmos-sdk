@@ -13,6 +13,11 @@ type Uint struct {
 	i *big.Int
 }
 
+// BigInt converts Uint to big.Int
+func (u Uint) BigInt() *big.Int {
+	return new(big.Int).Set(u.i)
+}
+
 // NewUintFromBigUint constructs Uint from big.Uint
 func NewUintFromBigInt(i *big.Int) Uint {
 	u, err := checkNewUint(i)
@@ -105,9 +110,6 @@ func MaxUint(u1, u2 Uint) Uint { return NewUintFromBigInt(max(u1.i, u2.i)) }
 
 // Human readable string
 func (u Uint) String() string { return u.i.String() }
-
-// Testing purpose random Uint generator
-func randomUint(u Uint) Uint { return NewUintFromBigInt(random(u.i)) }
 
 // MarshalAmino defines custom encoding scheme
 func (u Uint) MarshalAmino() (string, error) {

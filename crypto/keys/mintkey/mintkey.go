@@ -4,11 +4,11 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"golang.org/x/crypto/bcrypt"
+	"github.com/tendermint/crypto/bcrypt"
 
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/armor"
-	"github.com/tendermint/tendermint/crypto/encoding/amino"
+	cryptoAmino "github.com/tendermint/tendermint/crypto/encoding/amino"
 	"github.com/tendermint/tendermint/crypto/xsalsa20symmetric"
 
 	cmn "github.com/tendermint/tendermint/libs/common"
@@ -29,7 +29,7 @@ const (
 // threat this then exposes would be something that changes this during
 // runtime before the user creates their key. This vulnerability must
 // succeed to update this to that same value before every subsequent call
-// to gaiacli keys in future startups / or the attacker must get access
+// to the keys command in future startups / or the attacker must get access
 // to the filesystem. However, with a similar threat model (changing
 // variables in runtime), one can cause the user to sign a different tx
 // than what they see, which is a significantly cheaper attack then breaking
@@ -77,11 +77,11 @@ func unarmorBytes(armorStr, blockType string) (bz []byte, err error) {
 		return
 	}
 	if bType != blockType {
-		err = fmt.Errorf("Unrecognized armor type %q, expected: %q", bType, blockType)
+		err = fmt.Errorf("unrecognized armor type %q, expected: %q", bType, blockType)
 		return
 	}
 	if header["version"] != "0.0.0" {
-		err = fmt.Errorf("Unrecognized version: %v", header["version"])
+		err = fmt.Errorf("unrecognized version: %v", header["version"])
 		return
 	}
 	return
@@ -123,17 +123,17 @@ func UnarmorDecryptPrivKey(armorStr string, passphrase string) (crypto.PrivKey, 
 		return privKey, err
 	}
 	if blockType != blockTypePrivKey {
-		return privKey, fmt.Errorf("Unrecognized armor type: %v", blockType)
+		return privKey, fmt.Errorf("unrecognized armor type: %v", blockType)
 	}
 	if header["kdf"] != "bcrypt" {
-		return privKey, fmt.Errorf("Unrecognized KDF type: %v", header["KDF"])
+		return privKey, fmt.Errorf("unrecognized KDF type: %v", header["KDF"])
 	}
 	if header["salt"] == "" {
-		return privKey, fmt.Errorf("Missing salt bytes")
+		return privKey, fmt.Errorf("missing salt bytes")
 	}
 	saltBytes, err := hex.DecodeString(header["salt"])
 	if err != nil {
-		return privKey, fmt.Errorf("Error decoding salt: %v", err.Error())
+		return privKey, fmt.Errorf("error decoding salt: %v", err.Error())
 	}
 	privKey, err = decryptPrivKey(saltBytes, encBytes, passphrase)
 	return privKey, err
@@ -142,7 +142,7 @@ func UnarmorDecryptPrivKey(armorStr string, passphrase string) (crypto.PrivKey, 
 func decryptPrivKey(saltBytes []byte, encBytes []byte, passphrase string) (privKey crypto.PrivKey, err error) {
 	key, err := bcrypt.GenerateFromPassword(saltBytes, []byte(passphrase), BcryptSecurityParameter)
 	if err != nil {
-		cmn.Exit("Error generating bcrypt key from passphrase: " + err.Error())
+		cmn.Exit("error generating bcrypt key from passphrase: " + err.Error())
 	}
 	key = crypto.Sha256(key) // Get 32 bytes
 	privKeyBytes, err := xsalsa20symmetric.DecryptSymmetric(encBytes, key)

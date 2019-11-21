@@ -1,3 +1,5 @@
+// nolint
+// DONTCOVER
 package slashing
 
 import (
@@ -9,9 +11,13 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
+	authexported "github.com/cosmos/cosmos-sdk/x/auth/exported"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	"github.com/cosmos/cosmos-sdk/x/mock"
 	"github.com/cosmos/cosmos-sdk/x/staking"
+	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/cosmos/cosmos-sdk/x/supply"
+	supplyexported "github.com/cosmos/cosmos-sdk/x/supply/exported"
 )
 
 var (
@@ -26,21 +32,38 @@ func getMockApp(t *testing.T) (*mock.App, staking.Keeper, Keeper) {
 
 	RegisterCodec(mapp.Cdc)
 	staking.RegisterCodec(mapp.Cdc)
+	supply.RegisterCodec(mapp.Cdc)
 
 	keyStaking := sdk.NewKVStoreKey(staking.StoreKey)
-	tkeyStaking := sdk.NewTransientStoreKey(staking.TStoreKey)
 	keySlashing := sdk.NewKVStoreKey(StoreKey)
+	keySupply := sdk.NewKVStoreKey(supply.StoreKey)
 
-	bankKeeper := bank.NewBaseKeeper(mapp.AccountKeeper, mapp.ParamsKeeper.Subspace(bank.DefaultParamspace), bank.DefaultCodespace)
-	stakingKeeper := staking.NewKeeper(mapp.Cdc, keyStaking, tkeyStaking, bankKeeper, mapp.ParamsKeeper.Subspace(staking.DefaultParamspace), staking.DefaultCodespace)
+	feeCollector := supply.NewEmptyModuleAccount(auth.FeeCollectorName)
+	notBondedPool := supply.NewEmptyModuleAccount(types.NotBondedPoolName, supply.Burner, supply.Staking)
+	bondPool := supply.NewEmptyModuleAccount(types.BondedPoolName, supply.Burner, supply.Staking)
+
+	blacklistedAddrs := make(map[string]bool)
+	blacklistedAddrs[feeCollector.GetAddress().String()] = true
+	blacklistedAddrs[notBondedPool.GetAddress().String()] = true
+	blacklistedAddrs[bondPool.GetAddress().String()] = true
+
+	bankKeeper := bank.NewBaseKeeper(mapp.AccountKeeper, mapp.ParamsKeeper.Subspace(bank.DefaultParamspace), bank.DefaultCodespace, blacklistedAddrs)
+	maccPerms := map[string][]string{
+		auth.FeeCollectorName:     nil,
+		staking.NotBondedPoolName: {supply.Burner, supply.Staking},
+		staking.BondedPoolName:    {supply.Burner, supply.Staking},
+	}
+	supplyKeeper := supply.NewKeeper(mapp.Cdc, keySupply, mapp.AccountKeeper, bankKeeper, maccPerms)
+	stakingKeeper := staking.NewKeeper(mapp.Cdc, keyStaking, supplyKeeper, mapp.ParamsKeeper.Subspace(staking.DefaultParamspace), staking.DefaultCodespace)
 	keeper := NewKeeper(mapp.Cdc, keySlashing, stakingKeeper, mapp.ParamsKeeper.Subspace(DefaultParamspace), DefaultCodespace)
 	mapp.Router().AddRoute(staking.RouterKey, staking.NewHandler(stakingKeeper))
 	mapp.Router().AddRoute(RouterKey, NewHandler(keeper))
 
 	mapp.SetEndBlocker(getEndBlocker(stakingKeeper))
-	mapp.SetInitChainer(getInitChainer(mapp, stakingKeeper))
+	mapp.SetInitChainer(getInitChainer(mapp, stakingKeeper, mapp.AccountKeeper, supplyKeeper,
+		[]supplyexported.ModuleAccountI{feeCollector, notBondedPool, bondPool}))
 
-	require.NoError(t, mapp.CompleteSetup(keyStaking, tkeyStaking, keySlashing))
+	require.NoError(t, mapp.CompleteSetup(keyStaking, keySupply, keySlashing))
 
 	return mapp, stakingKeeper, keeper
 }
@@ -48,26 +71,25 @@ func getMockApp(t *testing.T) (*mock.App, staking.Keeper, Keeper) {
 // staking endblocker
 func getEndBlocker(keeper staking.Keeper) sdk.EndBlocker {
 	return func(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
-		validatorUpdates, tags := staking.EndBlocker(ctx, keeper)
+		validatorUpdates := staking.EndBlocker(ctx, keeper)
 		return abci.ResponseEndBlock{
 			ValidatorUpdates: validatorUpdates,
-			Tags:             tags,
 		}
 	}
 }
 
 // overwrite the mock init chainer
-func getInitChainer(mapp *mock.App, keeper staking.Keeper) sdk.InitChainer {
+func getInitChainer(mapp *mock.App, keeper staking.Keeper, accountKeeper types.AccountKeeper, supplyKeeper types.SupplyKeeper,
+	blacklistedAddrs []supplyexported.ModuleAccountI) sdk.InitChainer {
 	return func(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
-		mapp.InitChainer(ctx, req)
-		stakingGenesis := staking.DefaultGenesisState()
-		tokens := sdk.TokensFromTendermintPower(100000)
-		stakingGenesis.Pool.NotBondedTokens = tokens
-		validators, err := staking.InitGenesis(ctx, keeper, stakingGenesis)
-		if err != nil {
-			panic(err)
+		// set module accounts
+		for _, macc := range blacklistedAddrs {
+			supplyKeeper.SetModuleAccount(ctx, macc)
 		}
 
+		mapp.InitChainer(ctx, req)
+		stakingGenesis := staking.DefaultGenesisState()
+		validators := staking.InitGenesis(ctx, keeper, accountKeeper, supplyKeeper, stakingGenesis)
 		return abci.ResponseInitChain{
 			Validators: validators,
 		}
@@ -85,7 +107,7 @@ func checkValidator(t *testing.T, mapp *mock.App, keeper staking.Keeper,
 func checkValidatorSigningInfo(t *testing.T, mapp *mock.App, keeper Keeper,
 	addr sdk.ConsAddress, expFound bool) ValidatorSigningInfo {
 	ctxCheck := mapp.BaseApp.NewContext(true, abci.Header{})
-	signingInfo, found := keeper.getValidatorSigningInfo(ctxCheck, addr)
+	signingInfo, found := keeper.GetValidatorSigningInfo(ctxCheck, addr)
 	require.Equal(t, expFound, found)
 	return signingInfo
 }
@@ -93,8 +115,8 @@ func checkValidatorSigningInfo(t *testing.T, mapp *mock.App, keeper Keeper,
 func TestSlashingMsgs(t *testing.T) {
 	mapp, stakingKeeper, keeper := getMockApp(t)
 
-	genTokens := sdk.TokensFromTendermintPower(42)
-	bondTokens := sdk.TokensFromTendermintPower(10)
+	genTokens := sdk.TokensFromConsensusPower(42)
+	bondTokens := sdk.TokensFromConsensusPower(10)
 	genCoin := sdk.NewCoin(sdk.DefaultBondDenom, genTokens)
 	bondCoin := sdk.NewCoin(sdk.DefaultBondDenom, bondTokens)
 
@@ -102,11 +124,11 @@ func TestSlashingMsgs(t *testing.T) {
 		Address: addr1,
 		Coins:   sdk.Coins{genCoin},
 	}
-	accs := []auth.Account{acc1}
+	accs := []authexported.Account{acc1}
 	mock.SetGenesis(mapp, accs)
 
-	description := staking.NewDescription("foo_moniker", "", "", "")
-	commission := staking.NewCommissionMsg(sdk.ZeroDec(), sdk.ZeroDec(), sdk.ZeroDec())
+	description := staking.NewDescription("foo_moniker", "", "", "", "")
+	commission := staking.NewCommissionRates(sdk.ZeroDec(), sdk.ZeroDec(), sdk.ZeroDec())
 
 	createValidatorMsg := staking.NewMsgCreateValidator(
 		sdk.ValAddress(addr1), priv1.PubKey(), bondCoin, description, commission, sdk.OneInt(),

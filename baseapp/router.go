@@ -6,28 +6,22 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// Router provides handlers for each transaction type.
-type Router interface {
-	AddRoute(r string, h sdk.Handler) (rtr Router)
-	Route(path string) (h sdk.Handler)
-}
-
-type router struct {
+type Router struct {
 	routes map[string]sdk.Handler
 }
 
+var _ sdk.Router = NewRouter()
+
 // NewRouter returns a reference to a new router.
-//
-// TODO: Either make the function private or make return type (router) public.
-func NewRouter() *router { // nolint: golint
-	return &router{
+func NewRouter() *Router {
+	return &Router{
 		routes: make(map[string]sdk.Handler),
 	}
 }
 
 // AddRoute adds a route path to the router with a given handler. The route must
 // be alphanumeric.
-func (rtr *router) AddRoute(path string, h sdk.Handler) Router {
+func (rtr *Router) AddRoute(path string, h sdk.Handler) sdk.Router {
 	if !isAlphaNumeric(path) {
 		panic("route expressions can only contain alphanumeric characters")
 	}
@@ -42,6 +36,6 @@ func (rtr *router) AddRoute(path string, h sdk.Handler) Router {
 // Route returns a handler for a given route path.
 //
 // TODO: Handle expressive matches.
-func (rtr *router) Route(path string) sdk.Handler {
+func (rtr *Router) Route(path string) sdk.Handler {
 	return rtr.routes[path]
 }

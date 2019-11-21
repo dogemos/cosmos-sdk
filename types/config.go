@@ -4,17 +4,30 @@ import (
 	"sync"
 )
 
+// DefaultKeyringServiceName defines a default service name for the keyring.
+const DefaultKeyringServiceName = "cosmos"
+
 // Config is the structure that holds the SDK configuration parameters.
 // This could be used to initialize certain configuration parameters for the SDK.
 type Config struct {
-	mtx                 sync.RWMutex
-	sealed              bool
+	fullFundraiserPath  string
+	keyringServiceName  string
 	bech32AddressPrefix map[string]string
 	txEncoder           TxEncoder
+	addressVerifier     func([]byte) error
+	mtx                 sync.RWMutex
+	coinType            uint32
+	sealed              bool
 }
 
-var (
-	// Initializing an instance of Config
+// cosmos-sdk wide global singleton
+var sdkConfig *Config
+
+// GetConfig returns the config instance for the SDK.
+func GetConfig() *Config {
+	if sdkConfig != nil {
+		return sdkConfig
+	}
 	sdkConfig = &Config{
 		sealed: false,
 		bech32AddressPrefix: map[string]string{
@@ -25,12 +38,11 @@ var (
 			"validator_pub":  Bech32PrefixValPub,
 			"consensus_pub":  Bech32PrefixConsPub,
 		},
-		txEncoder: nil,
+		coinType:           CoinType,
+		fullFundraiserPath: FullFundraiserPath,
+		txEncoder:          nil,
+		keyringServiceName: DefaultKeyringServiceName,
 	}
-)
-
-// GetConfig returns the config instance for the SDK.
-func GetConfig() *Config {
 	return sdkConfig
 }
 
@@ -71,6 +83,31 @@ func (config *Config) SetBech32PrefixForConsensusNode(addressPrefix, pubKeyPrefi
 func (config *Config) SetTxEncoder(encoder TxEncoder) {
 	config.assertNotSealed()
 	config.txEncoder = encoder
+}
+
+// SetAddressVerifier builds the Config with the provided function for verifying that addresses
+// have the correct format
+func (config *Config) SetAddressVerifier(addressVerifier func([]byte) error) {
+	config.assertNotSealed()
+	config.addressVerifier = addressVerifier
+}
+
+// Set the BIP-0044 CoinType code on the config
+func (config *Config) SetCoinType(coinType uint32) {
+	config.assertNotSealed()
+	config.coinType = coinType
+}
+
+// Set the FullFundraiserPath (BIP44Prefix) on the config
+func (config *Config) SetFullFundraiserPath(fullFundraiserPath string) {
+	config.assertNotSealed()
+	config.fullFundraiserPath = fullFundraiserPath
+}
+
+// Set the keyringServiceName (BIP44Prefix) on the config
+func (config *Config) SetKeyringServiceName(keyringServiceName string) {
+	config.assertNotSealed()
+	config.keyringServiceName = keyringServiceName
 }
 
 // Seal seals the config such that the config state could not be modified further
@@ -115,4 +152,24 @@ func (config *Config) GetBech32ConsensusPubPrefix() string {
 // GetTxEncoder return function to encode transactions
 func (config *Config) GetTxEncoder() TxEncoder {
 	return config.txEncoder
+}
+
+// GetAddressVerifier returns the function to verify that addresses have the correct format
+func (config *Config) GetAddressVerifier() func([]byte) error {
+	return config.addressVerifier
+}
+
+// GetCoinType returns the BIP-0044 CoinType code on the config.
+func (config *Config) GetCoinType() uint32 {
+	return config.coinType
+}
+
+// GetFullFundraiserPath returns the BIP44Prefix.
+func (config *Config) GetFullFundraiserPath() string {
+	return config.fullFundraiserPath
+}
+
+// GetKeyringServiceName returns the keyring service name from the config.
+func (config *Config) GetKeyringServiceName() string {
+	return config.keyringServiceName
 }

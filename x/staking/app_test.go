@@ -8,8 +8,12 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
+	authexported "github.com/cosmos/cosmos-sdk/x/auth/exported"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	"github.com/cosmos/cosmos-sdk/x/mock"
+	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/cosmos/cosmos-sdk/x/supply"
+	supplyexported "github.com/cosmos/cosmos-sdk/x/supply/exported"
 )
 
 // getMockApp returns an initialized mock application for this module.
@@ -17,48 +21,63 @@ func getMockApp(t *testing.T) (*mock.App, Keeper) {
 	mApp := mock.NewApp()
 
 	RegisterCodec(mApp.Cdc)
+	supply.RegisterCodec(mApp.Cdc)
 
 	keyStaking := sdk.NewKVStoreKey(StoreKey)
-	tkeyStaking := sdk.NewTransientStoreKey(TStoreKey)
+	keySupply := sdk.NewKVStoreKey(supply.StoreKey)
 
-	bankKeeper := bank.NewBaseKeeper(mApp.AccountKeeper, mApp.ParamsKeeper.Subspace(bank.DefaultParamspace), bank.DefaultCodespace)
-	keeper := NewKeeper(mApp.Cdc, keyStaking, tkeyStaking, bankKeeper, mApp.ParamsKeeper.Subspace(DefaultParamspace), DefaultCodespace)
+	feeCollector := supply.NewEmptyModuleAccount(auth.FeeCollectorName)
+	notBondedPool := supply.NewEmptyModuleAccount(types.NotBondedPoolName, supply.Burner, supply.Staking)
+	bondPool := supply.NewEmptyModuleAccount(types.BondedPoolName, supply.Burner, supply.Staking)
+
+	blacklistedAddrs := make(map[string]bool)
+	blacklistedAddrs[feeCollector.GetAddress().String()] = true
+	blacklistedAddrs[notBondedPool.GetAddress().String()] = true
+	blacklistedAddrs[bondPool.GetAddress().String()] = true
+
+	bankKeeper := bank.NewBaseKeeper(mApp.AccountKeeper, mApp.ParamsKeeper.Subspace(bank.DefaultParamspace), bank.DefaultCodespace, blacklistedAddrs)
+	maccPerms := map[string][]string{
+		auth.FeeCollectorName:   nil,
+		types.NotBondedPoolName: {supply.Burner, supply.Staking},
+		types.BondedPoolName:    {supply.Burner, supply.Staking},
+	}
+	supplyKeeper := supply.NewKeeper(mApp.Cdc, keySupply, mApp.AccountKeeper, bankKeeper, maccPerms)
+	keeper := NewKeeper(mApp.Cdc, keyStaking, supplyKeeper, mApp.ParamsKeeper.Subspace(DefaultParamspace), DefaultCodespace)
 
 	mApp.Router().AddRoute(RouterKey, NewHandler(keeper))
 	mApp.SetEndBlocker(getEndBlocker(keeper))
-	mApp.SetInitChainer(getInitChainer(mApp, keeper))
+	mApp.SetInitChainer(getInitChainer(mApp, keeper, mApp.AccountKeeper, supplyKeeper,
+		[]supplyexported.ModuleAccountI{feeCollector, notBondedPool, bondPool}))
 
-	require.NoError(t, mApp.CompleteSetup(keyStaking, tkeyStaking))
+	require.NoError(t, mApp.CompleteSetup(keyStaking, keySupply))
 	return mApp, keeper
 }
 
 // getEndBlocker returns a staking endblocker.
 func getEndBlocker(keeper Keeper) sdk.EndBlocker {
 	return func(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
-		validatorUpdates, tags := EndBlocker(ctx, keeper)
+		validatorUpdates := EndBlocker(ctx, keeper)
 
 		return abci.ResponseEndBlock{
 			ValidatorUpdates: validatorUpdates,
-			Tags:             tags,
 		}
 	}
 }
 
 // getInitChainer initializes the chainer of the mock app and sets the genesis
 // state. It returns an empty ResponseInitChain.
-func getInitChainer(mapp *mock.App, keeper Keeper) sdk.InitChainer {
+func getInitChainer(mapp *mock.App, keeper Keeper, accountKeeper types.AccountKeeper, supplyKeeper types.SupplyKeeper,
+	blacklistedAddrs []supplyexported.ModuleAccountI) sdk.InitChainer {
 	return func(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 		mapp.InitChainer(ctx, req)
 
-		stakingGenesis := DefaultGenesisState()
-		tokens := sdk.TokensFromTendermintPower(100000)
-		stakingGenesis.Pool.NotBondedTokens = tokens
-
-		validators, err := InitGenesis(ctx, keeper, stakingGenesis)
-		if err != nil {
-			panic(err)
+		// set module accounts
+		for _, macc := range blacklistedAddrs {
+			supplyKeeper.SetModuleAccount(ctx, macc)
 		}
 
+		stakingGenesis := DefaultGenesisState()
+		validators := InitGenesis(ctx, keeper, accountKeeper, supplyKeeper, stakingGenesis)
 		return abci.ResponseInitChain{
 			Validators: validators,
 		}
@@ -97,8 +116,8 @@ func checkDelegation(
 func TestStakingMsgs(t *testing.T) {
 	mApp, keeper := getMockApp(t)
 
-	genTokens := sdk.TokensFromTendermintPower(42)
-	bondTokens := sdk.TokensFromTendermintPower(10)
+	genTokens := sdk.TokensFromConsensusPower(42)
+	bondTokens := sdk.TokensFromConsensusPower(10)
 	genCoin := sdk.NewCoin(sdk.DefaultBondDenom, genTokens)
 	bondCoin := sdk.NewCoin(sdk.DefaultBondDenom, bondTokens)
 
@@ -110,16 +129,16 @@ func TestStakingMsgs(t *testing.T) {
 		Address: addr2,
 		Coins:   sdk.Coins{genCoin},
 	}
-	accs := []auth.Account{acc1, acc2}
+	accs := []authexported.Account{acc1, acc2}
 
 	mock.SetGenesis(mApp, accs)
 	mock.CheckBalance(t, mApp, addr1, sdk.Coins{genCoin})
 	mock.CheckBalance(t, mApp, addr2, sdk.Coins{genCoin})
 
 	// create validator
-	description := NewDescription("foo_moniker", "", "", "")
+	description := NewDescription("foo_moniker", "", "", "", "")
 	createValidatorMsg := NewMsgCreateValidator(
-		sdk.ValAddress(addr1), priv1.PubKey(), bondCoin, description, commissionMsg, sdk.OneInt(),
+		sdk.ValAddress(addr1), priv1.PubKey(), bondCoin, description, commissionRates, sdk.OneInt(),
 	)
 
 	header := abci.Header{Height: mApp.LastBlockHeight() + 1}
@@ -138,7 +157,7 @@ func TestStakingMsgs(t *testing.T) {
 	mApp.BeginBlock(abci.RequestBeginBlock{Header: header})
 
 	// edit the validator
-	description = NewDescription("bar_moniker", "", "", "")
+	description = NewDescription("bar_moniker", "", "", "", "")
 	editValidatorMsg := NewMsgEditValidator(sdk.ValAddress(addr1), description, nil, nil)
 
 	header = abci.Header{Height: mApp.LastBlockHeight() + 1}
@@ -157,7 +176,7 @@ func TestStakingMsgs(t *testing.T) {
 	checkDelegation(t, mApp, keeper, addr2, sdk.ValAddress(addr1), true, bondTokens.ToDec())
 
 	// begin unbonding
-	beginUnbondingMsg := NewMsgUndelegate(addr2, sdk.ValAddress(addr1), bondTokens.ToDec())
+	beginUnbondingMsg := NewMsgUndelegate(addr2, sdk.ValAddress(addr1), bondCoin)
 	header = abci.Header{Height: mApp.LastBlockHeight() + 1}
 	mock.SignCheckDeliver(t, mApp.Cdc, mApp.BaseApp, header, []sdk.Msg{beginUnbondingMsg}, []uint64{1}, []uint64{1}, true, true, priv2)
 

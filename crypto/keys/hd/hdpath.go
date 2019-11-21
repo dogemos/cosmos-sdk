@@ -25,12 +25,6 @@ import (
 	"github.com/btcsuite/btcd/btcec"
 )
 
-// BIP44Prefix is the parts of the BIP32 HD path that are fixed by what we used during the fundraiser.
-const (
-	BIP44Prefix        = "44'/118'/"
-	FullFundraiserPath = BIP44Prefix + "0'/0/0"
-)
-
 // BIP44Params wraps BIP 44 params (5 level BIP 32 path).
 // To receive a canonical string representation ala
 // m / purpose' / coinType' / account' / change / addressIndex
@@ -56,7 +50,6 @@ func NewParams(purpose, coinType, account uint32, change bool, addressIdx uint32
 }
 
 // Parse the BIP44 path and unmarshal into the struct.
-// nolint: gocyclo
 func NewParamsFromPath(path string) (*BIP44Params, error) {
 	spl := strings.Split(path, "/")
 	if len(spl) != 5 {
@@ -130,10 +123,10 @@ func isHardened(field string) bool {
 }
 
 // NewFundraiserParams creates a BIP 44 parameter object from the params:
-// m / 44' / 118' / account' / 0 / address_index
+// m / 44' / coinType' / account' / 0 / address_index
 // The fixed parameters (purpose', coin_type', and change) are determined by what was used in the fundraiser.
-func NewFundraiserParams(account uint32, addressIdx uint32) *BIP44Params {
-	return NewParams(44, 118, account, false, addressIdx)
+func NewFundraiserParams(account, coinType, addressIdx uint32) *BIP44Params {
+	return NewParams(44, coinType, account, false, addressIdx)
 }
 
 // DerivationPath returns the BIP44 fields as an array.
@@ -213,7 +206,7 @@ func DerivePrivateKeyForPath(privKeyBytes [32]byte, chainCode [32]byte, path str
 func derivePrivateKey(privKeyBytes [32]byte, chainCode [32]byte, index uint32, harden bool) ([32]byte, [32]byte) {
 	var data []byte
 	if harden {
-		index = index | 0x80000000
+		index |= 0x80000000
 		data = append([]byte{byte(0)}, privKeyBytes[:]...)
 	} else {
 		// this can't return an error:
@@ -251,14 +244,14 @@ func uint32ToBytes(i uint32) []byte {
 }
 
 // i64 returns the two halfs of the SHA512 HMAC of key and data.
-func i64(key []byte, data []byte) (IL [32]byte, IR [32]byte) {
+func i64(key []byte, data []byte) (il [32]byte, ir [32]byte) {
 	mac := hmac.New(sha512.New, key)
 	// sha512 does not err
 	_, _ = mac.Write(data)
 
 	I := mac.Sum(nil)
-	copy(IL[:], I[:32])
-	copy(IR[:], I[32:])
+	copy(il[:], I[:32])
+	copy(ir[:], I[32:])
 
 	return
 }

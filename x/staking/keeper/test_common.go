@@ -1,4 +1,4 @@
-package keeper
+package keeper // noalias
 
 import (
 	"bytes"
@@ -12,25 +12,26 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
-	dbm "github.com/tendermint/tendermint/libs/db"
 	"github.com/tendermint/tendermint/libs/log"
 	tmtypes "github.com/tendermint/tendermint/types"
+	dbm "github.com/tendermint/tm-db"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
+	authexported "github.com/cosmos/cosmos-sdk/x/auth/exported"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/cosmos/cosmos-sdk/x/supply"
 )
 
 // dummy addresses used for testing
+// nolint:unused, deadcode
 var (
-	Addrs       = createTestAddrs(500)
-	PKs         = createTestPubKeys(500)
-	emptyAddr   sdk.AccAddress
-	emptyPubkey crypto.PubKey
+	Addrs = createTestAddrs(500)
+	PKs   = createTestPubKeys(500)
 
 	addrDels = []sdk.AccAddress{
 		Addrs[0],
@@ -67,8 +68,9 @@ func MakeTestCodec() *codec.Codec {
 	cdc.RegisterConcrete(types.MsgBeginRedelegate{}, "test/staking/BeginRedelegate", nil)
 
 	// Register AppAccount
-	cdc.RegisterInterface((*auth.Account)(nil), nil)
-	cdc.RegisterConcrete(&auth.BaseAccount{}, "test/staking/Account", nil)
+	cdc.RegisterInterface((*authexported.Account)(nil), nil)
+	cdc.RegisterConcrete(&auth.BaseAccount{}, "test/staking/BaseAccount", nil)
+	supply.RegisterCodec(cdc)
 	codec.RegisterCrypto(cdc)
 
 	return cdc
@@ -77,23 +79,20 @@ func MakeTestCodec() *codec.Codec {
 // Hogpodge of all sorts of input required for testing.
 // `initPower` is converted to an amount of tokens.
 // If `initPower` is 0, no addrs get created.
-func CreateTestInput(t *testing.T, isCheckTx bool, initPower int64) (sdk.Context, auth.AccountKeeper, Keeper) {
-
-	initCoins := sdk.TokensFromTendermintPower(initPower)
-
+func CreateTestInput(t *testing.T, isCheckTx bool, initPower int64) (sdk.Context, auth.AccountKeeper, Keeper, types.SupplyKeeper) {
 	keyStaking := sdk.NewKVStoreKey(types.StoreKey)
-	tkeyStaking := sdk.NewTransientStoreKey(types.TStoreKey)
 	keyAcc := sdk.NewKVStoreKey(auth.StoreKey)
 	keyParams := sdk.NewKVStoreKey(params.StoreKey)
 	tkeyParams := sdk.NewTransientStoreKey(params.TStoreKey)
+	keySupply := sdk.NewKVStoreKey(supply.StoreKey)
 
 	db := dbm.NewMemDB()
 	ms := store.NewCommitMultiStore(db)
-	ms.MountStoreWithDB(tkeyStaking, sdk.StoreTypeTransient, nil)
 	ms.MountStoreWithDB(keyStaking, sdk.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(keyAcc, sdk.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(keyParams, sdk.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(tkeyParams, sdk.StoreTypeTransient, db)
+	ms.MountStoreWithDB(keySupply, sdk.StoreTypeIAVL, db)
 	err := ms.LoadLatestVersion()
 	require.Nil(t, err)
 
@@ -107,7 +106,16 @@ func CreateTestInput(t *testing.T, isCheckTx bool, initPower int64) (sdk.Context
 	)
 	cdc := MakeTestCodec()
 
-	pk := params.NewKeeper(cdc, keyParams, tkeyParams)
+	feeCollectorAcc := supply.NewEmptyModuleAccount(auth.FeeCollectorName)
+	notBondedPool := supply.NewEmptyModuleAccount(types.NotBondedPoolName, supply.Burner, supply.Staking)
+	bondPool := supply.NewEmptyModuleAccount(types.BondedPoolName, supply.Burner, supply.Staking)
+
+	blacklistedAddrs := make(map[string]bool)
+	blacklistedAddrs[feeCollectorAcc.GetAddress().String()] = true
+	blacklistedAddrs[notBondedPool.GetAddress().String()] = true
+	blacklistedAddrs[bondPool.GetAddress().String()] = true
+
+	pk := params.NewKeeper(cdc, keyParams, tkeyParams, params.DefaultCodespace)
 
 	accountKeeper := auth.NewAccountKeeper(
 		cdc,    // amino codec
@@ -116,31 +124,46 @@ func CreateTestInput(t *testing.T, isCheckTx bool, initPower int64) (sdk.Context
 		auth.ProtoBaseAccount, // prototype
 	)
 
-	ck := bank.NewBaseKeeper(
+	bk := bank.NewBaseKeeper(
 		accountKeeper,
 		pk.Subspace(bank.DefaultParamspace),
 		bank.DefaultCodespace,
+		blacklistedAddrs,
 	)
 
-	keeper := NewKeeper(cdc, keyStaking, tkeyStaking, ck, pk.Subspace(DefaultParamspace), types.DefaultCodespace)
-	keeper.SetPool(ctx, types.InitialPool())
+	maccPerms := map[string][]string{
+		auth.FeeCollectorName:   nil,
+		types.NotBondedPoolName: {supply.Burner, supply.Staking},
+		types.BondedPoolName:    {supply.Burner, supply.Staking},
+	}
+	supplyKeeper := supply.NewKeeper(cdc, keySupply, accountKeeper, bk, maccPerms)
+
+	initTokens := sdk.TokensFromConsensusPower(initPower)
+	initCoins := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, initTokens))
+	totalSupply := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, initTokens.MulRaw(int64(len(Addrs)))))
+
+	supplyKeeper.SetSupply(ctx, supply.NewSupply(totalSupply))
+
+	keeper := NewKeeper(cdc, keyStaking, supplyKeeper, pk.Subspace(DefaultParamspace), types.DefaultCodespace)
 	keeper.SetParams(ctx, types.DefaultParams())
+
+	// set module accounts
+	err = notBondedPool.SetCoins(totalSupply)
+	require.NoError(t, err)
+
+	supplyKeeper.SetModuleAccount(ctx, feeCollectorAcc)
+	supplyKeeper.SetModuleAccount(ctx, bondPool)
+	supplyKeeper.SetModuleAccount(ctx, notBondedPool)
 
 	// fill all the addresses with some coins, set the loose pool tokens simultaneously
 	for _, addr := range Addrs {
-		pool := keeper.GetPool(ctx)
-		err := error(nil)
-		if !initCoins.IsZero() {
-			_, _, err = ck.AddCoins(ctx, addr, sdk.Coins{
-				{keeper.BondDenom(ctx), initCoins},
-			})
+		_, err := bk.AddCoins(ctx, addr, initCoins)
+		if err != nil {
+			panic(err)
 		}
-		require.Nil(t, err)
-		pool.NotBondedTokens = pool.NotBondedTokens.Add(initCoins)
-		keeper.SetPool(ctx, pool)
 	}
 
-	return ctx, accountKeeper, keeper
+	return ctx, accountKeeper, keeper, supplyKeeper
 }
 
 func NewPubKey(pk string) (res crypto.PubKey) {
@@ -150,7 +173,7 @@ func NewPubKey(pk string) (res crypto.PubKey) {
 	}
 	//res, err = crypto.PubKeyFromBytes(pkBytes)
 	var pkEd ed25519.PubKeyEd25519
-	copy(pkEd[:], pkBytes[:])
+	copy(pkEd[:], pkBytes)
 	return pkEd
 }
 
@@ -223,23 +246,24 @@ func ValidatorByPowerIndexExists(ctx sdk.Context, keeper Keeper, power []byte) b
 // update validator for testing
 func TestingUpdateValidator(keeper Keeper, ctx sdk.Context, validator types.Validator, apply bool) types.Validator {
 	keeper.SetValidator(ctx, validator)
-	{ // Remove any existing power key for validator.
-		store := ctx.KVStore(keeper.storeKey)
-		iterator := sdk.KVStorePrefixIterator(store, ValidatorsByPowerIndexKey)
-		defer iterator.Close()
-		deleted := false
-		for ; iterator.Valid(); iterator.Next() {
-			valAddr := parseValidatorPowerRankKey(iterator.Key())
-			if bytes.Equal(valAddr, validator.OperatorAddress) {
-				if deleted {
-					panic("found duplicate power index key")
-				} else {
-					deleted = true
-				}
-				store.Delete(iterator.Key())
+
+	// Remove any existing power key for validator.
+	store := ctx.KVStore(keeper.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.ValidatorsByPowerIndexKey)
+	defer iterator.Close()
+	deleted := false
+	for ; iterator.Valid(); iterator.Next() {
+		valAddr := types.ParseValidatorPowerRankKey(iterator.Key())
+		if bytes.Equal(valAddr, validator.OperatorAddress) {
+			if deleted {
+				panic("found duplicate power index key")
+			} else {
+				deleted = true
 			}
+			store.Delete(iterator.Key())
 		}
 	}
+
 	keeper.SetValidatorByPowerIndex(ctx, validator)
 	if apply {
 		keeper.ApplyAndReturnValidatorSetUpdates(ctx)
@@ -258,21 +282,19 @@ func TestingUpdateValidator(keeper Keeper, ctx sdk.Context, validator types.Vali
 	return validator
 }
 
+// nolint:deadcode, unused
 func validatorByPowerIndexExists(k Keeper, ctx sdk.Context, power []byte) bool {
 	store := ctx.KVStore(k.storeKey)
 	return store.Has(power)
 }
 
 // RandomValidator returns a random validator given access to the keeper and ctx
-func RandomValidator(r *rand.Rand, keeper Keeper, ctx sdk.Context) types.Validator {
+func RandomValidator(r *rand.Rand, keeper Keeper, ctx sdk.Context) (val types.Validator, ok bool) {
 	vals := keeper.GetAllValidators(ctx)
-	i := r.Intn(len(vals))
-	return vals[i]
-}
+	if len(vals) == 0 {
+		return types.Validator{}, false
+	}
 
-// RandomBondedValidator returns a random bonded validator given access to the keeper and ctx
-func RandomBondedValidator(r *rand.Rand, keeper Keeper, ctx sdk.Context) types.Validator {
-	vals := keeper.GetBondedValidatorsByPower(ctx)
 	i := r.Intn(len(vals))
-	return vals[i]
+	return vals[i], true
 }

@@ -5,16 +5,13 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// name to identify transaction types
-const MsgRoute = "distr"
-
 // Verify interface at compile time
 var _, _, _ sdk.Msg = &MsgSetWithdrawAddress{}, &MsgWithdrawDelegatorReward{}, &MsgWithdrawValidatorCommission{}
 
 // msg struct for changing the withdraw address for a delegator (or validator self-delegation)
 type MsgSetWithdrawAddress struct {
-	DelegatorAddress sdk.AccAddress `json:"delegator_address"`
-	WithdrawAddress  sdk.AccAddress `json:"withdraw_address"`
+	DelegatorAddress sdk.AccAddress `json:"delegator_address" yaml:"delegator_address"`
+	WithdrawAddress  sdk.AccAddress `json:"withdraw_address" yaml:"withdraw_address"`
 }
 
 func NewMsgSetWithdrawAddress(delAddr, withdrawAddr sdk.AccAddress) MsgSetWithdrawAddress {
@@ -24,7 +21,7 @@ func NewMsgSetWithdrawAddress(delAddr, withdrawAddr sdk.AccAddress) MsgSetWithdr
 	}
 }
 
-func (msg MsgSetWithdrawAddress) Route() string { return MsgRoute }
+func (msg MsgSetWithdrawAddress) Route() string { return ModuleName }
 func (msg MsgSetWithdrawAddress) Type() string  { return "set_withdraw_address" }
 
 // Return address that must sign over msg.GetSignBytes()
@@ -34,7 +31,7 @@ func (msg MsgSetWithdrawAddress) GetSigners() []sdk.AccAddress {
 
 // get the bytes for the message signer to sign on
 func (msg MsgSetWithdrawAddress) GetSignBytes() []byte {
-	bz := MsgCdc.MustMarshalJSON(msg)
+	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
@@ -51,8 +48,8 @@ func (msg MsgSetWithdrawAddress) ValidateBasic() sdk.Error {
 
 // msg struct for delegation withdraw from a single validator
 type MsgWithdrawDelegatorReward struct {
-	DelegatorAddress sdk.AccAddress `json:"delegator_address"`
-	ValidatorAddress sdk.ValAddress `json:"validator_address"`
+	DelegatorAddress sdk.AccAddress `json:"delegator_address" yaml:"delegator_address"`
+	ValidatorAddress sdk.ValAddress `json:"validator_address" yaml:"validator_address"`
 }
 
 func NewMsgWithdrawDelegatorReward(delAddr sdk.AccAddress, valAddr sdk.ValAddress) MsgWithdrawDelegatorReward {
@@ -62,7 +59,7 @@ func NewMsgWithdrawDelegatorReward(delAddr sdk.AccAddress, valAddr sdk.ValAddres
 	}
 }
 
-func (msg MsgWithdrawDelegatorReward) Route() string { return MsgRoute }
+func (msg MsgWithdrawDelegatorReward) Route() string { return ModuleName }
 func (msg MsgWithdrawDelegatorReward) Type() string  { return "withdraw_delegator_reward" }
 
 // Return address that must sign over msg.GetSignBytes()
@@ -72,7 +69,7 @@ func (msg MsgWithdrawDelegatorReward) GetSigners() []sdk.AccAddress {
 
 // get the bytes for the message signer to sign on
 func (msg MsgWithdrawDelegatorReward) GetSignBytes() []byte {
-	bz := MsgCdc.MustMarshalJSON(msg)
+	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
@@ -89,7 +86,7 @@ func (msg MsgWithdrawDelegatorReward) ValidateBasic() sdk.Error {
 
 // msg struct for validator withdraw
 type MsgWithdrawValidatorCommission struct {
-	ValidatorAddress sdk.ValAddress `json:"validator_address"`
+	ValidatorAddress sdk.ValAddress `json:"validator_address" yaml:"validator_address"`
 }
 
 func NewMsgWithdrawValidatorCommission(valAddr sdk.ValAddress) MsgWithdrawValidatorCommission {
@@ -98,8 +95,8 @@ func NewMsgWithdrawValidatorCommission(valAddr sdk.ValAddress) MsgWithdrawValida
 	}
 }
 
-func (msg MsgWithdrawValidatorCommission) Route() string { return MsgRoute }
-func (msg MsgWithdrawValidatorCommission) Type() string  { return "withdraw_validator_rewards_all" }
+func (msg MsgWithdrawValidatorCommission) Route() string { return ModuleName }
+func (msg MsgWithdrawValidatorCommission) Type() string  { return "withdraw_validator_commission" }
 
 // Return address that must sign over msg.GetSignBytes()
 func (msg MsgWithdrawValidatorCommission) GetSigners() []sdk.AccAddress {
@@ -108,7 +105,7 @@ func (msg MsgWithdrawValidatorCommission) GetSigners() []sdk.AccAddress {
 
 // get the bytes for the message signer to sign on
 func (msg MsgWithdrawValidatorCommission) GetSignBytes() []byte {
-	bz := MsgCdc.MustMarshalJSON(msg)
+	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 

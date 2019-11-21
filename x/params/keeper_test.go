@@ -6,39 +6,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-	dbm "github.com/tendermint/tendermint/libs/db"
-	"github.com/tendermint/tendermint/libs/log"
-
-	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/store"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
-
-func defaultContext(key sdk.StoreKey, tkey sdk.StoreKey) sdk.Context {
-	db := dbm.NewMemDB()
-	cms := store.NewCommitMultiStore(db)
-	cms.MountStoreWithDB(key, sdk.StoreTypeIAVL, db)
-	cms.MountStoreWithDB(tkey, sdk.StoreTypeTransient, db)
-	cms.LoadLatestVersion()
-	ctx := sdk.NewContext(cms, abci.Header{}, false, log.NewNopLogger())
-	return ctx
-}
-
-type invalid struct{}
-
-type s struct {
-	I int
-}
-
-func createTestCodec() *codec.Codec {
-	cdc := codec.New()
-	sdk.RegisterCodec(cdc)
-	cdc.RegisterConcrete(s{}, "test/s", nil)
-	cdc.RegisterConcrete(invalid{}, "test/invalid", nil)
-	return cdc
-}
 
 func TestKeeper(t *testing.T) {
 	kvs := []struct {
@@ -66,21 +36,20 @@ func TestKeeper(t *testing.T) {
 		[]byte("extra2"), string(""),
 	)
 
-	cdc := codec.New()
-	skey := sdk.NewKVStoreKey("test")
-	tkey := sdk.NewTransientStoreKey("transient_test")
-	ctx := defaultContext(skey, tkey)
-	keeper := NewKeeper(cdc, skey, tkey)
+	cdc, ctx, skey, _, keeper := testComponents()
+
 	store := prefix.NewStore(ctx.KVStore(skey), []byte("test/"))
 	space := keeper.Subspace("test").WithKeyTable(table)
 
 	// Set params
 	for i, kv := range kvs {
+		kv := kv
 		require.NotPanics(t, func() { space.Set(ctx, []byte(kv.key), kv.param) }, "space.Set panics, tc #%d", i)
 	}
 
 	// Test space.Get
 	for i, kv := range kvs {
+		i, kv := i, kv
 		var param int64
 		require.NotPanics(t, func() { space.Get(ctx, []byte(kv.key), &param) }, "space.Get panics, tc #%d", i)
 		require.Equal(t, kv.param, param, "stored param not equal, tc #%d", i)
@@ -107,17 +76,20 @@ func TestKeeper(t *testing.T) {
 
 	// Test invalid space.Get
 	for i, kv := range kvs {
+		kv := kv
 		var param bool
 		require.Panics(t, func() { space.Get(ctx, []byte(kv.key), &param) }, "invalid space.Get not panics, tc #%d", i)
 	}
 
 	// Test invalid space.Set
 	for i, kv := range kvs {
+		kv := kv
 		require.Panics(t, func() { space.Set(ctx, []byte(kv.key), true) }, "invalid space.Set not panics, tc #%d", i)
 	}
 
 	// Test GetSubspace
 	for i, kv := range kvs {
+		i, kv := i, kv
 		var gparam, param int64
 		gspace, ok := keeper.GetSubspace("test")
 		require.True(t, ok, "cannot retrieve subspace, tc #%d", i)
@@ -137,11 +109,7 @@ func indirect(ptr interface{}) interface{} {
 }
 
 func TestSubspace(t *testing.T) {
-	cdc := createTestCodec()
-	key := sdk.NewKVStoreKey("test")
-	tkey := sdk.NewTransientStoreKey("transient_test")
-	ctx := defaultContext(key, tkey)
-	keeper := NewKeeper(cdc, key, tkey)
+	cdc, ctx, key, _, keeper := testComponents()
 
 	kvs := []struct {
 		key   string
@@ -183,6 +151,7 @@ func TestSubspace(t *testing.T) {
 
 	// Test space.Set, space.Modified
 	for i, kv := range kvs {
+		i, kv := i, kv
 		require.False(t, space.Modified(ctx, []byte(kv.key)), "space.Modified returns true before setting, tc #%d", i)
 		require.NotPanics(t, func() { space.Set(ctx, []byte(kv.key), kv.param) }, "space.Set panics, tc #%d", i)
 		require.True(t, space.Modified(ctx, []byte(kv.key)), "space.Modified returns false after setting, tc #%d", i)
@@ -190,6 +159,7 @@ func TestSubspace(t *testing.T) {
 
 	// Test space.Get, space.GetIfExists
 	for i, kv := range kvs {
+		i, kv := i, kv
 		require.NotPanics(t, func() { space.GetIfExists(ctx, []byte("invalid"), kv.ptr) }, "space.GetIfExists panics when no value exists, tc #%d", i)
 		require.Equal(t, kv.zero, indirect(kv.ptr), "space.GetIfExists unmarshalls when no value exists, tc #%d", i)
 		require.Panics(t, func() { space.Get(ctx, []byte("invalid"), kv.ptr) }, "invalid space.Get not panics when no value exists, tc #%d", i)
@@ -215,4 +185,35 @@ func TestSubspace(t *testing.T) {
 		require.NoError(t, err, "cdc.UnmarshalJSON() returns error, tc #%d", i)
 		require.Equal(t, kv.param, indirect(kv.ptr), "stored param not equal, tc #%d", i)
 	}
+}
+
+type paramJSON struct {
+	Param1 int64  `json:"param1,omitempty" yaml:"param1,omitempty"`
+	Param2 string `json:"param2,omitempty" yaml:"param2,omitempty"`
+}
+
+func TestJSONUpdate(t *testing.T) {
+	_, ctx, _, _, keeper := testComponents()
+
+	key := []byte("key")
+
+	space := keeper.Subspace("test").WithKeyTable(NewKeyTable(key, paramJSON{}))
+
+	var param paramJSON
+
+	space.Update(ctx, key, []byte(`{"param1": "10241024"}`))
+	space.Get(ctx, key, &param)
+	require.Equal(t, paramJSON{10241024, ""}, param)
+
+	space.Update(ctx, key, []byte(`{"param2": "helloworld"}`))
+	space.Get(ctx, key, &param)
+	require.Equal(t, paramJSON{10241024, "helloworld"}, param)
+
+	space.Update(ctx, key, []byte(`{"param1": "20482048"}`))
+	space.Get(ctx, key, &param)
+	require.Equal(t, paramJSON{20482048, "helloworld"}, param)
+
+	space.Update(ctx, key, []byte(`{"param1": "40964096", "param2": "goodbyeworld"}`))
+	space.Get(ctx, key, &param)
+	require.Equal(t, paramJSON{40964096, "goodbyeworld"}, param)
 }

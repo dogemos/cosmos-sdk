@@ -7,71 +7,112 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/cosmos/cosmos-sdk/client/context"
-	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
-	"github.com/cosmos/cosmos-sdk/x/slashing"
+	"github.com/cosmos/cosmos-sdk/x/slashing/internal/types"
 )
 
-func registerQueryRoutes(cliCtx context.CLIContext, r *mux.Router, cdc *codec.Codec) {
+func registerQueryRoutes(cliCtx context.CLIContext, r *mux.Router) {
 	r.HandleFunc(
 		"/slashing/validators/{validatorPubKey}/signing_info",
-		signingInfoHandlerFn(cliCtx, slashing.StoreKey, cdc),
+		signingInfoHandlerFn(cliCtx),
+	).Methods("GET")
+
+	r.HandleFunc(
+		"/slashing/signing_infos",
+		signingInfoHandlerListFn(cliCtx),
 	).Methods("GET")
 
 	r.HandleFunc(
 		"/slashing/parameters",
-		queryParamsHandlerFn(cdc, cliCtx),
+		queryParamsHandlerFn(cliCtx),
 	).Methods("GET")
 }
 
 // http request handler to query signing info
-// nolint: unparam
-func signingInfoHandlerFn(cliCtx context.CLIContext, storeName string, cdc *codec.Codec) http.HandlerFunc {
+func signingInfoHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-
 		pk, err := sdk.GetConsPubKeyBech32(vars["validatorPubKey"])
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
 
-		key := slashing.GetValidatorSigningInfoKey(sdk.ConsAddress(pk.Address()))
+		cliCtx, ok := rest.ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
+		if !ok {
+			return
+		}
 
-		res, err := cliCtx.QueryStore(key, storeName)
+		params := types.NewQuerySigningInfoParams(sdk.ConsAddress(pk.Address()))
+
+		bz, err := cliCtx.Codec.MarshalJSON(params)
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		route := fmt.Sprintf("custom/%s/%s", types.QuerierRoute, types.QuerySigningInfo)
+		res, height, err := cliCtx.QueryWithData(route, bz)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		if len(res) == 0 {
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
-
-		var signingInfo slashing.ValidatorSigningInfo
-
-		err = cdc.UnmarshalBinaryLengthPrefixed(res, &signingInfo)
-		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
-			return
-		}
-
-		rest.PostProcessResponse(w, cdc, signingInfo, cliCtx.Indent)
+		cliCtx = cliCtx.WithHeight(height)
+		rest.PostProcessResponse(w, cliCtx, res)
 	}
 }
 
-func queryParamsHandlerFn(cdc *codec.Codec, cliCtx context.CLIContext) http.HandlerFunc {
+// http request handler to query signing info
+func signingInfoHandlerListFn(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		route := fmt.Sprintf("custom/%s/parameters", slashing.QuerierRoute)
+		_, page, limit, err := rest.ParseHTTPArgsWithLimit(r, 0)
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
 
-		res, err := cliCtx.QueryWithData(route, nil)
+		cliCtx, ok := rest.ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
+		if !ok {
+			return
+		}
+
+		params := types.NewQuerySigningInfosParams(page, limit)
+		bz, err := cliCtx.Codec.MarshalJSON(params)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		rest.PostProcessResponse(w, cdc, res, cliCtx.Indent)
+		route := fmt.Sprintf("custom/%s/%s", types.QuerierRoute, types.QuerySigningInfos)
+		res, height, err := cliCtx.QueryWithData(route, bz)
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		cliCtx = cliCtx.WithHeight(height)
+		rest.PostProcessResponse(w, cliCtx, res)
+	}
+}
+
+func queryParamsHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cliCtx, ok := rest.ParseQueryHeightOrReturnBadRequest(w, cliCtx, r)
+		if !ok {
+			return
+		}
+
+		route := fmt.Sprintf("custom/%s/parameters", types.QuerierRoute)
+
+		res, height, err := cliCtx.QueryWithData(route, nil)
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		cliCtx = cliCtx.WithHeight(height)
+		rest.PostProcessResponse(w, cliCtx, res)
 	}
 }

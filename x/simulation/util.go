@@ -1,29 +1,11 @@
 package simulation
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"testing"
-
-	"github.com/cosmos/cosmos-sdk/baseapp"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	abci "github.com/tendermint/tendermint/abci/types"
 )
-
-// assertAll asserts the all invariants against application state
-func assertAllInvariants(t *testing.T, app *baseapp.BaseApp, invs sdk.Invariants,
-	event string, logWriter LogWriter) {
-
-	ctx := app.NewContext(false, abci.Header{Height: app.LastBlockHeight() + 1})
-
-	for i := 0; i < len(invs); i++ {
-		if err := invs[i](ctx); err != nil {
-			fmt.Printf("Invariants broken after %s\n%s\n", event, err.Error())
-			logWriter.PrintLogs()
-			t.Fatal()
-		}
-	}
-}
 
 func getTestingMode(tb testing.TB) (testingMode bool, t *testing.T, b *testing.B) {
 	testingMode = false
@@ -42,35 +24,30 @@ func getTestingMode(tb testing.TB) (testingMode bool, t *testing.T, b *testing.B
 //  - "over stuffed" blocks with average size of 2 * avgblocksize,
 //  - normal sized blocks, hitting avgBlocksize on average,
 //  - and empty blocks, with no txs / only txs scheduled from the past.
-func getBlockSize(r *rand.Rand, params Params,
-	lastBlockSizeState, avgBlockSize int) (state, blocksize int) {
-
+func getBlockSize(r *rand.Rand, params Params, lastBlockSizeState, avgBlockSize int) (state, blockSize int) {
 	// TODO: Make default blocksize transition matrix actually make the average
 	// blocksize equal to avgBlockSize.
 	state = params.BlockSizeTransitionMatrix.NextState(r, lastBlockSizeState)
+
 	switch state {
 	case 0:
-		blocksize = r.Intn(avgBlockSize * 4)
+		blockSize = r.Intn(avgBlockSize * 4)
+
 	case 1:
-		blocksize = r.Intn(avgBlockSize * 2)
+		blockSize = r.Intn(avgBlockSize * 2)
+
 	default:
-		blocksize = 0
+		blockSize = 0
 	}
-	return state, blocksize
+
+	return state, blockSize
 }
 
-// PeriodicInvariant returns an Invariant function closure that asserts a given
-// invariant if the mock application's last block modulo the given period is
-// congruent to the given offset.
-//
-// NOTE this function is intended to be used manually used while running
-// computationally heavy simulations.
-// TODO reference this function in the codebase probably through use of a switch
-func PeriodicInvariant(invariant sdk.Invariant, period int, offset int) sdk.Invariant {
-	return func(ctx sdk.Context) error {
-		if int(ctx.BlockHeight())%period == offset {
-			return invariant(ctx)
-		}
-		return nil
+func mustMarshalJSONIndent(o interface{}) []byte {
+	bz, err := json.MarshalIndent(o, "", "  ")
+	if err != nil {
+		panic(fmt.Sprintf("failed to JSON encode: %s", err))
 	}
+
+	return bz
 }

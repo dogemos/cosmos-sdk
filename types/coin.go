@@ -1,7 +1,7 @@
 package types
 
 import (
-	"errors"
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"sort"
@@ -28,10 +28,8 @@ type Coin struct {
 // NewCoin returns a new coin with a denomination and amount. It will panic if
 // the amount is negative.
 func NewCoin(denom string, amount Int) Coin {
-	mustValidateDenom(denom)
-
-	if amount.LT(ZeroInt()) {
-		panic(fmt.Errorf("negative coin amount: %v", amount))
+	if err := validate(denom, amount); err != nil {
+		panic(err)
 	}
 
 	return Coin{
@@ -49,6 +47,28 @@ func NewInt64Coin(denom string, amount int64) Coin {
 // String provides a human-readable representation of a coin
 func (coin Coin) String() string {
 	return fmt.Sprintf("%v%v", coin.Amount, coin.Denom)
+}
+
+// validate returns an error if the Coin has a negative amount or if
+// the denom is invalid.
+func validate(denom string, amount Int) error {
+	if err := validateDenom(denom); err != nil {
+		return err
+	}
+
+	if amount.IsNegative() {
+		return fmt.Errorf("negative coin amount: %v", amount)
+	}
+
+	return nil
+}
+
+// IsValid returns true if the Coin has a non-negative amount and the denom is vaild.
+func (coin Coin) IsValid() bool {
+	if err := validate(coin.Denom, coin.Amount); err != nil {
+		return false
+	}
+	return true
 }
 
 // IsZero returns if this represents no money
@@ -104,7 +124,7 @@ func (coin Coin) Sub(coinB Coin) Coin {
 
 	res := Coin{coin.Denom, coin.Amount.Sub(coinB.Amount)}
 	if res.IsNegative() {
-		panic("negative count amount")
+		panic("negative coin amount")
 	}
 
 	return res
@@ -150,6 +170,18 @@ func NewCoins(coins ...Coin) Coins {
 	}
 
 	return newCoins
+}
+
+type coinsJSON Coins
+
+// MarshalJSON implements a custom JSON marshaller for the Coins type to allow
+// nil Coins to be encoded as an empty array.
+func (coins Coins) MarshalJSON() ([]byte, error) {
+	if coins == nil {
+		return json.Marshal(coinsJSON(Coins{}))
+	}
+
+	return json.Marshal(coinsJSON(coins))
 }
 
 func (coins Coins) String() string {
@@ -369,6 +401,29 @@ func (coins Coins) IsAllLTE(coinsB Coins) bool {
 	return coinsB.IsAllGTE(coins)
 }
 
+// IsAnyGT returns true iff for any denom in coins, the denom is present at a
+// greater amount in coinsB.
+//
+// e.g.
+// {2A, 3B}.IsAnyGT{A} = true
+// {2A, 3B}.IsAnyGT{5C} = false
+// {}.IsAnyGT{5C} = false
+// {2A, 3B}.IsAnyGT{} = false
+func (coins Coins) IsAnyGT(coinsB Coins) bool {
+	if len(coinsB) == 0 {
+		return false
+	}
+
+	for _, coin := range coins {
+		amt := coinsB.AmountOf(coin.Denom)
+		if coin.Amount.GT(amt) && !amt.IsZero() {
+			return true
+		}
+	}
+
+	return false
+}
+
 // IsAnyGTE returns true iff coins contains at least one denom that is present
 // at a greater or equal amount in coinsB; it returns false otherwise.
 //
@@ -440,12 +495,12 @@ func (coins Coins) AmountOf(denom string) Int {
 	default:
 		midIdx := len(coins) / 2 // 2:1, 3:1, 4:2
 		coin := coins[midIdx]
-
-		if denom < coin.Denom {
+		switch {
+		case denom < coin.Denom:
 			return coins[:midIdx].AmountOf(denom)
-		} else if denom == coin.Denom {
+		case denom == coin.Denom:
 			return coin.Amount
-		} else {
+		default:
 			return coins[midIdx+1:].AmountOf(denom)
 		}
 	}
@@ -514,12 +569,6 @@ func removeZeroCoins(coins Coins) Coins {
 	return coins[:i]
 }
 
-func copyCoins(coins Coins) Coins {
-	copyCoins := make(Coins, len(coins))
-	copy(copyCoins, coins)
-	return copyCoins
-}
-
 //-----------------------------------------------------------------------------
 // Sort interface
 
@@ -552,7 +601,7 @@ var (
 
 func validateDenom(denom string) error {
 	if !reDnm.MatchString(denom) {
-		return errors.New("illegal characters")
+		return fmt.Errorf("invalid denom: %s", denom)
 	}
 	return nil
 }
@@ -590,25 +639,27 @@ func ParseCoin(coinStr string) (coin Coin, err error) {
 // ParseCoins will parse out a list of coins separated by commas.
 // If nothing is provided, it returns nil Coins.
 // Returned coins are sorted.
-func ParseCoins(coinsStr string) (coins Coins, err error) {
+func ParseCoins(coinsStr string) (Coins, error) {
 	coinsStr = strings.TrimSpace(coinsStr)
 	if len(coinsStr) == 0 {
 		return nil, nil
 	}
 
 	coinStrs := strings.Split(coinsStr, ",")
-	for _, coinStr := range coinStrs {
+	coins := make(Coins, len(coinStrs))
+	for i, coinStr := range coinStrs {
 		coin, err := ParseCoin(coinStr)
 		if err != nil {
 			return nil, err
 		}
-		coins = append(coins, coin)
+
+		coins[i] = coin
 	}
 
-	// Sort coins for determinism.
+	// sort coins for determinism
 	coins.Sort()
 
-	// Validate coins before returning.
+	// validate coins before returning
 	if !coins.IsValid() {
 		return nil, fmt.Errorf("parseCoins invalid: %#v", coins)
 	}
@@ -622,11 +673,12 @@ func findDup(coins Coins) int {
 		return -1
 	}
 
-	prevDenom := coins[0]
+	prevDenom := coins[0].Denom
 	for i := 1; i < len(coins); i++ {
-		if coins[i] == prevDenom {
+		if coins[i].Denom == prevDenom {
 			return i
 		}
+		prevDenom = coins[i].Denom
 	}
 
 	return -1
