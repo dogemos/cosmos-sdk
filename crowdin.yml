@@ -1,7 +1,7 @@
 files:
   - source: /docs
     ignore:
-      - /kr
-      - /ru
-      - /cn
-    translation: '%two_letters_code%/%original_file_name%'
+      - /kr/*.*
+      - /ru/*.*
+      - /cn/*.*
+    translation: /docs/%three_letters_code%/%original_file_name%
