@@ -4,4 +4,4 @@ files:
       - /kr/*.*
       - /ru/*.*
       - /cn/*.*
-    translation: /docs/%three_letters_code%/%original_file_name%
+    translation: /docs/%three_letters_code%/%original_path%/%original_file_name%
