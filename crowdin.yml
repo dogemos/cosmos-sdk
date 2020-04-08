@@ -1,7 +1,9 @@
 files:
-  - source: /docs
+  - source: /docs/
     ignore:
-      - /kr/*.*
-      - /ru/*.*
-      - /cn/*.*
-    translation: /docs/%three_letters_code%/%original_path%/%original_file_name%
+      - /**/kr/
+      - /**/ru/
+      - /**/cn/
+      - /**/.vuepress/
+      - '*.json'
+    translation: /kr/%two_letters_code%/%original_path%/%original_file_name%
