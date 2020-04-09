@@ -3,17 +3,14 @@ package keys
 import (
 	"fmt"
 	"io"
-	"os"
 	"path/filepath"
 
-	"github.com/99designs/keyring"
 	"github.com/spf13/viper"
 	"github.com/tendermint/tendermint/libs/cli"
 	"gopkg.in/yaml.v2"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/cosmos/cosmos-sdk/crypto/keys"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	cryptokeyring "github.com/cosmos/cosmos-sdk/crypto/keyring"
 )
 
 // available output formats.
@@ -25,40 +22,19 @@ const (
 	defaultKeyDBName = "keys"
 )
 
-type bechKeyOutFn func(keyInfo keys.Info) (keys.KeyOutput, error)
+type bechKeyOutFn func(keyInfo cryptokeyring.Info) (cryptokeyring.KeyOutput, error)
 
-// NewKeyBaseFromHomeFlag initializes a Keybase based on the configuration.
-func NewKeyBaseFromHomeFlag() (keys.Keybase, error) {
-	rootDir := viper.GetString(flags.FlagHome)
-	return NewKeyBaseFromDir(rootDir)
+// NewLegacyKeyBaseFromDir initializes a legacy keybase at the rootDir directory. Keybase
+// options can be applied when generating this new Keybase.
+func NewLegacyKeyBaseFromDir(rootDir string, opts ...cryptokeyring.KeybaseOption) (cryptokeyring.LegacyKeybase, error) {
+	return getLegacyKeyBaseFromDir(rootDir, opts...)
 }
 
-// NewKeyBaseFromDir initializes a keybase at a particular dir.
-func NewKeyBaseFromDir(rootDir string) (keys.Keybase, error) {
-	return getLazyKeyBaseFromDir(rootDir)
+func getLegacyKeyBaseFromDir(rootDir string, opts ...cryptokeyring.KeybaseOption) (cryptokeyring.LegacyKeybase, error) {
+	return cryptokeyring.NewLegacy(defaultKeyDBName, filepath.Join(rootDir, "keys"), opts...)
 }
 
-// NewInMemoryKeyBase returns a storage-less keybase.
-func NewInMemoryKeyBase() keys.Keybase { return keys.NewInMemory() }
-
-// NewKeyBaseFromHomeFlag initializes a keyring based on configuration.
-func NewKeyringFromHomeFlag(input io.Reader) (keys.Keybase, error) {
-	return NewKeyringFromDir(viper.GetString(flags.FlagHome), input)
-}
-
-// NewKeyBaseFromDir initializes a keybase at a particular dir.
-func NewKeyringFromDir(rootDir string, input io.Reader) (keys.Keybase, error) {
-	if os.Getenv("COSMOS_SDK_TEST_KEYRING") != "" {
-		return keys.NewTestKeyring(sdk.GetConfig().GetKeyringServiceName(), rootDir)
-	}
-	return keys.NewKeyring(sdk.GetConfig().GetKeyringServiceName(), rootDir, input)
-}
-
-func getLazyKeyBaseFromDir(rootDir string) (keys.Keybase, error) {
-	return keys.New(defaultKeyDBName, filepath.Join(rootDir, "keys")), nil
-}
-
-func printKeyInfo(keyInfo keys.Info, bechKeyOut bechKeyOutFn) {
+func printKeyInfo(w io.Writer, keyInfo cryptokeyring.Info, bechKeyOut bechKeyOutFn) {
 	ko, err := bechKeyOut(keyInfo)
 	if err != nil {
 		panic(err)
@@ -66,78 +42,73 @@ func printKeyInfo(keyInfo keys.Info, bechKeyOut bechKeyOutFn) {
 
 	switch viper.Get(cli.OutputFlag) {
 	case OutputFormatText:
-		printTextInfos([]keys.KeyOutput{ko})
+		printTextInfos(w, []cryptokeyring.KeyOutput{ko})
 
 	case OutputFormatJSON:
 		var out []byte
 		var err error
 		if viper.GetBool(flags.FlagIndentResponse) {
-			out, err = cdc.MarshalJSONIndent(ko, "", "  ")
+			out, err = KeysCdc.MarshalJSONIndent(ko, "", "  ")
 		} else {
-			out, err = cdc.MarshalJSON(ko)
+			out, err = KeysCdc.MarshalJSON(ko)
 		}
 		if err != nil {
 			panic(err)
 		}
 
-		fmt.Println(string(out))
+		fmt.Fprintln(w, string(out))
 	}
 }
 
-func printInfos(infos []keys.Info) {
-	kos, err := keys.Bech32KeysOutput(infos)
+func printInfos(w io.Writer, infos []cryptokeyring.Info) {
+	kos, err := cryptokeyring.Bech32KeysOutput(infos)
 	if err != nil {
 		panic(err)
 	}
 
 	switch viper.Get(cli.OutputFlag) {
 	case OutputFormatText:
-		printTextInfos(kos)
+		printTextInfos(w, kos)
 
 	case OutputFormatJSON:
 		var out []byte
 		var err error
 
 		if viper.GetBool(flags.FlagIndentResponse) {
-			out, err = cdc.MarshalJSONIndent(kos, "", "  ")
+			out, err = KeysCdc.MarshalJSONIndent(kos, "", "  ")
 		} else {
-			out, err = cdc.MarshalJSON(kos)
+			out, err = KeysCdc.MarshalJSON(kos)
 		}
 
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("%s", out)
+		fmt.Fprintf(w, "%s", out)
 	}
 }
 
-func printTextInfos(kos []keys.KeyOutput) {
+func printTextInfos(w io.Writer, kos []cryptokeyring.KeyOutput) {
 	out, err := yaml.Marshal(&kos)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(out))
+	fmt.Fprintln(w, string(out))
 }
 
-func printKeyAddress(info keys.Info, bechKeyOut bechKeyOutFn) {
+func printKeyAddress(w io.Writer, info cryptokeyring.Info, bechKeyOut bechKeyOutFn) {
 	ko, err := bechKeyOut(info)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(ko.Address)
+	fmt.Fprintln(w, ko.Address)
 }
 
-func printPubKey(info keys.Info, bechKeyOut bechKeyOutFn) {
+func printPubKey(w io.Writer, info cryptokeyring.Info, bechKeyOut bechKeyOutFn) {
 	ko, err := bechKeyOut(info)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(ko.PubKey)
-}
-
-func isRunningUnattended() bool {
-	backends := keyring.AvailableBackends()
-	return len(backends) == 2 && backends[1] == keyring.BackendType("file")
+	fmt.Fprintln(w, ko.PubKey)
 }

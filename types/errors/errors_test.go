@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/pkg/errors"
 )
 
@@ -157,4 +159,77 @@ func TestWrapEmpty(t *testing.T) {
 	if err := Wrap(nil, "wrapping <nil>"); err != nil {
 		t.Fatal(err)
 	}
+}
+
+func TestWrappedIs(t *testing.T) {
+	err := Wrap(ErrTxTooLarge, "context")
+	require.True(t, stdlib.Is(err, ErrTxTooLarge))
+
+	err = Wrap(err, "more context")
+	require.True(t, stdlib.Is(err, ErrTxTooLarge))
+
+	err = Wrap(err, "even more context")
+	require.True(t, stdlib.Is(err, ErrTxTooLarge))
+
+	err = Wrap(ErrInsufficientFee, "...")
+	require.False(t, stdlib.Is(err, ErrTxTooLarge))
+}
+
+func TestWrappedIsMultiple(t *testing.T) {
+	var errTest = errors.New("test error")
+	var errTest2 = errors.New("test error 2")
+	err := Wrap(errTest2, Wrap(errTest, "some random description").Error())
+	require.True(t, stdlib.Is(err, errTest2))
+}
+
+func TestWrappedIsFail(t *testing.T) {
+	var errTest = errors.New("test error")
+	var errTest2 = errors.New("test error 2")
+	err := Wrap(errTest2, Wrap(errTest, "some random description").Error())
+	require.False(t, stdlib.Is(err, errTest))
+}
+
+func TestWrappedUnwrap(t *testing.T) {
+	var errTest = errors.New("test error")
+	err := Wrap(errTest, "some random description")
+	require.Equal(t, errTest, stdlib.Unwrap(err))
+}
+
+func TestWrappedUnwrapMultiple(t *testing.T) {
+	var errTest = errors.New("test error")
+	var errTest2 = errors.New("test error 2")
+	err := Wrap(errTest2, Wrap(errTest, "some random description").Error())
+	require.Equal(t, errTest2, stdlib.Unwrap(err))
+}
+
+func TestWrappedUnwrapFail(t *testing.T) {
+	var errTest = errors.New("test error")
+	var errTest2 = errors.New("test error 2")
+	err := Wrap(errTest2, Wrap(errTest, "some random description").Error())
+	require.NotEqual(t, errTest, stdlib.Unwrap(err))
+}
+
+func TestABCIError(t *testing.T) {
+	require.Equal(t, "custom: tx parse error", ABCIError(RootCodespace, 2, "custom").Error())
+	require.Equal(t, "custom: unknown", ABCIError("unknown", 1, "custom").Error())
+}
+
+func ExampleWrap() {
+	err1 := Wrap(ErrInsufficientFunds, "90 is smaller than 100")
+	err2 := errors.Wrap(ErrInsufficientFunds, "90 is smaller than 100")
+	fmt.Println(err1.Error())
+	fmt.Println(err2.Error())
+	// Output:
+	// 90 is smaller than 100: insufficient funds
+	// 90 is smaller than 100: insufficient funds
+}
+
+func ExampleWrapf() {
+	err1 := Wrap(ErrInsufficientFunds, "90 is smaller than 100")
+	err2 := errors.Wrap(ErrInsufficientFunds, "90 is smaller than 100")
+	fmt.Println(err1.Error())
+	fmt.Println(err2.Error())
+	// Output:
+	// 90 is smaller than 100: insufficient funds
+	// 90 is smaller than 100: insufficient funds
 }

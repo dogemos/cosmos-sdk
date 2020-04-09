@@ -5,13 +5,15 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"sort"
 
-	bip39 "github.com/bartekn/go-bip39"
+	bip39 "github.com/cosmos/go-bip39"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/input"
-	"github.com/cosmos/cosmos-sdk/crypto/keys"
+	"github.com/cosmos/cosmos-sdk/crypto/hd"
+	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/spf13/cobra"
@@ -26,17 +28,20 @@ const (
 	flagInteractive = "interactive"
 	flagRecover     = "recover"
 	flagNoBackup    = "no-backup"
-	flagDryRun      = "dry-run"
+	flagCoinType    = "coin-type"
 	flagAccount     = "account"
 	flagIndex       = "index"
 	flagMultisig    = "multisig"
 	flagNoSort      = "nosort"
+	flagHDPath      = "hd-path"
+	flagKeyAlgo     = "algo"
 
 	// DefaultKeyPass contains the default key password for genesis transactions
 	DefaultKeyPass = "12345678"
 )
 
-func addKeyCommand() *cobra.Command {
+// AddKeyCommand defines a keys command to add a generated or recovered private key to keybase.
+func AddKeyCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add <name>",
 		Short: "Add an encrypted private key (either newly generated or recovered), encrypt it, and save to disk",
@@ -68,11 +73,32 @@ the flag --nosort is set.
 	cmd.Flags().Bool(flags.FlagUseLedger, false, "Store a local reference to a private key on a Ledger device")
 	cmd.Flags().Bool(flagRecover, false, "Provide seed phrase to recover existing key instead of creating")
 	cmd.Flags().Bool(flagNoBackup, false, "Don't print out seed phrase (if others are watching the terminal)")
-	cmd.Flags().Bool(flagDryRun, false, "Perform action, but don't add key to local keystore")
+	cmd.Flags().Bool(flags.FlagDryRun, false, "Perform action, but don't add key to local keystore")
+	cmd.Flags().String(flagHDPath, "", "Manual HD Path derivation (overrides BIP44 config)")
+	cmd.Flags().Uint32(flagCoinType, sdk.CoinType, "coin type number for HD derivation")
 	cmd.Flags().Uint32(flagAccount, 0, "Account number for HD derivation")
 	cmd.Flags().Uint32(flagIndex, 0, "Address index number for HD derivation")
 	cmd.Flags().Bool(flags.FlagIndentResponse, false, "Add indent to JSON response")
+	cmd.Flags().String(flagKeyAlgo, string(hd.Secp256k1Type), "Key signing algorithm to generate keys for")
 	return cmd
+}
+
+func getKeybase(transient bool, buf io.Reader) (keyring.Keyring, error) {
+	if transient {
+		return keyring.New(sdk.KeyringServiceName(), keyring.BackendMemory, viper.GetString(flags.FlagHome), buf)
+	}
+
+	return keyring.New(sdk.KeyringServiceName(), viper.GetString(flags.FlagKeyringBackend), viper.GetString(flags.FlagHome), buf)
+}
+
+func runAddCmd(cmd *cobra.Command, args []string) error {
+	inBuf := bufio.NewReader(cmd.InOrStdin())
+	kb, err := getKeybase(viper.GetBool(flags.FlagDryRun), inBuf)
+	if err != nil {
+		return err
+	}
+
+	return RunAddCmd(cmd, args, kb, inBuf)
 }
 
 /*
@@ -84,35 +110,34 @@ input
 output
 	- armor encrypted private key (saved to file)
 */
-func runAddCmd(cmd *cobra.Command, args []string) error {
-	var kb keys.Keybase
+func RunAddCmd(cmd *cobra.Command, args []string, kb keyring.Keyring, inBuf *bufio.Reader) error {
 	var err error
 
-	inBuf := bufio.NewReader(cmd.InOrStdin())
 	name := args[0]
 
 	interactive := viper.GetBool(flagInteractive)
 	showMnemonic := !viper.GetBool(flagNoBackup)
 
-	if viper.GetBool(flagDryRun) {
-		// we throw this away, so don't enforce args,
-		// we want to get a new random seed phrase quickly
-		kb = keys.NewInMemory()
-	} else {
-		kb, err = NewKeyringFromHomeFlag(cmd.InOrStdin())
-		if err != nil {
-			return err
-		}
+	algo, err := keyring.NewSigningAlgoFromString(viper.GetString(flagKeyAlgo))
+	if err != nil {
+		algo = hd.Secp256k1
+	}
 
-		_, err = kb.Get(name)
+	if !viper.GetBool(flags.FlagDryRun) {
+		_, err = kb.Key(name)
 		if err == nil {
 			// account exists, ask for user confirmation
-			response, err2 := input.GetConfirmation(fmt.Sprintf("override the existing name %s", name), inBuf)
+			response, err2 := input.GetConfirmation(fmt.Sprintf("override the existing name %s", name), inBuf, cmd.ErrOrStderr())
 			if err2 != nil {
 				return err2
 			}
 			if !response {
 				return errors.New("aborted")
+			}
+
+			err2 = kb.Delete(name)
+			if err2 != nil {
+				return err2
 			}
 		}
 
@@ -126,7 +151,7 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 			}
 
 			for _, keyname := range multisigKeys {
-				k, err := kb.Get(keyname)
+				k, err := kb.Key(keyname)
 				if err != nil {
 					return err
 				}
@@ -141,7 +166,7 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 			}
 
 			pk := multisig.NewPubKeyMultisigThreshold(multisigThreshold, pks)
-			if _, err := kb.CreateMulti(name, pk); err != nil {
+			if _, err := kb.SaveMultisig(name, pk); err != nil {
 				return err
 			}
 
@@ -151,24 +176,39 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 	}
 
 	if viper.GetString(FlagPublicKey) != "" {
-		pk, err := sdk.GetAccPubKeyBech32(viper.GetString(FlagPublicKey))
+		pk, err := sdk.GetPubKeyFromBech32(sdk.Bech32PubKeyTypeAccPub, viper.GetString(FlagPublicKey))
 		if err != nil {
 			return err
 		}
-		_, err = kb.CreateOffline(name, pk)
+		_, err = kb.SavePubKey(name, pk, algo.Name())
 		if err != nil {
 			return err
 		}
 		return nil
 	}
 
+	coinType := uint32(viper.GetInt(flagCoinType))
 	account := uint32(viper.GetInt(flagAccount))
 	index := uint32(viper.GetInt(flagIndex))
 
+	useBIP44 := !viper.IsSet(flagHDPath)
+	var hdPath string
+
+	if useBIP44 {
+		hdPath = hd.CreateHDPath(coinType, account, index).String()
+	} else {
+		hdPath = viper.GetString(flagHDPath)
+	}
+
 	// If we're using ledger, only thing we need is the path and the bech32 prefix.
 	if viper.GetBool(flags.FlagUseLedger) {
+
+		if !useBIP44 {
+			return errors.New("cannot set custom bip32 path with ledger")
+		}
+
 		bech32PrefixAccAddr := sdk.GetConfig().GetBech32AccountAddrPrefix()
-		info, err := kb.CreateLedger(name, keys.Secp256k1, bech32PrefixAccAddr, account, index)
+		info, err := kb.SaveLedgerKey(name, hd.Secp256k1, bech32PrefixAccAddr, coinType, account, index)
 		if err != nil {
 			return err
 		}
@@ -231,7 +271,7 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	info, err := kb.CreateAccount(name, mnemonic, bip39Passphrase, DefaultKeyPass, account, index)
+	info, err := kb.NewAccount(name, mnemonic, bip39Passphrase, hdPath, algo)
 	if err != nil {
 		return err
 	}
@@ -246,13 +286,13 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 	return printCreate(cmd, info, showMnemonic, mnemonic)
 }
 
-func printCreate(cmd *cobra.Command, info keys.Info, showMnemonic bool, mnemonic string) error {
+func printCreate(cmd *cobra.Command, info keyring.Info, showMnemonic bool, mnemonic string) error {
 	output := viper.Get(cli.OutputFlag)
 
 	switch output {
 	case OutputFormatText:
 		cmd.PrintErrln()
-		printKeyInfo(info, keys.Bech32KeyOutput)
+		printKeyInfo(cmd.OutOrStdout(), info, keyring.Bech32KeyOutput)
 
 		// print mnemonic unless requested not to.
 		if showMnemonic {
@@ -262,7 +302,7 @@ func printCreate(cmd *cobra.Command, info keys.Info, showMnemonic bool, mnemonic
 			cmd.PrintErrln(mnemonic)
 		}
 	case OutputFormatJSON:
-		out, err := keys.Bech32KeyOutput(info)
+		out, err := keyring.Bech32KeyOutput(info)
 		if err != nil {
 			return err
 		}
@@ -273,9 +313,9 @@ func printCreate(cmd *cobra.Command, info keys.Info, showMnemonic bool, mnemonic
 
 		var jsonString []byte
 		if viper.GetBool(flags.FlagIndentResponse) {
-			jsonString, err = cdc.MarshalJSONIndent(out, "", "  ")
+			jsonString, err = KeysCdc.MarshalJSONIndent(out, "", "  ")
 		} else {
-			jsonString, err = cdc.MarshalJSON(out)
+			jsonString, err = KeysCdc.MarshalJSON(out)
 		}
 
 		if err != nil {

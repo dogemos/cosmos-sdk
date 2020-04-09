@@ -1,11 +1,10 @@
 package simulation
 
 import (
-	"encoding/json"
 	"fmt"
 	"math/rand"
 
-	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/types/simulation"
 )
 
 const (
@@ -35,73 +34,111 @@ var (
 	})
 )
 
-// AppParams defines a flat JSON of key/values for all possible configurable
-// simulation parameters. It might contain: operation weights, simulation parameters
-// and flattened module state parameters (i.e not stored under it's respective module name).
-type AppParams map[string]json.RawMessage
-
-// ParamSimulator creates a parameter value from a source of random number
-type ParamSimulator func(r *rand.Rand)
-
-// GetOrGenerate attempts to get a given parameter by key from the AppParams
-// object. If it exists, it'll be decoded and returned. Otherwise, the provided
-// ParamSimulator is used to generate a random value.
-func (sp AppParams) GetOrGenerate(cdc *codec.Codec, key string, ptr interface{}, r *rand.Rand, ps ParamSimulator) {
-	if v, ok := sp[key]; ok && v != nil {
-		cdc.MustUnmarshalJSON(v, ptr)
-		return
-	}
-
-	ps(r)
-}
-
 // Params define the parameters necessary for running the simulations
 type Params struct {
-	PastEvidenceFraction      float64
-	NumKeys                   int
-	EvidenceFraction          float64
-	InitialLivenessWeightings []int
-	LivenessTransitionMatrix  TransitionMatrix
-	BlockSizeTransitionMatrix TransitionMatrix
+	pastEvidenceFraction      float64
+	numKeys                   int
+	evidenceFraction          float64
+	initialLivenessWeightings []int
+	livenessTransitionMatrix  simulation.TransitionMatrix
+	blockSizeTransitionMatrix simulation.TransitionMatrix
 }
 
-// RandomParams for simulation
+func (p Params) PastEvidenceFraction() float64 {
+	return p.pastEvidenceFraction
+}
+
+func (p Params) NumKeys() int {
+	return p.numKeys
+}
+
+func (p Params) EvidenceFraction() float64 {
+	return p.evidenceFraction
+}
+
+func (p Params) InitialLivenessWeightings() []int {
+	return p.initialLivenessWeightings
+}
+
+func (p Params) LivenessTransitionMatrix() simulation.TransitionMatrix {
+	return p.livenessTransitionMatrix
+}
+
+func (p Params) BlockSizeTransitionMatrix() simulation.TransitionMatrix {
+	return p.blockSizeTransitionMatrix
+}
+
+// RandomParams returns random simulation parameters
 func RandomParams(r *rand.Rand) Params {
 	return Params{
-		PastEvidenceFraction:      r.Float64(),
-		NumKeys:                   RandIntBetween(r, 2, 2500), // number of accounts created for the simulation
-		EvidenceFraction:          r.Float64(),
-		InitialLivenessWeightings: []int{RandIntBetween(r, 1, 80), r.Intn(10), r.Intn(10)},
-		LivenessTransitionMatrix:  defaultLivenessTransitionMatrix,
-		BlockSizeTransitionMatrix: defaultBlockSizeTransitionMatrix,
+		pastEvidenceFraction:      r.Float64(),
+		numKeys:                   simulation.RandIntBetween(r, 2, 2500), // number of accounts created for the simulation
+		evidenceFraction:          r.Float64(),
+		initialLivenessWeightings: []int{simulation.RandIntBetween(r, 1, 80), r.Intn(10), r.Intn(10)},
+		livenessTransitionMatrix:  defaultLivenessTransitionMatrix,
+		blockSizeTransitionMatrix: defaultBlockSizeTransitionMatrix,
 	}
 }
 
 //-----------------------------------------------------------------------------
 // Param change proposals
 
-// SimValFn function to generate the randomized parameter change value
-type SimValFn func(r *rand.Rand) string
-
 // ParamChange defines the object used for simulating parameter change proposals
 type ParamChange struct {
-	Subspace string
-	Key      string
-	Subkey   string
-	SimValue SimValFn
+	subspace string
+	key      string
+	simValue simulation.SimValFn
+}
+
+func (spc ParamChange) Subspace() string {
+	return spc.subspace
+}
+
+func (spc ParamChange) Key() string {
+	return spc.key
+}
+
+func (spc ParamChange) SimValue() simulation.SimValFn {
+	return spc.simValue
 }
 
 // NewSimParamChange creates a new ParamChange instance
-func NewSimParamChange(subspace, key, subkey string, simVal SimValFn) ParamChange {
+func NewSimParamChange(subspace, key string, simVal simulation.SimValFn) simulation.ParamChange {
 	return ParamChange{
-		Subspace: subspace,
-		Key:      key,
-		Subkey:   subkey,
-		SimValue: simVal,
+		subspace: subspace,
+		key:      key,
+		simValue: simVal,
 	}
 }
 
 // ComposedKey creates a new composed key for the param change proposal
 func (spc ParamChange) ComposedKey() string {
-	return fmt.Sprintf("%s/%s/%s", spc.Subspace, spc.Key, spc.Subkey)
+	return fmt.Sprintf("%s/%s", spc.Subspace(), spc.Key())
+}
+
+//-----------------------------------------------------------------------------
+// Proposal Contents
+
+// WeightedProposalContent defines a common struct for proposal contents defined by
+// external modules (i.e outside gov)
+type WeightedProposalContent struct {
+	appParamsKey       string                        // key used to retrieve the value of the weight from the simulation application params
+	defaultWeight      int                           // default weight
+	contentSimulatorFn simulation.ContentSimulatorFn // content simulator function
+}
+
+func NewWeightedProposalContent(appParamsKey string, defaultWeight int, contentSimulatorFn simulation.ContentSimulatorFn) simulation.WeightedProposalContent {
+	return &WeightedProposalContent{appParamsKey: appParamsKey, defaultWeight: defaultWeight, contentSimulatorFn: contentSimulatorFn}
+}
+
+func (w WeightedProposalContent) AppParamsKey() string {
+	return w.appParamsKey
+}
+
+func (w WeightedProposalContent) DefaultWeight() int {
+	return w.defaultWeight
+}
+
+func (w WeightedProposalContent) ContentSimulatorFn() simulation.ContentSimulatorFn {
+	return w.contentSimulatorFn
 }

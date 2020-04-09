@@ -53,13 +53,11 @@ func getBlock(cliCtx context.CLIContext, height *int64) ([]byte, error) {
 			return nil, err
 		}
 
-		err = tmliteProxy.ValidateBlockMeta(res.BlockMeta, check)
-		if err != nil {
+		if err := tmliteProxy.ValidateHeader(&res.Block.Header, check); err != nil {
 			return nil, err
 		}
 
-		err = tmliteProxy.ValidateBlock(res.Block, check)
-		if err != nil {
+		if err = tmliteProxy.ValidateBlock(res.Block, check); err != nil {
 			return nil, err
 		}
 	}
@@ -138,8 +136,7 @@ func BlockRequestHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
 		}
 
 		output, err := getBlock(cliCtx, &height)
-		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+		if rest.CheckInternalServerError(w, err) {
 			return
 		}
 
@@ -151,8 +148,7 @@ func BlockRequestHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
 func LatestBlockRequestHandlerFn(cliCtx context.CLIContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		output, err := getBlock(cliCtx, nil)
-		if err != nil {
-			rest.WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
+		if rest.CheckInternalServerError(w, err) {
 			return
 		}
 

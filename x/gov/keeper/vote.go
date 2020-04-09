@@ -4,21 +4,22 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/gov/types"
 )
 
 // AddVote adds a vote on a specific proposal
-func (keeper Keeper) AddVote(ctx sdk.Context, proposalID uint64, voterAddr sdk.AccAddress, option types.VoteOption) sdk.Error {
+func (keeper Keeper) AddVote(ctx sdk.Context, proposalID uint64, voterAddr sdk.AccAddress, option types.VoteOption) error {
 	proposal, ok := keeper.GetProposal(ctx, proposalID)
 	if !ok {
-		return types.ErrUnknownProposal(keeper.codespace, proposalID)
+		return sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", proposalID)
 	}
 	if proposal.Status != types.StatusVotingPeriod {
-		return types.ErrInactiveProposal(keeper.codespace, proposalID)
+		return sdkerrors.Wrapf(types.ErrInactiveProposal, "%d", proposalID)
 	}
 
 	if !types.ValidVoteOption(option) {
-		return types.ErrInvalidVote(keeper.codespace, option.String())
+		return sdkerrors.Wrap(types.ErrInvalidVote, option.String())
 	}
 
 	vote := types.NewVote(proposalID, voterAddr, option)
@@ -61,14 +62,14 @@ func (keeper Keeper) GetVote(ctx sdk.Context, proposalID uint64, voterAddr sdk.A
 		return vote, false
 	}
 
-	keeper.cdc.MustUnmarshalBinaryLengthPrefixed(bz, &vote)
+	keeper.cdc.MustUnmarshalBinaryBare(bz, &vote)
 	return vote, true
 }
 
 // SetVote sets a Vote to the gov store
 func (keeper Keeper) SetVote(ctx sdk.Context, vote types.Vote) {
 	store := ctx.KVStore(keeper.storeKey)
-	bz := keeper.cdc.MustMarshalBinaryLengthPrefixed(vote)
+	bz := keeper.cdc.MustMarshalBinaryBare(&vote)
 	store.Set(types.VoteKey(vote.ProposalID, vote.Voter), bz)
 }
 
@@ -80,7 +81,7 @@ func (keeper Keeper) IterateAllVotes(ctx sdk.Context, cb func(vote types.Vote) (
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var vote types.Vote
-		keeper.cdc.MustUnmarshalBinaryLengthPrefixed(iterator.Value(), &vote)
+		keeper.cdc.MustUnmarshalBinaryBare(iterator.Value(), &vote)
 
 		if cb(vote) {
 			break
@@ -96,7 +97,7 @@ func (keeper Keeper) IterateVotes(ctx sdk.Context, proposalID uint64, cb func(vo
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var vote types.Vote
-		keeper.cdc.MustUnmarshalBinaryLengthPrefixed(iterator.Value(), &vote)
+		keeper.cdc.MustUnmarshalBinaryBare(iterator.Value(), &vote)
 
 		if cb(vote) {
 			break

@@ -8,6 +8,7 @@ import (
 	"math/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 )
@@ -23,19 +24,19 @@ const (
 
 // ParamChanges defines the parameters that can be modified by param change proposals
 // on the simulation
-func ParamChanges(r *rand.Rand) []simulation.ParamChange {
-	return []simulation.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, keyVotingParams, "",
+func ParamChanges(r *rand.Rand) []simtypes.ParamChange {
+	return []simtypes.ParamChange{
+		simulation.NewSimParamChange(types.ModuleName, keyVotingParams,
 			func(r *rand.Rand) string {
 				return fmt.Sprintf(`{"voting_period": "%d"}`, GenVotingParamsVotingPeriod(r))
 			},
 		),
-		simulation.NewSimParamChange(types.ModuleName, keyDepositParams, "",
+		simulation.NewSimParamChange(types.ModuleName, keyDepositParams,
 			func(r *rand.Rand) string {
 				return fmt.Sprintf(`{"max_deposit_period": "%d"}`, GenDepositParamsDepositPeriod(r))
 			},
 		),
-		simulation.NewSimParamChange(types.ModuleName, keyTallyParams, "",
+		simulation.NewSimParamChange(types.ModuleName, keyTallyParams,
 			func(r *rand.Rand) string {
 				changes := []struct {
 					key   string
@@ -47,7 +48,7 @@ func ParamChanges(r *rand.Rand) []simulation.ParamChange {
 				}
 
 				pc := make(map[string]string)
-				numChanges := simulation.RandIntBetween(r, 1, len(changes))
+				numChanges := simtypes.RandIntBetween(r, 1, len(changes))
 				for i := 0; i < numChanges; i++ {
 					c := changes[r.Intn(len(changes))]
 

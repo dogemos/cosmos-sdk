@@ -5,7 +5,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 
-	bip39 "github.com/bartekn/go-bip39"
+	bip39 "github.com/cosmos/go-bip39"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client/input"
@@ -17,7 +17,8 @@ const (
 	mnemonicEntropySize = 256
 )
 
-func mnemonicKeyCommand() *cobra.Command {
+// MnemonicKeyCommand computes the bip39 memonic for input entropy.
+func MnemonicKeyCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "mnemonic",
 		Short: "Compute the bip39 mnemonic for some input entropy",
@@ -45,7 +46,7 @@ func runMnemonicCmd(cmd *cobra.Command, args []string) error {
 		if len(inputEntropy) < 43 {
 			return fmt.Errorf("256-bits is 43 characters in Base-64, and 100 in Base-6. You entered %v, and probably want more", len(inputEntropy))
 		}
-		conf, err := input.GetConfirmation(fmt.Sprintf("> Input length: %d", len(inputEntropy)), buf)
+		conf, err := input.GetConfirmation(fmt.Sprintf("> Input length: %d", len(inputEntropy)), buf, cmd.ErrOrStderr())
 		if err != nil {
 			return err
 		}

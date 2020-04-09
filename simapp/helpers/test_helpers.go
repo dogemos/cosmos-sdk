@@ -7,18 +7,21 @@ import (
 	"github.com/tendermint/tendermint/crypto"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
 )
 
 // SimAppChainID hardcoded chainID for simulation
-const SimAppChainID = "simulation-app"
+const (
+	DefaultGenTxGas = 1000000
+	SimAppChainID   = "simulation-app"
+)
 
 // GenTx generates a signed mock transaction.
-func GenTx(msgs []sdk.Msg, feeAmt sdk.Coins, chainID string, accnums []uint64, seq []uint64, priv ...crypto.PrivKey) auth.StdTx {
+func GenTx(msgs []sdk.Msg, feeAmt sdk.Coins, gas uint64, chainID string, accnums []uint64, seq []uint64, priv ...crypto.PrivKey) auth.StdTx {
 	fee := auth.StdFee{
 		Amount: feeAmt,
-		Gas:    1000000, // TODO: this should be a param
+		Gas:    gas,
 	}
 
 	sigs := make([]auth.StdSignature, len(priv))
@@ -36,7 +39,7 @@ func GenTx(msgs []sdk.Msg, feeAmt sdk.Coins, chainID string, accnums []uint64, s
 		}
 
 		sigs[i] = auth.StdSignature{
-			PubKey:    p.PubKey(),
+			PubKey:    p.PubKey().Bytes(),
 			Signature: sig,
 		}
 	}
