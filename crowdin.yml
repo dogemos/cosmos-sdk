@@ -4,4 +4,9 @@ files:
       - /docs/cn/
       - /docs/kr/
       - /docs/ru/
+      - /.vuepress/
+      - '*.json'
+      - '*.jpg'
+      - '*.png'
+      - '*.sh'
     translation: /docs/%two_letters_code%/**/%original_file_name%
