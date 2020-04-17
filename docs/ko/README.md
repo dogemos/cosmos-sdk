@@ -58,12 +58,12 @@ footer:
 aside: false
 -->
 
-# Cosmos SDK Documentation
+# 코스모스 SDK 도큐멘테이션
 
 ## Get Started
 
-- **[SDK Intro](./intro/overview.md)**: High-level overview of the Cosmos SDK.
-- **[Quick Start Guide](./using-the-sdk/quick-start.md)**: Scaffold a standard Cosmos SDK app and run a node.
+- **[SDK 입문](./intro/overview.md)**: 코스모스 오버뷰
+- **[빠르게 시작하기](./using-the-sdk/quick-start.md)**: 스캐폴드... 블라블라
 - **[SDK Application Tutorial](https://github.com/cosmos/sdk-application-tutorial)**: A tutorial that showcases how to build an SDK-based blockchain from scratch and explains the basic principles of the SDK in the process.
 
 ## Reference
