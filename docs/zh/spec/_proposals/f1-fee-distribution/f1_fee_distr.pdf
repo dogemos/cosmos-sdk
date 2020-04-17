@@ -1,0 +1,1073 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang><head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Crowdin">
+<meta name="author" content>
+<meta name="keywords" content>
+
+<meta name="subject" content>
+<style type="text/css">
+<!--
+.xflip {
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: fliph;
+}
+.yflip {
+    -moz-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: flipv;
+}
+.xyflip {
+    -moz-transform: scaleX(-1) scaleY(-1);
+    -webkit-transform: scaleX(-1) scaleY(-1);
+    -o-transform: scaleX(-1) scaleY(-1);
+    transform: scaleX(-1) scaleY(-1);
+    filter: fliph + flipv;
+}
+-->
+</style>
+<style type="text/css"> 
+        @media screen {
+            body {
+                background-color: #f0f0f0;
+            }
+
+            .page-screen {
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px;
+                margin: 15px auto;
+            }
+
+            .crowdin-print-widget {
+                position: fixed;
+                font-size: 40px;
+                width: 60px;
+                height: 60px;
+                right: 0px;
+                bottom: 0px;
+                text-align: center;
+                cursor: pointer;
+            }
+        }
+
+        @media print {
+            @page {
+                margin: 0;
+                padding: 0;
+            }
+
+            .page-screen {
+                break-after: always;
+                page-break-inside: avoid;
+
+                width: 100%;
+                height: 100%;
+                zoom: 60%;
+                margin: 0 auto;
+            }
+
+            .crowdin-print-widget {
+                display: none;
+            }
+         }
+    </style><script>
+        if (window.location.protocol == "file:") {
+            var el = document.createElement('script');
+            el.src = "https://code.jquery.com/jquery-1.12.4.js";
+            el.onload = function(script) {
+                document.designMode = "on";
+                $("<div>")
+                    .html('🖶')
+                    .addClass('crowdin-print-widget')
+                    .attr('contentEditable', 'false')
+                    .attr('title', 'Print or export as PDF')
+                    .on('click', function() {
+                        window.print();
+                    })
+                    .appendTo('body');
+            }
+
+            document.getElementsByTagName('head')[0].appendChild(el);
+        }
+    </script></head>
+<body vlink="blue" link="blue" style="background-color: #f0f0f0;">
+<!-- Page 1 -->
+<a name="1"></a>
+<style type="text/css">
+<!--
+	p {margin: 0; padding: 0;}	.ft10{font-size:23px;font-family:QUFRXK+CMR17;color:#000000;}
+	.ft11{font-size:15px;font-family:IZWIKP+CMR12;color:#000000;}
+	.ft12{font-size:11px;font-family:EUWOLL+CMBX9;color:#000000;}
+	.ft13{font-size:11px;font-family:HDTHKX+CMR9;color:#000000;}
+	.ft14{font-size:19px;font-family:QKDMAV+CMBX12;color:#000000;}
+	.ft15{font-size:15px;font-family:QKDMAV+CMBX12;color:#000000;}
+	.ft16{font-size:12px;font-family:CTEKRI+CMR10;color:#000000;}
+	.ft17{font-size:11px;line-height:16px;font-family:HDTHKX+CMR9;color:#000000;}
+	.ft18{font-size:12px;line-height:17px;font-family:CTEKRI+CMR10;color:#000000;}
+-->
+</style>
+<div id="page1-div" style="position:relative;width:918px;height:1188px;" class="page-screen">
+<img width="918" height="1188" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5YAAASkCAIAAACXfAIBAAAACXBIWXMAABCbAAAQmwF0iZxLAAAS5klEQVR42u3WMQ0AAAgEMcC/50cCM0kr4abrJAUAAH+MBAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCSgAAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsrAQAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwkoAAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALKwEAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAANwWOocMRRfj6l0AAAAASUVORK5CYII=">
+<div class="ft10" style="position:absolute;top:247px;left:309px;white-space:nowrap">F1 Fee Distribution Draft-02</div>
+<div class="ft11" style="position:absolute;top:296px;left:421px;white-space:nowrap">Dev Ojha</div>
+<div class="ft11" style="position:absolute;top:331px;left:397px;white-space:nowrap">January 3, 2019</div>
+<div class="ft12" style="position:absolute;top:384px;left:428px;white-space:nowrap">Abstract</div>
+<div class="ft13" style="position:absolute;top:404px;left:259px;white-space:nowrap">In a pro of of stake blo ckchain, validators need to split the rewards</div>
+<div class="ft17" style="position:absolute;top:420px;left:238px;white-space:nowrap">gained from transaction fees each blo ck. Furthermore, these fees must<br>b e fairly distributed to each of a validator’s constituent delegators. They<br>accrue this reward throughout the entire time they are delegated, and<br>they have a sp ecial op eration to withdraw accrued rewards.</div>
+<div class="ft13" style="position:absolute;top:486px;left:259px;white-space:nowrap">The F1 fee distribution scheme works for any algorithm to split funds</div>
+<div class="ft17" style="position:absolute;top:502px;left:238px;white-space:nowrap">b etween validators each blo ck, with minimal iteration, and the only ap-<br>proximations b eing due to finite decimal precision. Per blo ck there is a<br>single iteration over the validator set, to enable reward algorithms that<br>differ by validator. No iteration is required to delegate, or withdraw. The<br>state usage is one state up date p er validator p er blo ck, and one state<br>entry p er active delegation. It can optionally handle arbitrary inflation<br>schemes, and auto-b onding of rewards.</div>
+<div class="ft14" style="position:absolute;top:644px;left:201px;white-space:nowrap">1</div>
+<div class="ft14" style="position:absolute;top:644px;left:237px;white-space:nowrap">F1 Fee Distribution</div>
+<div class="ft15" style="position:absolute;top:682px;left:201px;white-space:nowrap">1.1</div>
+<div class="ft15" style="position:absolute;top:682px;left:247px;white-space:nowrap">Context</div>
+<div class="ft18" style="position:absolute;top:712px;left:201px;white-space:nowrap">In a pro of of stake blo ckchain, each validator has an asso ciated stake. Trans-<br>action fees get rewarded to validators based on the incentive scheme of the<br>underlying pro of of stake mo del. The fee distribution problem o ccurs in pro of<br>of stake blo ckchains supp orting delegation, as there is a need to distribute a<br>validator’s fee rewards to its delegators. The trivial solution of just giving the<br>rewards to each delegator every blo ck is to o exp ensive to p erform on-chain.<br>So instead fee distribution algorithms have delegators p erform a withdraw ac-<br>tion, which when p erformed yields the same total amount of fees as if they had<br>received them at every blo ck.</div>
+<div class="ft16" style="position:absolute;top:873px;left:223px;white-space:nowrap">This details F1, an approximation-free, slash-tolerant fee distribution algo-</div>
+<div class="ft18" style="position:absolute;top:891px;left:201px;white-space:nowrap">rithm which allows validator commission-rates, inflation rates, and fee prop or-<br>tions, which can all efficiently change p er validator, every blo ck. The algorithm<br>requires iterating over the b onded validators every blo ck, and withdraws require<br>no iteration. This is cheap, due to staking logic already requiring iteration over<br>all validators, which causes the exp ensive state-reads to b e cached.</div>
+<div class="ft16" style="position:absolute;top:981px;left:223px;white-space:nowrap">The key p oint of how F1 works is that it tracks how much rewards a delegator</div>
+<div class="ft16" style="position:absolute;top:999px;left:201px;white-space:nowrap">with 1 stake for a given validator would b e entitled to if it had b onded at blo ck</div>
+<div class="ft16" style="position:absolute;top:1044px;left:455px;white-space:nowrap">1</div>
+</div>
+<!-- Page 2 -->
+<a name="2"></a>
+<style type="text/css">
+<!--
+	p {margin: 0; padding: 0;}	.ft29{font-size:12px;font-family:DNJOIZ+CMMI10;color:#000000;}
+	.ft210{font-size:8px;font-family:OIWDLL+CMMI7;color:#000000;}
+	.ft211{font-size:12px;font-family:WQOVQC+CMEX10;color:#000000;}
+	.ft212{font-size:8px;font-family:IJLYIH+CMR7;color:#000000;}
+	.ft213{font-size:5px;font-family:BLHPAP+CMMI5;color:#000000;}
+	.ft214{font-size:8px;font-family:PXBGHL+CMSY7;color:#000000;}
+	.ft215{font-size:8px;line-height:11px;font-family:OIWDLL+CMMI7;color:#000000;}
+-->
+</style>
+<div id="page2-div" style="position:relative;width:918px;height:1188px;" class="page-screen">
+<img width="918" height="1188" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5YAAASkCAIAAACXfAIBAAAACXBIWXMAABCbAAAQmwF0iZxLAAATVUlEQVR42u3aUapCIRiF0f7Q+U9Y2M2gUxGox7Wehe7dlHwPVpIHAADs42kCAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGFNAACAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAA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AAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACSsCQAAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAcJAXoWpCRZjRNq8AAAAASUVORK5CYII=">
+<div class="ft26" style="position:absolute;top:192px;left:201px;white-space:nowrap">0 until the latest blo ck. When a delegator b onds at blo ck</div>
+<div class="ft29" style="position:absolute;top:192px;left:603px;white-space:nowrap">b</div>
+<div class="ft26" style="position:absolute;top:192px;left:610px;white-space:nowrap">, the amount of</div>
+<div class="ft26" style="position:absolute;top:210px;left:201px;white-space:nowrap">rewards a delegator with 1 stake would have if b onded at blo ck 0 until blo ck</div>
+<div class="ft29" style="position:absolute;top:228px;left:201px;white-space:nowrap">b</div>
+<div class="ft26" style="position:absolute;top:228px;left:214px;white-space:nowrap">is also p ersisted to state. When the delegator withdraws, they receive the</div>
+<div class="ft28" style="position:absolute;top:246px;left:201px;white-space:nowrap">difference of these two values. Since rewards are distributed according to stake-<br>weighting, this amount of rewards can b e scaled by the amount of stake a<br>delegator had. Section 1.2 describ es this in more detail, with an argument for<br>it b eing approximation free. Section 2 details how to adapt this algorithm to<br>handle commission rates, slashing, and inflation.</div>
+<div class="ft25" style="position:absolute;top:357px;left:201px;white-space:nowrap">1.2</div>
+<div class="ft25" style="position:absolute;top:357px;left:247px;white-space:nowrap">Base algorithm</div>
+<div class="ft28" style="position:absolute;top:386px;left:201px;white-space:nowrap">In this section, we show that the F1 base algorithm gives each delegator rewards<br>identical to that which they’d receive in the naive and correct fee distribution<br>algorithm that iterated over all delegators every blo ck.</div>
+<div class="ft26" style="position:absolute;top:440px;left:223px;white-space:nowrap">Even distribution of a validators rewards amongst its validators weighted by</div>
+<div class="ft26" style="position:absolute;top:458px;left:201px;white-space:nowrap">stake means the following: Supp ose a delegator delegates</div>
+<div class="ft29" style="position:absolute;top:458px;left:577px;white-space:nowrap">x</div>
+<div class="ft26" style="position:absolute;top:458px;left:590px;white-space:nowrap">stake to a validator</div>
+<div class="ft29" style="position:absolute;top:476px;left:201px;white-space:nowrap">v</div>
+<div class="ft26" style="position:absolute;top:476px;left:213px;white-space:nowrap">at blo ck</div>
+<div class="ft29" style="position:absolute;top:476px;left:270px;white-space:nowrap">h</div>
+<div class="ft26" style="position:absolute;top:476px;left:279px;white-space:nowrap">. Let the amount of stake the validator has at blo ck</div>
+<div class="ft29" style="position:absolute;top:476px;left:620px;white-space:nowrap">i</div>
+<div class="ft26" style="position:absolute;top:476px;left:630px;white-space:nowrap">b e</div>
+<div class="ft29" style="position:absolute;top:476px;left:650px;white-space:nowrap">s</div>
+<div class="ft210" style="position:absolute;top:481px;left:657px;white-space:nowrap">i</div>
+<div class="ft26" style="position:absolute;top:476px;left:667px;white-space:nowrap">and the</div>
+<div class="ft26" style="position:absolute;top:494px;left:201px;white-space:nowrap">amount of fees they receive at this height b e</div>
+<div class="ft29" style="position:absolute;top:494px;left:487px;white-space:nowrap">f</div>
+<div class="ft210" style="position:absolute;top:499px;left:495px;white-space:nowrap">i</div>
+<div class="ft26" style="position:absolute;top:494px;left:500px;white-space:nowrap">. Then if a delegator contributing</div>
+<div class="ft29" style="position:absolute;top:512px;left:201px;white-space:nowrap">x</div>
+<div class="ft26" style="position:absolute;top:512px;left:214px;white-space:nowrap">stake decides to withdraw at blo ck</div>
+<div class="ft29" style="position:absolute;top:512px;left:446px;white-space:nowrap">n</div>
+<div class="ft26" style="position:absolute;top:512px;left:455px;white-space:nowrap">, the rewards they receive are</div>
+<div class="ft210" style="position:absolute;top:539px;left:404px;white-space:nowrap">n</div>
+<div class="ft211" style="position:absolute;top:550px;left:397px;white-space:nowrap">X</div>
+<div class="ft210" style="position:absolute;top:575px;left:398px;white-space:nowrap">i</div>
+<div class="ft212" style="position:absolute;top:575px;left:402px;white-space:nowrap">=</div>
+<div class="ft210" style="position:absolute;top:575px;left:411px;white-space:nowrap">h</div>
+<div class="ft29" style="position:absolute;top:544px;left:425px;white-space:nowrap">x</div>
+<div class="ft29" style="position:absolute;top:565px;left:423px;white-space:nowrap">s</div>
+<div class="ft210" style="position:absolute;top:570px;left:430px;white-space:nowrap">i</div>
+<div class="ft29" style="position:absolute;top:554px;left:437px;white-space:nowrap">f</div>
+<div class="ft210" style="position:absolute;top:560px;left:444px;white-space:nowrap">i</div>
+<div class="ft26" style="position:absolute;top:554px;left:453px;white-space:nowrap">=</div>
+<div class="ft29" style="position:absolute;top:554px;left:469px;white-space:nowrap">x</div>
+<div class="ft210" style="position:absolute;top:539px;left:487px;white-space:nowrap">n</div>
+<div class="ft211" style="position:absolute;top:550px;left:480px;white-space:nowrap">X</div>
+<div class="ft210" style="position:absolute;top:575px;left:480px;white-space:nowrap">i</div>
+<div class="ft212" style="position:absolute;top:575px;left:485px;white-space:nowrap">=</div>
+<div class="ft210" style="position:absolute;top:575px;left:494px;white-space:nowrap">h</div>
+<div class="ft29" style="position:absolute;top:544px;left:506px;white-space:nowrap">f</div>
+<div class="ft210" style="position:absolute;top:550px;left:513px;white-space:nowrap">i</div>
+<div class="ft29" style="position:absolute;top:565px;left:506px;white-space:nowrap">s</div>
+<div class="ft210" style="position:absolute;top:570px;left:513px;white-space:nowrap">i</div>
+<div class="ft26" style="position:absolute;top:599px;left:223px;white-space:nowrap">Note that</div>
+<div class="ft29" style="position:absolute;top:599px;left:294px;white-space:nowrap">s</div>
+<div class="ft210" style="position:absolute;top:604px;left:301px;white-space:nowrap">i</div>
+<div class="ft26" style="position:absolute;top:599px;left:312px;white-space:nowrap">do es not change every blo ck, it only changes if the validator</div>
+<div class="ft28" style="position:absolute;top:617px;left:201px;white-space:nowrap">gets slashed, or if any delegator alters the amount they have delegated. We’ll<br>relegate handling of slashes to <a href="9045f324e4_3961325e99d354484e11.37216412f1_fee_distr.html#3">subsection 2.2, </a>and only consider the case with<br>no slashing here. We can change the iteration from b eing over every blo ck, to<br>instead b eing over the set of blo cks b etween two changes in validator</div>
+<div class="ft29" style="position:absolute;top:671px;left:662px;white-space:nowrap">v</div>
+<div class="ft26" style="position:absolute;top:671px;left:670px;white-space:nowrap">’s total</div>
+<div class="ft28" style="position:absolute;top:689px;left:201px;white-space:nowrap">stake. Let each of these set of blo cks b e called a p erio d. A new p erio d b egins<br>every time that validator’s total stake changes. Let the total amount of stake<br>for the validator in p erio d</div>
+<div class="ft29" style="position:absolute;top:724px;left:382px;white-space:nowrap">p</div>
+<div class="ft26" style="position:absolute;top:724px;left:395px;white-space:nowrap">b e</div>
+<div class="ft29" style="position:absolute;top:724px;left:417px;white-space:nowrap">n</div>
+<div class="ft210" style="position:absolute;top:730px;left:426px;white-space:nowrap">p</div>
+<div class="ft26" style="position:absolute;top:724px;left:432px;white-space:nowrap">. Let</div>
+<div class="ft29" style="position:absolute;top:724px;left:474px;white-space:nowrap">T</div>
+<div class="ft210" style="position:absolute;top:730px;left:483px;white-space:nowrap">p</div>
+<div class="ft26" style="position:absolute;top:724px;left:496px;white-space:nowrap">b e the total fees that validator</div>
+<div class="ft29" style="position:absolute;top:724px;left:708px;white-space:nowrap">v</div>
+<div class="ft26" style="position:absolute;top:742px;left:201px;white-space:nowrap">accrued in p erio d</div>
+<div class="ft29" style="position:absolute;top:742px;left:319px;white-space:nowrap">p</div>
+<div class="ft26" style="position:absolute;top:742px;left:326px;white-space:nowrap">. Let</div>
+<div class="ft29" style="position:absolute;top:742px;left:364px;white-space:nowrap">h</div>
+<div class="ft26" style="position:absolute;top:742px;left:377px;white-space:nowrap">b e the start of p erio d</div>
+<div class="ft29" style="position:absolute;top:742px;left:522px;white-space:nowrap">p</div>
+<div class="ft210" style="position:absolute;top:748px;left:529px;white-space:nowrap">init</div>
+<div class="ft26" style="position:absolute;top:742px;left:550px;white-space:nowrap">, and height</div>
+<div class="ft29" style="position:absolute;top:742px;left:633px;white-space:nowrap">n</div>
+<div class="ft26" style="position:absolute;top:742px;left:647px;white-space:nowrap">b e the end</div>
+<div class="ft26" style="position:absolute;top:760px;left:201px;white-space:nowrap">of</div>
+<div class="ft29" style="position:absolute;top:760px;left:218px;white-space:nowrap">p</div>
+<div class="ft210" style="position:absolute;top:766px;left:225px;white-space:nowrap">f inal</div>
+<div class="ft26" style="position:absolute;top:760px;left:255px;white-space:nowrap">. It follows that</div>
+<div class="ft29" style="position:absolute;top:806px;left:386px;white-space:nowrap">x</div>
+<div class="ft210" style="position:absolute;top:790px;left:404px;white-space:nowrap">n</div>
+<div class="ft211" style="position:absolute;top:801px;left:397px;white-space:nowrap">X</div>
+<div class="ft210" style="position:absolute;top:827px;left:398px;white-space:nowrap">i</div>
+<div class="ft212" style="position:absolute;top:827px;left:402px;white-space:nowrap">=</div>
+<div class="ft210" style="position:absolute;top:827px;left:411px;white-space:nowrap">h</div>
+<div class="ft29" style="position:absolute;top:796px;left:423px;white-space:nowrap">f</div>
+<div class="ft210" style="position:absolute;top:801px;left:430px;white-space:nowrap">i</div>
+<div class="ft29" style="position:absolute;top:816px;left:423px;white-space:nowrap">s</div>
+<div class="ft210" style="position:absolute;top:821px;left:430px;white-space:nowrap">i</div>
+<div class="ft26" style="position:absolute;top:806px;left:441px;white-space:nowrap">=</div>
+<div class="ft29" style="position:absolute;top:806px;left:457px;white-space:nowrap">x</div>
+<div class="ft210" style="position:absolute;top:788px;left:472px;white-space:nowrap">p</div>
+<div class="ft213" style="position:absolute;top:792px;left:478px;white-space:nowrap">f inal</div>
+<div class="ft211" style="position:absolute;top:801px;left:478px;white-space:nowrap">X</div>
+<div class="ft210" style="position:absolute;top:826px;left:468px;white-space:nowrap">p</div>
+<div class="ft212" style="position:absolute;top:826px;left:474px;white-space:nowrap">=</div>
+<div class="ft210" style="position:absolute;top:826px;left:483px;white-space:nowrap">p</div>
+<div class="ft213" style="position:absolute;top:830px;left:489px;white-space:nowrap">init</div>
+<div class="ft29" style="position:absolute;top:796px;left:513px;white-space:nowrap">T</div>
+<div class="ft210" style="position:absolute;top:801px;left:522px;white-space:nowrap">p</div>
+<div class="ft29" style="position:absolute;top:816px;left:513px;white-space:nowrap">n</div>
+<div class="ft210" style="position:absolute;top:821px;left:522px;white-space:nowrap">p</div>
+<div class="ft26" style="position:absolute;top:852px;left:223px;white-space:nowrap">Let</div>
+<div class="ft29" style="position:absolute;top:852px;left:249px;white-space:nowrap">p</div>
+<div class="ft212" style="position:absolute;top:857px;left:256px;white-space:nowrap">0</div>
+<div class="ft26" style="position:absolute;top:852px;left:267px;white-space:nowrap">represent the p erio d which b egins when the validator first b onds. The</div>
+<div class="ft26" style="position:absolute;top:870px;left:201px;white-space:nowrap">central idea to the F1 mo del is that at the end of the</div>
+<div class="ft29" style="position:absolute;top:870px;left:543px;white-space:nowrap">k</div>
+<div class="ft26" style="position:absolute;top:870px;left:551px;white-space:nowrap">th p erio d, the following is</div>
+<div class="ft26" style="position:absolute;top:887px;left:201px;white-space:nowrap">stored at a state lo cation indexable by</div>
+<div class="ft29" style="position:absolute;top:887px;left:453px;white-space:nowrap">k</div>
+<div class="ft26" style="position:absolute;top:887px;left:461px;white-space:nowrap">:</div>
+<div class="ft211" style="position:absolute;top:886px;left:472px;white-space:nowrap">P</div>
+<div class="ft215" style="position:absolute;top:883px;left:488px;white-space:nowrap">k<br>i</div>
+<div class="ft212" style="position:absolute;top:895px;left:492px;white-space:nowrap">=0</div>
+<div class="ft210" style="position:absolute;top:884px;left:512px;white-space:nowrap">T</div>
+<div class="ft213" style="position:absolute;top:888px;left:519px;white-space:nowrap">i</div>
+<div class="ft210" style="position:absolute;top:896px;left:512px;white-space:nowrap">n</div>
+<div class="ft213" style="position:absolute;top:899px;left:520px;white-space:nowrap">i</div>
+<div class="ft26" style="position:absolute;top:887px;left:526px;white-space:nowrap">. Let the index of the current</div>
+<div class="ft26" style="position:absolute;top:905px;left:201px;white-space:nowrap">p erio d b e</div>
+<div class="ft29" style="position:absolute;top:905px;left:270px;white-space:nowrap">f</div>
+<div class="ft26" style="position:absolute;top:905px;left:279px;white-space:nowrap">. When a delegator wants to delegate or withdraw their reward,</div>
+<div class="ft28" style="position:absolute;top:923px;left:201px;white-space:nowrap">they first create a new entry in state to end the current p erio d. Then this entry<br>is created using the previous entry as follows:</div>
+<div class="ft29" style="position:absolute;top:987px;left:292px;white-space:nowrap">E ntr y</div>
+<div class="ft210" style="position:absolute;top:992px;left:333px;white-space:nowrap">f</div>
+<div class="ft26" style="position:absolute;top:987px;left:345px;white-space:nowrap">=</div>
+<div class="ft210" style="position:absolute;top:971px;left:368px;white-space:nowrap">f</div>
+<div class="ft211" style="position:absolute;top:983px;left:360px;white-space:nowrap">X</div>
+<div class="ft210" style="position:absolute;top:1008px;left:361px;white-space:nowrap">i</div>
+<div class="ft212" style="position:absolute;top:1008px;left:366px;white-space:nowrap">=0</div>
+<div class="ft29" style="position:absolute;top:977px;left:386px;white-space:nowrap">T</div>
+<div class="ft210" style="position:absolute;top:982px;left:395px;white-space:nowrap">i</div>
+<div class="ft29" style="position:absolute;top:997px;left:386px;white-space:nowrap">n</div>
+<div class="ft210" style="position:absolute;top:1003px;left:395px;white-space:nowrap">i</div>
+<div class="ft26" style="position:absolute;top:987px;left:406px;white-space:nowrap">=</div>
+<div class="ft210" style="position:absolute;top:971px;left:422px;white-space:nowrap">f</div>
+<div class="ft214" style="position:absolute;top:970px;left:429px;white-space:nowrap">−</div>
+<div class="ft212" style="position:absolute;top:971px;left:438px;white-space:nowrap">1</div>
+<div class="ft211" style="position:absolute;top:983px;left:422px;white-space:nowrap">X</div>
+<div class="ft210" style="position:absolute;top:1008px;left:423px;white-space:nowrap">i</div>
+<div class="ft212" style="position:absolute;top:1008px;left:428px;white-space:nowrap">=0</div>
+<div class="ft29" style="position:absolute;top:977px;left:449px;white-space:nowrap">T</div>
+<div class="ft210" style="position:absolute;top:982px;left:457px;white-space:nowrap">i</div>
+<div class="ft29" style="position:absolute;top:997px;left:448px;white-space:nowrap">n</div>
+<div class="ft210" style="position:absolute;top:1003px;left:457px;white-space:nowrap">i</div>
+<div class="ft26" style="position:absolute;top:987px;left:467px;white-space:nowrap">+</div>
+<div class="ft29" style="position:absolute;top:977px;left:484px;white-space:nowrap">T</div>
+<div class="ft210" style="position:absolute;top:982px;left:493px;white-space:nowrap">f</div>
+<div class="ft29" style="position:absolute;top:997px;left:484px;white-space:nowrap">n</div>
+<div class="ft210" style="position:absolute;top:1003px;left:493px;white-space:nowrap">f</div>
+<div class="ft26" style="position:absolute;top:987px;left:507px;white-space:nowrap">=</div>
+<div class="ft29" style="position:absolute;top:987px;left:523px;white-space:nowrap">E ntr y</div>
+<div class="ft210" style="position:absolute;top:992px;left:563px;white-space:nowrap">f</div>
+<div class="ft214" style="position:absolute;top:992px;left:570px;white-space:nowrap">−</div>
+<div class="ft212" style="position:absolute;top:992px;left:580px;white-space:nowrap">1</div>
+<div class="ft26" style="position:absolute;top:987px;left:590px;white-space:nowrap">+</div>
+<div class="ft29" style="position:absolute;top:977px;left:607px;white-space:nowrap">T</div>
+<div class="ft210" style="position:absolute;top:982px;left:615px;white-space:nowrap">f</div>
+<div class="ft29" style="position:absolute;top:997px;left:606px;white-space:nowrap">n</div>
+<div class="ft210" style="position:absolute;top:1003px;left:615px;white-space:nowrap">f</div>
+<div class="ft26" style="position:absolute;top:1044px;left:455px;white-space:nowrap">2</div>
+</div>
+<!-- Page 3 -->
+<a name="3"></a>
+<style type="text/css">
+<!--
+	p {margin: 0; padding: 0;}	.ft316{font-size:12px;font-family:HAMJEP+CMSY10;color:#000000;}
+-->
+</style>
+<div id="page3-div" style="position:relative;width:918px;height:1188px;" class="page-screen">
+<img width="918" height="1188" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5YAAASkCAIAAACXfAIBAAAACXBIWXMAABCbAAAQmwF0iZxLAAATGElEQVR42u3aMQqEQBBEUVsM5/437bhMNZtAlh3mvdiokOYjVpIDAADWcZoAAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgTAAAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAwKzLBPBjVTX5ZJIN9+nuMcaeE3k3AGYPpjsIAMBa/EgAAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEtYEAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMKaAAAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCxsq7vrwSB8qN4MAvz71UpiBQAAFuIrLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYEwAAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJawIAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAD2dAP31yE5OoCjNQAAAABJRU5ErkJggg==">
+<div class="ft36" style="position:absolute;top:192px;left:201px;white-space:nowrap">Where</div>
+<div class="ft39" style="position:absolute;top:192px;left:249px;white-space:nowrap">T</div>
+<div class="ft310" style="position:absolute;top:197px;left:258px;white-space:nowrap">f</div>
+<div class="ft36" style="position:absolute;top:192px;left:271px;white-space:nowrap">is the fees the validator has accrued in p erio d</div>
+<div class="ft39" style="position:absolute;top:192px;left:580px;white-space:nowrap">f</div>
+<div class="ft36" style="position:absolute;top:192px;left:589px;white-space:nowrap">, and</div>
+<div class="ft39" style="position:absolute;top:192px;left:628px;white-space:nowrap">n</div>
+<div class="ft310" style="position:absolute;top:197px;left:637px;white-space:nowrap">f</div>
+<div class="ft36" style="position:absolute;top:192px;left:651px;white-space:nowrap">is the val-</div>
+<div class="ft36" style="position:absolute;top:210px;left:201px;white-space:nowrap">idators total amount of stake in p erio d</div>
+<div class="ft39" style="position:absolute;top:210px;left:460px;white-space:nowrap">f</div>
+<div class="ft36" style="position:absolute;top:210px;left:469px;white-space:nowrap">.</div>
+<div class="ft36" style="position:absolute;top:228px;left:223px;white-space:nowrap">The withdrawer’s delegation ob ject has the index</div>
+<div class="ft39" style="position:absolute;top:228px;left:563px;white-space:nowrap">k</div>
+<div class="ft36" style="position:absolute;top:228px;left:578px;white-space:nowrap">for the p erio d which</div>
+<div class="ft36" style="position:absolute;top:246px;left:201px;white-space:nowrap">they ended by b onding. (They start receiving rewards for p erio d</div>
+<div class="ft39" style="position:absolute;top:246px;left:643px;white-space:nowrap">k</div>
+<div class="ft36" style="position:absolute;top:246px;left:655px;white-space:nowrap">+ 1) The</div>
+<div class="ft36" style="position:absolute;top:264px;left:201px;white-space:nowrap">reward they should receive when withdrawing is:</div>
+<div class="ft39" style="position:absolute;top:324px;left:245px;white-space:nowrap">x</div>
+<div class="ft310" style="position:absolute;top:308px;left:270px;white-space:nowrap">f</div>
+<div class="ft311" style="position:absolute;top:319px;left:263px;white-space:nowrap">X</div>
+<div class="ft310" style="position:absolute;top:345px;left:256px;white-space:nowrap">i</div>
+<div class="ft312" style="position:absolute;top:345px;left:260px;white-space:nowrap">=</div>
+<div class="ft310" style="position:absolute;top:345px;left:269px;white-space:nowrap">k</div>
+<div class="ft312" style="position:absolute;top:345px;left:276px;white-space:nowrap">+1</div>
+<div class="ft39" style="position:absolute;top:314px;left:295px;white-space:nowrap">T</div>
+<div class="ft310" style="position:absolute;top:319px;left:304px;white-space:nowrap">i</div>
+<div class="ft39" style="position:absolute;top:334px;left:295px;white-space:nowrap">n</div>
+<div class="ft310" style="position:absolute;top:339px;left:304px;white-space:nowrap">i</div>
+<div class="ft36" style="position:absolute;top:324px;left:315px;white-space:nowrap">=</div>
+<div class="ft39" style="position:absolute;top:324px;left:331px;white-space:nowrap">x</div>
+<div class="ft311" style="position:absolute;top:308px;left:342px;white-space:nowrap"> </div>
+<div class="ft310" style="position:absolute;top:308px;left:373px;white-space:nowrap">f</div>
+<div class="ft311" style="position:absolute;top:319px;left:366px;white-space:nowrap">X</div>
+<div class="ft310" style="position:absolute;top:345px;left:367px;white-space:nowrap">i</div>
+<div class="ft312" style="position:absolute;top:345px;left:371px;white-space:nowrap">=0</div>
+<div class="ft39" style="position:absolute;top:314px;left:392px;white-space:nowrap">T</div>
+<div class="ft310" style="position:absolute;top:319px;left:400px;white-space:nowrap">i</div>
+<div class="ft39" style="position:absolute;top:334px;left:392px;white-space:nowrap">n</div>
+<div class="ft310" style="position:absolute;top:339px;left:401px;white-space:nowrap">i</div>
+<div class="ft311" style="position:absolute;top:308px;left:407px;white-space:nowrap">!</div>
+<div class="ft316" style="position:absolute;top:323px;left:422px;white-space:nowrap">−</div>
+<div class="ft311" style="position:absolute;top:308px;left:437px;white-space:nowrap"> </div>
+<div class="ft310" style="position:absolute;top:308px;left:457px;white-space:nowrap">k</div>
+<div class="ft311" style="position:absolute;top:319px;left:449px;white-space:nowrap">X</div>
+<div class="ft310" style="position:absolute;top:345px;left:450px;white-space:nowrap">i</div>
+<div class="ft312" style="position:absolute;top:345px;left:455px;white-space:nowrap">=0</div>
+<div class="ft39" style="position:absolute;top:314px;left:475px;white-space:nowrap">T</div>
+<div class="ft310" style="position:absolute;top:319px;left:484px;white-space:nowrap">i</div>
+<div class="ft39" style="position:absolute;top:334px;left:475px;white-space:nowrap">n</div>
+<div class="ft310" style="position:absolute;top:339px;left:484px;white-space:nowrap">i</div>
+<div class="ft311" style="position:absolute;top:308px;left:491px;white-space:nowrap">!!</div>
+<div class="ft36" style="position:absolute;top:324px;left:519px;white-space:nowrap">=</div>
+<div class="ft39" style="position:absolute;top:324px;left:534px;white-space:nowrap">x</div>
+<div class="ft36" style="position:absolute;top:324px;left:545px;white-space:nowrap">(</div>
+<div class="ft39" style="position:absolute;top:324px;left:551px;white-space:nowrap">E ntr y</div>
+<div class="ft310" style="position:absolute;top:329px;left:592px;white-space:nowrap">f</div>
+<div class="ft316" style="position:absolute;top:323px;left:603px;white-space:nowrap">−</div>
+<div class="ft39" style="position:absolute;top:324px;left:618px;white-space:nowrap">E ntr y</div>
+<div class="ft310" style="position:absolute;top:329px;left:659px;white-space:nowrap">k</div>
+<div class="ft36" style="position:absolute;top:324px;left:666px;white-space:nowrap">)</div>
+<div class="ft36" style="position:absolute;top:369px;left:223px;white-space:nowrap">It is clear from the equations that this payout mechanism maintains correct-</div>
+<div class="ft38" style="position:absolute;top:387px;left:201px;white-space:nowrap">ness, and requires no iterations. It just needed the two state reads for these<br>entries.</div>
+<div class="ft39" style="position:absolute;top:423px;left:223px;white-space:nowrap">T</div>
+<div class="ft310" style="position:absolute;top:428px;left:232px;white-space:nowrap">f</div>
+<div class="ft36" style="position:absolute;top:423px;left:245px;white-space:nowrap">is a separate variable in state for the amount of fees this validator has</div>
+<div class="ft38" style="position:absolute;top:441px;left:201px;white-space:nowrap">accrued since the last up date to its p ower. This variable is incremented at every<br>blo ck by however much fees this validator received that blo ck. On the up date<br>to the validators p ower, this variable is used to create the entry in state at</div>
+<div class="ft39" style="position:absolute;top:477px;left:703px;white-space:nowrap">f</div>
+<div class="ft36" style="position:absolute;top:477px;left:712px;white-space:nowrap">,</div>
+<div class="ft36" style="position:absolute;top:495px;left:201px;white-space:nowrap">and is then reset to 0.</div>
+<div class="ft36" style="position:absolute;top:513px;left:223px;white-space:nowrap">This fee distribution prop osal is agnostic to how all of the blo cks fees are</div>
+<div class="ft38" style="position:absolute;top:530px;left:201px;white-space:nowrap">divied up b etween validators. This creates many nice prop erties, for example it<br>is p ossible to only rewarding validators who signed that blo ck.</div>
+<div class="ft34" style="position:absolute;top:593px;left:201px;white-space:nowrap">2</div>
+<div class="ft34" style="position:absolute;top:593px;left:237px;white-space:nowrap">Additional add-ons</div>
+<div class="ft35" style="position:absolute;top:631px;left:201px;white-space:nowrap">2.1</div>
+<div class="ft35" style="position:absolute;top:631px;left:247px;white-space:nowrap">Commission Rates</div>
+<div class="ft36" style="position:absolute;top:661px;left:201px;white-space:nowrap">Commission rates are the idea that a validator can take a fixed</div>
+<div class="ft39" style="position:absolute;top:661px;left:629px;white-space:nowrap">x</div>
+<div class="ft36" style="position:absolute;top:661px;left:638px;white-space:nowrap">% cut of all</div>
+<div class="ft38" style="position:absolute;top:679px;left:201px;white-space:nowrap">of their received fees, b efore redistributing evenly to the constituent delegators.<br>This can easily b e done as follows:</div>
+<div class="ft36" style="position:absolute;top:715px;left:223px;white-space:nowrap">In blo ck</div>
+<div class="ft39" style="position:absolute;top:715px;left:278px;white-space:nowrap">h</div>
+<div class="ft36" style="position:absolute;top:715px;left:290px;white-space:nowrap">a validator receives</div>
+<div class="ft39" style="position:absolute;top:715px;left:415px;white-space:nowrap">f</div>
+<div class="ft310" style="position:absolute;top:720px;left:422px;white-space:nowrap">h</div>
+<div class="ft36" style="position:absolute;top:715px;left:434px;white-space:nowrap">fees. Instead of incrementing that validators</div>
+<div class="ft36" style="position:absolute;top:732px;left:201px;white-space:nowrap">“total accrued fees this p erio d variable” by</div>
+<div class="ft39" style="position:absolute;top:732px;left:501px;white-space:nowrap">f</div>
+<div class="ft310" style="position:absolute;top:738px;left:508px;white-space:nowrap">h</div>
+<div class="ft36" style="position:absolute;top:732px;left:516px;white-space:nowrap">, it is instead incremented by</div>
+<div class="ft36" style="position:absolute;top:750px;left:201px;white-space:nowrap">(1</div>
+<div class="ft316" style="position:absolute;top:750px;left:218px;white-space:nowrap">−</div>
+<div class="ft39" style="position:absolute;top:750px;left:233px;white-space:nowrap">commission r ate</div>
+<div class="ft36" style="position:absolute;top:750px;left:347px;white-space:nowrap">)</div>
+<div class="ft316" style="position:absolute;top:750px;left:356px;white-space:nowrap">∗</div>
+<div class="ft39" style="position:absolute;top:750px;left:368px;white-space:nowrap">f</div>
+<div class="ft310" style="position:absolute;top:756px;left:375px;white-space:nowrap">p</div>
+<div class="ft36" style="position:absolute;top:750px;left:382px;white-space:nowrap">. Then</div>
+<div class="ft39" style="position:absolute;top:750px;left:435px;white-space:nowrap">commission r ate</div>
+<div class="ft316" style="position:absolute;top:750px;left:552px;white-space:nowrap">∗</div>
+<div class="ft39" style="position:absolute;top:750px;left:563px;white-space:nowrap">f</div>
+<div class="ft310" style="position:absolute;top:756px;left:571px;white-space:nowrap">p</div>
+<div class="ft36" style="position:absolute;top:750px;left:583px;white-space:nowrap">is dep osited directly</div>
+<div class="ft38" style="position:absolute;top:768px;left:201px;white-space:nowrap">to the validator’s account. This allows for efficient up dates to a validator’s<br>commission rate every blo ck if desired. More generally, each validator could<br>have a function which takes their fees as input, and outputs a set of outputs to<br>pay these fees to o. (i.e. x% going to themselves, y% to delegators, z% burnt)</div>
+<div class="ft35" style="position:absolute;top:861px;left:201px;white-space:nowrap">2.2</div>
+<div class="ft35" style="position:absolute;top:861px;left:247px;white-space:nowrap">Slashing</div>
+<div class="ft38" style="position:absolute;top:891px;left:201px;white-space:nowrap">Slashing is distinct from withdrawals, since it lowers the stake of all of the<br>delegator’s by a fixed p ercentage. Since no one is charged gas for slashes, a<br>slash cannot iterate over all delegators. Thus we can no longer just multiply<br>by</div>
+<div class="ft39" style="position:absolute;top:945px;left:222px;white-space:nowrap">x</div>
+<div class="ft36" style="position:absolute;top:945px;left:236px;white-space:nowrap">over the difference in stake. This section describ es a simple solution that</div>
+<div class="ft38" style="position:absolute;top:963px;left:201px;white-space:nowrap">should suffice for most chains needs. An asymptotically optimal solution is<br>provided in section 2.4. TODO: Consider removing this section in favor of just<br>using the current section 2.4?</div>
+<div class="ft36" style="position:absolute;top:1044px;left:455px;white-space:nowrap">3</div>
+</div>
+<!-- Page 4 -->
+<a name="4"></a>
+<style type="text/css">
+<!--
+	p {margin: 0; padding: 0;}-->
+</style>
+<div id="page4-div" style="position:relative;width:918px;height:1188px;" class="page-screen">
+<img width="918" height="1188" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5YAAASkCAIAAACXfAIBAAAACXBIWXMAABCbAAAQmwF0iZxLAAAS+UlEQVR42u3asQkAIBAEQV/sv+WzBjF5ZSY3OVA2sJIMAAB4xzQBAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAmAABAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABLWBAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCmgAAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAIAelgkA6K+qTo8ksRt8+ya44QAAvMVHAgAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwJgAAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAODeBsk/EkP7olpcAAAAAElFTkSuQmCC">
+<div class="ft46" style="position:absolute;top:192px;left:223px;white-space:nowrap">The solution here is to instead store each p erio d created by a slash in the</div>
+<div class="ft48" style="position:absolute;top:210px;left:201px;white-space:nowrap">validators state. Then when withdrawing, you must iterate over all slashes<br>b etween when you started and ended. Supp ose you delegated at p erio d 0, a<br>y% slash o ccured at p erio d 2, and your withdrawal creates p erio d 4. Then you<br>receive funds from p erio ds 0 to 2 as normal. The equations for funds you receive<br>for p erio ds 2 to 4 now uses (1</div>
+<div class="ft416" style="position:absolute;top:281px;left:392px;white-space:nowrap">−</div>
+<div class="ft49" style="position:absolute;top:281px;left:406px;white-space:nowrap">y</div>
+<div class="ft46" style="position:absolute;top:281px;left:413px;white-space:nowrap">)</div>
+<div class="ft49" style="position:absolute;top:281px;left:419px;white-space:nowrap">x</div>
+<div class="ft46" style="position:absolute;top:281px;left:432px;white-space:nowrap">for your stake instead of just</div>
+<div class="ft49" style="position:absolute;top:281px;left:621px;white-space:nowrap">x</div>
+<div class="ft46" style="position:absolute;top:281px;left:634px;white-space:nowrap">stake. When</div>
+<div class="ft46" style="position:absolute;top:299px;left:201px;white-space:nowrap">there are multiple slashes, you just account for the accumulated slash factor.</div>
+<div class="ft46" style="position:absolute;top:317px;left:223px;white-space:nowrap">In practice this will not really b e an efficiency hit, as the numb er of slashes</div>
+<div class="ft48" style="position:absolute;top:335px;left:201px;white-space:nowrap">is exp ected to b e 0 or 1 for most validators. Validators that get slashed more<br>will naturally lose their delegators. A malicious validator that gets itself slashed<br>many times would increase the gas to withdraw linearly, but the economic loss<br>of funds due to the slashes is exp ected to far out-weigh the extra overhead the<br>honest withdrawer must pay for due to the gas. (TODO: frame that ab ove<br>sentence in terms of griefing factors, as thats more correct)</div>
+<div class="ft45" style="position:absolute;top:465px;left:201px;white-space:nowrap">2.3</div>
+<div class="ft45" style="position:absolute;top:465px;left:247px;white-space:nowrap">Inflation</div>
+<div class="ft48" style="position:absolute;top:494px;left:201px;white-space:nowrap">Inflation is the idea that we want every staked coin to create more staking<br>tokens as time progresses. The purp ose b eing to drive down the relative worth<br>of unstaked tokens. Each blo ck, every staked token should pro duce</div>
+<div class="ft49" style="position:absolute;top:530px;left:655px;white-space:nowrap">x</div>
+<div class="ft46" style="position:absolute;top:530px;left:669px;white-space:nowrap">staking</div>
+<div class="ft46" style="position:absolute;top:548px;left:201px;white-space:nowrap">tokens as inflation, where</div>
+<div class="ft49" style="position:absolute;top:548px;left:370px;white-space:nowrap">x</div>
+<div class="ft46" style="position:absolute;top:548px;left:384px;white-space:nowrap">is calculated from a function</div>
+<div class="ft49" style="position:absolute;top:548px;left:574px;white-space:nowrap">inf l ation</div>
+<div class="ft46" style="position:absolute;top:548px;left:641px;white-space:nowrap">which takes</div>
+<div class="ft46" style="position:absolute;top:566px;left:201px;white-space:nowrap">state and the blo ck information as input. Let</div>
+<div class="ft49" style="position:absolute;top:566px;left:518px;white-space:nowrap">x</div>
+<div class="ft410" style="position:absolute;top:571px;left:526px;white-space:nowrap">i</div>
+<div class="ft46" style="position:absolute;top:566px;left:538px;white-space:nowrap">represent the evaluation of</div>
+<div class="ft49" style="position:absolute;top:584px;left:201px;white-space:nowrap">inf l ation</div>
+<div class="ft46" style="position:absolute;top:584px;left:269px;white-space:nowrap">in the</div>
+<div class="ft49" style="position:absolute;top:584px;left:315px;white-space:nowrap">i</div>
+<div class="ft46" style="position:absolute;top:584px;left:320px;white-space:nowrap">th blo ck. The goal of this section is to auto-b ond inflation</div>
+<div class="ft48" style="position:absolute;top:602px;left:201px;white-space:nowrap">in the fee distribution mo del without iteration. This is done by preserving the<br>invariant that every state entry contains the rewards one would have if they had<br>b onded one stake at genesis until that corresp onding blo ck.</div>
+<div class="ft46" style="position:absolute;top:656px;left:223px;white-space:nowrap">In state a variable should b e kept for the numb er of tokens one would have</div>
+<div class="ft46" style="position:absolute;top:674px;left:201px;white-space:nowrap">now due to inflation, given that they b onded one token at genesis. This is</div>
+<div class="ft411" style="position:absolute;top:690px;left:201px;white-space:nowrap">Q</div>
+<div class="ft410" style="position:absolute;top:687px;left:215px;white-space:nowrap">now</div>
+<div class="ft412" style="position:absolute;top:699px;left:215px;white-space:nowrap">0</div>
+<div class="ft46" style="position:absolute;top:692px;left:238px;white-space:nowrap">(1 +</div>
+<div class="ft49" style="position:absolute;top:692px;left:270px;white-space:nowrap">x</div>
+<div class="ft410" style="position:absolute;top:697px;left:279px;white-space:nowrap">i</div>
+<div class="ft46" style="position:absolute;top:692px;left:284px;white-space:nowrap">). Each p erio d now stores this total inflation pro duct along with</div>
+<div class="ft46" style="position:absolute;top:710px;left:201px;white-space:nowrap">what it already stores p er-p erio d.</div>
+<div class="ft46" style="position:absolute;top:727px;left:223px;white-space:nowrap">Let</div>
+<div class="ft49" style="position:absolute;top:727px;left:250px;white-space:nowrap">R</div>
+<div class="ft410" style="position:absolute;top:733px;left:261px;white-space:nowrap">i</div>
+<div class="ft46" style="position:absolute;top:727px;left:271px;white-space:nowrap">b e the fee rewards in blo ck</div>
+<div class="ft49" style="position:absolute;top:727px;left:452px;white-space:nowrap">i</div>
+<div class="ft46" style="position:absolute;top:727px;left:457px;white-space:nowrap">, and</div>
+<div class="ft49" style="position:absolute;top:727px;left:495px;white-space:nowrap">n</div>
+<div class="ft410" style="position:absolute;top:733px;left:504px;white-space:nowrap">i</div>
+<div class="ft46" style="position:absolute;top:727px;left:514px;white-space:nowrap">b e the total amount b onded to</div>
+<div class="ft48" style="position:absolute;top:745px;left:201px;white-space:nowrap">that validator in that blo ck. The correct amount of rewards which 1 token at<br>genesis should have now is:</div>
+<div class="ft49" style="position:absolute;top:813px;left:329px;white-space:nowrap">Rew ar d</div>
+<div class="ft46" style="position:absolute;top:813px;left:381px;white-space:nowrap">(</div>
+<div class="ft49" style="position:absolute;top:813px;left:387px;white-space:nowrap">now</div>
+<div class="ft46" style="position:absolute;top:813px;left:414px;white-space:nowrap">) =</div>
+<div class="ft410" style="position:absolute;top:798px;left:440px;white-space:nowrap">now</div>
+<div class="ft411" style="position:absolute;top:809px;left:440px;white-space:nowrap">X</div>
+<div class="ft410" style="position:absolute;top:834px;left:441px;white-space:nowrap">i</div>
+<div class="ft412" style="position:absolute;top:834px;left:445px;white-space:nowrap">=0</div>
+<div class="ft411" style="position:absolute;top:793px;left:464px;white-space:nowrap"></div>
+<div class="ft411" style="position:absolute;top:820px;left:464px;white-space:nowrap"></div>
+<div class="ft410" style="position:absolute;top:798px;left:486px;white-space:nowrap">i</div>
+<div class="ft411" style="position:absolute;top:809px;left:478px;white-space:nowrap">Y</div>
+<div class="ft410" style="position:absolute;top:834px;left:478px;white-space:nowrap">j</div>
+<div class="ft412" style="position:absolute;top:834px;left:483px;white-space:nowrap">=0</div>
+<div class="ft46" style="position:absolute;top:813px;left:501px;white-space:nowrap">1 +</div>
+<div class="ft49" style="position:absolute;top:813px;left:526px;white-space:nowrap">x</div>
+<div class="ft410" style="position:absolute;top:819px;left:535px;white-space:nowrap">j</div>
+<div class="ft411" style="position:absolute;top:793px;left:541px;white-space:nowrap"></div>
+<div class="ft411" style="position:absolute;top:820px;left:541px;white-space:nowrap"></div>
+<div class="ft416" style="position:absolute;top:812px;left:558px;white-space:nowrap">∗</div>
+<div class="ft49" style="position:absolute;top:803px;left:570px;white-space:nowrap">R</div>
+<div class="ft410" style="position:absolute;top:809px;left:582px;white-space:nowrap">i</div>
+<div class="ft49" style="position:absolute;top:824px;left:571px;white-space:nowrap">n</div>
+<div class="ft410" style="position:absolute;top:829px;left:580px;white-space:nowrap">i</div>
+<div class="ft48" style="position:absolute;top:863px;left:201px;white-space:nowrap">The term in the sum is the amount of stake one stake b ecomes due to inflation,<br>multiplied by the amount of fees p er stake.</div>
+<div class="ft46" style="position:absolute;top:899px;left:223px;white-space:nowrap">Now we cast this into the p erio d frame of view. Recall that we build the</div>
+<div class="ft48" style="position:absolute;top:917px;left:201px;white-space:nowrap">rewards by creating a state entry for the rewards of the previous p erio d, and<br>keeping track of the rewards within this p erio d. Thus we first define the correct<br>amount of rewards for each successive p erio d, proving correctness of this via<br>induction. We then show that the state entry that gets efficiently built up blo ck<br>by blo ck is equal to this value for the latest p erio d.</div>
+<div class="ft46" style="position:absolute;top:1044px;left:455px;white-space:nowrap">4</div>
+</div>
+<!-- Page 5 -->
+<a name="5"></a>
+<style type="text/css">
+<!--
+	p {margin: 0; padding: 0;}	.ft517{font-size:5px;font-family:QCVHIM+CMR5;color:#000000;}
+-->
+</style>
+<div id="page5-div" style="position:relative;width:918px;height:1188px;" class="page-screen">
+<img width="918" height="1188" src="data:image/png;base64,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ACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAwNcNIwDetNaac24dSWJudsNuYMH4uPIdAwDQi4cEAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAAK5j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wgIAgIQFAAAJCwCAhDUCAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQBAwgIAgIQFAAAJCwCAhAUAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAACQsAABIWAAAkLAAAEhYAACQsAAAIGEBAJCwAAAgYQEAQMICACBhAQBAwgIAgIQFAEDCAgCAhAUAAAkLAICEBQAACQsAABIWAAAkLAAAEhYAACQsAABIWAAAJCwAAEhYAACQsAAASFgAAJCwAAAgYQEAkLAAACBhAQBAwgIAIGEBAEDCAgCAhAUAQMICAICEBQAACQsAgIQFAAAJCwAAEhYAAAkLAAASFgAAJCwAABIWAAAkLAAASFgAAJCwAABIWAAAkLAAACBhAQCQsAAAIGEBAEDCAgAgYQEA4Lse+UFLOR1gPs4AAAAASUVORK5CYII=">
+<div class="ft56" style="position:absolute;top:192px;left:223px;white-space:nowrap">Let</div>
+<div class="ft59" style="position:absolute;top:192px;left:250px;white-space:nowrap">star t, end</div>
+<div class="ft56" style="position:absolute;top:192px;left:318px;white-space:nowrap">denote the start/end of a p erio d.</div>
+<div class="ft56" style="position:absolute;top:210px;left:223px;white-space:nowrap">Supp ose that</div>
+<div class="ft516" style="position:absolute;top:209px;left:314px;white-space:nowrap">∀</div>
+<div class="ft59" style="position:absolute;top:210px;left:322px;white-space:nowrap">f ></div>
+<div class="ft56" style="position:absolute;top:210px;left:351px;white-space:nowrap">0,</div>
+<div class="ft59" style="position:absolute;top:210px;left:368px;white-space:nowrap">Rew ar d</div>
+<div class="ft56" style="position:absolute;top:210px;left:420px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:210px;left:426px;white-space:nowrap">end</div>
+<div class="ft56" style="position:absolute;top:210px;left:450px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:210px;left:456px;white-space:nowrap">f</div>
+<div class="ft56" style="position:absolute;top:210px;left:464px;white-space:nowrap">)) is correctly constructed as</div>
+<div class="ft59" style="position:absolute;top:259px;left:232px;white-space:nowrap">Rew ar d</div>
+<div class="ft56" style="position:absolute;top:259px;left:285px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:259px;left:291px;white-space:nowrap">end</div>
+<div class="ft56" style="position:absolute;top:259px;left:314px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:259px;left:320px;white-space:nowrap">f</div>
+<div class="ft56" style="position:absolute;top:259px;left:329px;white-space:nowrap">)) =</div>
+<div class="ft59" style="position:absolute;top:259px;left:361px;white-space:nowrap">Rew ar d</div>
+<div class="ft56" style="position:absolute;top:259px;left:413px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:259px;left:419px;white-space:nowrap">end</div>
+<div class="ft56" style="position:absolute;top:259px;left:442px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:259px;left:448px;white-space:nowrap">f</div>
+<div class="ft516" style="position:absolute;top:258px;left:461px;white-space:nowrap">−</div>
+<div class="ft56" style="position:absolute;top:259px;left:475px;white-space:nowrap">1)) +</div>
+<div class="ft510" style="position:absolute;top:242px;left:523px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:242px;left:543px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:242px;left:547px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:242px;left:554px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:255px;left:530px;white-space:nowrap">X</div>
+<div class="ft510" style="position:absolute;top:281px;left:513px;white-space:nowrap">i</div>
+<div class="ft512" style="position:absolute;top:281px;left:517px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:281px;left:526px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:281px;left:553px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:281px;left:558px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:281px;left:565px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:239px;left:572px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:266px;left:572px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:244px;left:593px;white-space:nowrap">i</div>
+<div class="ft511" style="position:absolute;top:255px;left:586px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:280px;left:585px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:280px;left:591px;white-space:nowrap">=0</div>
+<div class="ft56" style="position:absolute;top:259px;left:608px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:259px;left:634px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:265px;left:643px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:239px;left:649px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:266px;left:649px;white-space:nowrap"></div>
+<div class="ft59" style="position:absolute;top:249px;left:666px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:255px;left:678px;white-space:nowrap">i</div>
+<div class="ft59" style="position:absolute;top:270px;left:667px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:275px;left:676px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:309px;left:201px;white-space:nowrap">and that for</div>
+<div class="ft59" style="position:absolute;top:309px;left:290px;white-space:nowrap">f</div>
+<div class="ft56" style="position:absolute;top:309px;left:306px;white-space:nowrap">= 0,</div>
+<div class="ft59" style="position:absolute;top:309px;left:343px;white-space:nowrap">Rew ar d</div>
+<div class="ft56" style="position:absolute;top:309px;left:396px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:309px;left:402px;white-space:nowrap">end</div>
+<div class="ft56" style="position:absolute;top:309px;left:425px;white-space:nowrap">(0)) = 0. (With p erio d 1 b eing defined as</div>
+<div class="ft58" style="position:absolute;top:327px;left:201px;white-space:nowrap">the p erio d that has the first b ond into it) It must b e shown that assuming the<br>supp osition</div>
+<div class="ft516" style="position:absolute;top:344px;left:280px;white-space:nowrap">∀</div>
+<div class="ft59" style="position:absolute;top:345px;left:288px;white-space:nowrap">f</div>
+<div class="ft516" style="position:absolute;top:344px;left:301px;white-space:nowrap">≤</div>
+<div class="ft59" style="position:absolute;top:345px;left:317px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:350px;left:325px;white-space:nowrap">0</div>
+<div class="ft56" style="position:absolute;top:345px;left:331px;white-space:nowrap">,</div>
+<div class="ft59" style="position:absolute;top:393px;left:217px;white-space:nowrap">Rew ar d</div>
+<div class="ft56" style="position:absolute;top:393px;left:270px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:393px;left:276px;white-space:nowrap">end</div>
+<div class="ft56" style="position:absolute;top:393px;left:299px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:393px;left:305px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:399px;left:312px;white-space:nowrap">0</div>
+<div class="ft56" style="position:absolute;top:393px;left:322px;white-space:nowrap">+ 1)) =</div>
+<div class="ft59" style="position:absolute;top:393px;left:376px;white-space:nowrap">Rew ar d</div>
+<div class="ft56" style="position:absolute;top:393px;left:429px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:393px;left:435px;white-space:nowrap">end</div>
+<div class="ft56" style="position:absolute;top:393px;left:458px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:393px;left:464px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:399px;left:471px;white-space:nowrap">0</div>
+<div class="ft56" style="position:absolute;top:393px;left:478px;white-space:nowrap">)) +</div>
+<div class="ft510" style="position:absolute;top:377px;left:519px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:377px;left:538px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:377px;left:543px;white-space:nowrap">f</div>
+<div class="ft517" style="position:absolute;top:380px;left:548px;white-space:nowrap">0</div>
+<div class="ft512" style="position:absolute;top:377px;left:554px;white-space:nowrap">+1)</div>
+<div class="ft511" style="position:absolute;top:389px;left:536px;white-space:nowrap">X</div>
+<div class="ft510" style="position:absolute;top:415px;left:508px;white-space:nowrap">i</div>
+<div class="ft512" style="position:absolute;top:415px;left:512px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:415px;left:521px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:415px;left:548px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:415px;left:553px;white-space:nowrap">f</div>
+<div class="ft517" style="position:absolute;top:419px;left:559px;white-space:nowrap">0</div>
+<div class="ft512" style="position:absolute;top:415px;left:565px;white-space:nowrap">+1)</div>
+<div class="ft511" style="position:absolute;top:373px;left:587px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:400px;left:587px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:378px;left:608px;white-space:nowrap">i</div>
+<div class="ft511" style="position:absolute;top:389px;left:601px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:414px;left:600px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:414px;left:606px;white-space:nowrap">=0</div>
+<div class="ft56" style="position:absolute;top:393px;left:623px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:393px;left:649px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:399px;left:658px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:373px;left:664px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:400px;left:664px;white-space:nowrap"></div>
+<div class="ft59" style="position:absolute;top:383px;left:681px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:389px;left:693px;white-space:nowrap">i</div>
+<div class="ft59" style="position:absolute;top:404px;left:682px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:409px;left:691px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:442px;left:201px;white-space:nowrap">Using the definition of</div>
+<div class="ft59" style="position:absolute;top:442px;left:352px;white-space:nowrap">Rew ar d</div>
+<div class="ft56" style="position:absolute;top:442px;left:404px;white-space:nowrap">, it follows that:</div>
+<div class="ft510" style="position:absolute;top:474px;left:201px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:474px;left:220px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:474px;left:225px;white-space:nowrap">f</div>
+<div class="ft517" style="position:absolute;top:478px;left:230px;white-space:nowrap">0</div>
+<div class="ft512" style="position:absolute;top:474px;left:236px;white-space:nowrap">+1)</div>
+<div class="ft511" style="position:absolute;top:487px;left:218px;white-space:nowrap">X</div>
+<div class="ft510" style="position:absolute;top:512px;left:219px;white-space:nowrap">i</div>
+<div class="ft512" style="position:absolute;top:512px;left:223px;white-space:nowrap">=0</div>
+<div class="ft511" style="position:absolute;top:471px;left:259px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:498px;left:259px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:475px;left:280px;white-space:nowrap">i</div>
+<div class="ft511" style="position:absolute;top:487px;left:272px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:512px;left:272px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:512px;left:277px;white-space:nowrap">=0</div>
+<div class="ft56" style="position:absolute;top:491px;left:295px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:491px;left:321px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:496px;left:329px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:471px;left:335px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:498px;left:335px;white-space:nowrap"></div>
+<div class="ft516" style="position:absolute;top:490px;left:348px;white-space:nowrap">∗</div>
+<div class="ft59" style="position:absolute;top:481px;left:358px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:486px;left:369px;white-space:nowrap">i</div>
+<div class="ft59" style="position:absolute;top:501px;left:359px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:507px;left:368px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:491px;left:380px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:474px;left:396px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:474px;left:415px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:474px;left:420px;white-space:nowrap">f</div>
+<div class="ft517" style="position:absolute;top:478px;left:426px;white-space:nowrap">0</div>
+<div class="ft512" style="position:absolute;top:474px;left:431px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:487px;left:405px;white-space:nowrap">X</div>
+<div class="ft510" style="position:absolute;top:512px;left:406px;white-space:nowrap">i</div>
+<div class="ft512" style="position:absolute;top:512px;left:410px;white-space:nowrap">=0</div>
+<div class="ft511" style="position:absolute;top:471px;left:439px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:498px;left:439px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:475px;left:460px;white-space:nowrap">i</div>
+<div class="ft511" style="position:absolute;top:487px;left:452px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:512px;left:452px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:512px;left:457px;white-space:nowrap">=0</div>
+<div class="ft56" style="position:absolute;top:491px;left:475px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:491px;left:501px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:496px;left:509px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:471px;left:515px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:498px;left:515px;white-space:nowrap"></div>
+<div class="ft516" style="position:absolute;top:490px;left:528px;white-space:nowrap">∗</div>
+<div class="ft59" style="position:absolute;top:481px;left:538px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:486px;left:549px;white-space:nowrap">i</div>
+<div class="ft59" style="position:absolute;top:501px;left:539px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:507px;left:548px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:491px;left:556px;white-space:nowrap">+</div>
+<div class="ft510" style="position:absolute;top:474px;left:578px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:474px;left:597px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:474px;left:602px;white-space:nowrap">f</div>
+<div class="ft517" style="position:absolute;top:478px;left:608px;white-space:nowrap">0</div>
+<div class="ft512" style="position:absolute;top:474px;left:614px;white-space:nowrap">+1)</div>
+<div class="ft511" style="position:absolute;top:487px;left:595px;white-space:nowrap">X</div>
+<div class="ft510" style="position:absolute;top:513px;left:567px;white-space:nowrap">i</div>
+<div class="ft512" style="position:absolute;top:513px;left:572px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:513px;left:581px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:513px;left:608px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:513px;left:613px;white-space:nowrap">f</div>
+<div class="ft517" style="position:absolute;top:516px;left:618px;white-space:nowrap">0</div>
+<div class="ft512" style="position:absolute;top:513px;left:624px;white-space:nowrap">+1)</div>
+<div class="ft511" style="position:absolute;top:471px;left:646px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:498px;left:646px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:475px;left:668px;white-space:nowrap">i</div>
+<div class="ft511" style="position:absolute;top:487px;left:660px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:512px;left:660px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:512px;left:665px;white-space:nowrap">=0</div>
+<div class="ft56" style="position:absolute;top:491px;left:683px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:491px;left:708px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:496px;left:717px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:471px;left:723px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:498px;left:723px;white-space:nowrap"></div>
+<div class="ft59" style="position:absolute;top:481px;left:741px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:486px;left:752px;white-space:nowrap">i</div>
+<div class="ft59" style="position:absolute;top:501px;left:742px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:507px;left:751px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:541px;left:223px;white-space:nowrap">Since the first summation on the right hand side is</div>
+<div class="ft59" style="position:absolute;top:541px;left:572px;white-space:nowrap">Rew ar d</div>
+<div class="ft56" style="position:absolute;top:541px;left:624px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:541px;left:630px;white-space:nowrap">end</div>
+<div class="ft56" style="position:absolute;top:541px;left:654px;white-space:nowrap">(</div>
+<div class="ft59" style="position:absolute;top:541px;left:659px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:546px;left:667px;white-space:nowrap">0</div>
+<div class="ft56" style="position:absolute;top:541px;left:673px;white-space:nowrap">)), the</div>
+<div class="ft56" style="position:absolute;top:558px;left:201px;white-space:nowrap">supp osition is proven true. Consequently, the reward for just p erio d</div>
+<div class="ft59" style="position:absolute;top:558px;left:647px;white-space:nowrap">f</div>
+<div class="ft56" style="position:absolute;top:558px;left:661px;white-space:nowrap">adjusted</div>
+<div class="ft56" style="position:absolute;top:576px;left:201px;white-space:nowrap">for the amount of inflation 1 token at genesis would pro duce, is:</div>
+<div class="ft510" style="position:absolute;top:608px;left:383px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:608px;left:403px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:608px;left:407px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:608px;left:414px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:621px;left:390px;white-space:nowrap">X</div>
+<div class="ft510" style="position:absolute;top:647px;left:373px;white-space:nowrap">i</div>
+<div class="ft512" style="position:absolute;top:647px;left:377px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:647px;left:386px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:647px;left:413px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:647px;left:418px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:647px;left:425px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:605px;left:432px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:632px;left:432px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:610px;left:453px;white-space:nowrap">i</div>
+<div class="ft511" style="position:absolute;top:621px;left:446px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:646px;left:445px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:646px;left:451px;white-space:nowrap">=0</div>
+<div class="ft56" style="position:absolute;top:625px;left:468px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:625px;left:494px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:630px;left:502px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:605px;left:509px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:632px;left:509px;white-space:nowrap"></div>
+<div class="ft59" style="position:absolute;top:615px;left:526px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:620px;left:537px;white-space:nowrap">i</div>
+<div class="ft59" style="position:absolute;top:635px;left:527px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:641px;left:536px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:674px;left:223px;white-space:nowrap">TODO: make this pro of + pre-amble less verb ose, and just wrap up into a</div>
+<div class="ft58" style="position:absolute;top:692px;left:201px;white-space:nowrap">lemma. Mayb e just leave this pro of or the last part to the reader, since it easily<br>follows from summation b ounds.</div>
+<div class="ft56" style="position:absolute;top:728px;left:223px;white-space:nowrap">Now note that</div>
+<div class="ft510" style="position:absolute;top:757px;left:211px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:757px;left:231px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:757px;left:235px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:757px;left:242px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:769px;left:218px;white-space:nowrap">X</div>
+<div class="ft510" style="position:absolute;top:795px;left:201px;white-space:nowrap">i</div>
+<div class="ft512" style="position:absolute;top:795px;left:205px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:795px;left:214px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:795px;left:241px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:795px;left:246px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:795px;left:253px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:753px;left:260px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:780px;left:260px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:758px;left:281px;white-space:nowrap">i</div>
+<div class="ft511" style="position:absolute;top:769px;left:274px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:794px;left:273px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:794px;left:279px;white-space:nowrap">=0</div>
+<div class="ft56" style="position:absolute;top:773px;left:296px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:773px;left:322px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:779px;left:330px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:753px;left:337px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:780px;left:337px;white-space:nowrap"></div>
+<div class="ft59" style="position:absolute;top:763px;left:354px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:769px;left:365px;white-space:nowrap">i</div>
+<div class="ft59" style="position:absolute;top:784px;left:355px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:789px;left:364px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:773px;left:376px;white-space:nowrap">=</div>
+<div class="ft511" style="position:absolute;top:753px;left:392px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:780px;left:392px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:757px;left:405px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:757px;left:424px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:757px;left:429px;white-space:nowrap">f</div>
+<div class="ft514" style="position:absolute;top:756px;left:436px;white-space:nowrap">−</div>
+<div class="ft512" style="position:absolute;top:757px;left:445px;white-space:nowrap">1)</div>
+<div class="ft511" style="position:absolute;top:769px;left:421px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:794px;left:420px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:794px;left:426px;white-space:nowrap">=0</div>
+<div class="ft56" style="position:absolute;top:773px;left:459px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:773px;left:484px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:779px;left:493px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:753px;left:499px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:780px;left:499px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:757px;left:525px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:757px;left:545px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:757px;left:549px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:757px;left:556px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:769px;left:532px;white-space:nowrap">X</div>
+<div class="ft510" style="position:absolute;top:795px;left:515px;white-space:nowrap">i</div>
+<div class="ft512" style="position:absolute;top:795px;left:519px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:795px;left:528px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:795px;left:555px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:795px;left:560px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:795px;left:567px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:753px;left:574px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:780px;left:574px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:758px;left:614px;white-space:nowrap">i</div>
+<div class="ft511" style="position:absolute;top:769px;left:607px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:795px;left:587px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:795px;left:593px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:795px;left:602px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:795px;left:629px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:795px;left:633px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:795px;left:640px;white-space:nowrap">)</div>
+<div class="ft56" style="position:absolute;top:773px;left:648px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:773px;left:673px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:779px;left:682px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:753px;left:688px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:780px;left:688px;white-space:nowrap"></div>
+<div class="ft59" style="position:absolute;top:763px;left:706px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:769px;left:717px;white-space:nowrap">i</div>
+<div class="ft59" style="position:absolute;top:784px;left:707px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:789px;left:716px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:822px;left:201px;white-space:nowrap">By definition of p erio d, and inflation b eing applied every blo ck,</div>
+<div class="ft59" style="position:absolute;top:844px;left:201px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:849px;left:210px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:844px;left:220px;white-space:nowrap">=</div>
+<div class="ft59" style="position:absolute;top:844px;left:238px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:850px;left:247px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:850px;left:274px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:850px;left:279px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:850px;left:286px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:837px;left:293px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:842px;left:302px;white-space:nowrap">Q</div>
+<div class="ft515" style="position:absolute;top:839px;left:316px;white-space:nowrap">i<br>j</div>
+<div class="ft512" style="position:absolute;top:851px;left:322px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:851px;left:331px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:851px;left:358px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:851px;left:363px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:851px;left:370px;white-space:nowrap">)</div>
+<div class="ft56" style="position:absolute;top:844px;left:378px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:844px;left:404px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:849px;left:412px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:837px;left:418px;white-space:nowrap"></div>
+<div class="ft56" style="position:absolute;top:844px;left:427px;white-space:nowrap">. This cancels out the pro duct in the sum-</div>
+<div class="ft56" style="position:absolute;top:865px;left:201px;white-space:nowrap">mation, therefore</div>
+<div class="ft510" style="position:absolute;top:897px;left:264px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:897px;left:283px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:897px;left:288px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:897px;left:295px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:910px;left:271px;white-space:nowrap">X</div>
+<div class="ft510" style="position:absolute;top:936px;left:254px;white-space:nowrap">i</div>
+<div class="ft512" style="position:absolute;top:936px;left:258px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:936px;left:267px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:936px;left:294px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:936px;left:299px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:936px;left:306px;white-space:nowrap">)</div>
+<div class="ft511" style="position:absolute;top:894px;left:313px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:921px;left:313px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:899px;left:334px;white-space:nowrap">i</div>
+<div class="ft511" style="position:absolute;top:910px;left:327px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:935px;left:326px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:935px;left:331px;white-space:nowrap">=0</div>
+<div class="ft56" style="position:absolute;top:914px;left:349px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:914px;left:375px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:919px;left:383px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:894px;left:390px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:921px;left:390px;white-space:nowrap"></div>
+<div class="ft59" style="position:absolute;top:904px;left:407px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:909px;left:418px;white-space:nowrap">i</div>
+<div class="ft59" style="position:absolute;top:924px;left:408px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:930px;left:417px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:914px;left:429px;white-space:nowrap">=</div>
+<div class="ft511" style="position:absolute;top:894px;left:445px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:921px;left:445px;white-space:nowrap"></div>
+<div class="ft510" style="position:absolute;top:897px;left:458px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:897px;left:477px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:897px;left:482px;white-space:nowrap">f</div>
+<div class="ft514" style="position:absolute;top:897px;left:489px;white-space:nowrap">−</div>
+<div class="ft512" style="position:absolute;top:897px;left:498px;white-space:nowrap">1)</div>
+<div class="ft511" style="position:absolute;top:910px;left:474px;white-space:nowrap">Y</div>
+<div class="ft510" style="position:absolute;top:935px;left:473px;white-space:nowrap">j</div>
+<div class="ft512" style="position:absolute;top:935px;left:479px;white-space:nowrap">=0</div>
+<div class="ft56" style="position:absolute;top:914px;left:512px;white-space:nowrap">1 +</div>
+<div class="ft59" style="position:absolute;top:914px;left:537px;white-space:nowrap">x</div>
+<div class="ft510" style="position:absolute;top:919px;left:546px;white-space:nowrap">j</div>
+<div class="ft511" style="position:absolute;top:894px;left:552px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:921px;left:552px;white-space:nowrap"></div>
+<div class="ft511" style="position:absolute;top:899px;left:569px;white-space:nowrap">P</div>
+<div class="ft510" style="position:absolute;top:896px;left:585px;white-space:nowrap">end</div>
+<div class="ft512" style="position:absolute;top:896px;left:604px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:896px;left:609px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:896px;left:616px;white-space:nowrap">)</div>
+<div class="ft510" style="position:absolute;top:909px;left:585px;white-space:nowrap">i</div>
+<div class="ft512" style="position:absolute;top:909px;left:589px;white-space:nowrap">=</div>
+<div class="ft510" style="position:absolute;top:909px;left:599px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:909px;left:626px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:909px;left:630px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:909px;left:637px;white-space:nowrap">)</div>
+<div class="ft59" style="position:absolute;top:901px;left:645px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:906px;left:657px;white-space:nowrap">i</div>
+<div class="ft59" style="position:absolute;top:924px;left:589px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:930px;left:598px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:930px;left:625px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:930px;left:630px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:930px;left:637px;white-space:nowrap">)</div>
+<div class="ft56" style="position:absolute;top:963px;left:223px;white-space:nowrap">Thus every blo ck, each validator just has to add the total amount of fees</div>
+<div class="ft56" style="position:absolute;top:981px;left:201px;white-space:nowrap">(The</div>
+<div class="ft59" style="position:absolute;top:981px;left:236px;white-space:nowrap">R</div>
+<div class="ft510" style="position:absolute;top:986px;left:248px;white-space:nowrap">i</div>
+<div class="ft56" style="position:absolute;top:981px;left:257px;white-space:nowrap">term) that go es to delegates to some p er-p erio d term. When creating a</div>
+<div class="ft56" style="position:absolute;top:999px;left:201px;white-space:nowrap">new p erio d,</div>
+<div class="ft59" style="position:absolute;top:999px;left:280px;white-space:nowrap">n</div>
+<div class="ft510" style="position:absolute;top:1005px;left:289px;white-space:nowrap">star t</div>
+<div class="ft512" style="position:absolute;top:1005px;left:316px;white-space:nowrap">(</div>
+<div class="ft510" style="position:absolute;top:1005px;left:321px;white-space:nowrap">f</div>
+<div class="ft512" style="position:absolute;top:1005px;left:328px;white-space:nowrap">)</div>
+<div class="ft56" style="position:absolute;top:999px;left:337px;white-space:nowrap">can b e cached in state, and the pro duct is already stored in</div>
+<div class="ft56" style="position:absolute;top:1044px;left:455px;white-space:nowrap">5</div>
+</div>
+<!-- Page 6 -->
+<a name="6"></a>
+<style type="text/css">
+<!--
+	p {margin: 0; padding: 0;}-->
+</style>
+<div id="page6-div" style="position:relative;width:918px;height:1188px;" class="page-screen">
+<img width="918" height="1188" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5YAAASkCAIAAACXfAIBAAAACXBIWXMAABCbAAAQmwF0iZxLAAAS5klEQVR42u3WMQ0AAAgEMcC/50cCM0kr4abrJAUAAH+MBAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCSgAAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsrAQAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwkoAAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALKwEAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAANwWOocMRRfj6l0AAAAASUVORK5CYII=">
+<div class="ft66" style="position:absolute;top:192px;left:201px;white-space:nowrap">the previous p erio ds state entry. You then get the next p erio d’s</div>
+<div class="ft69" style="position:absolute;top:192px;left:628px;white-space:nowrap">n</div>
+<div class="ft610" style="position:absolute;top:198px;left:637px;white-space:nowrap">star t</div>
+<div class="ft612" style="position:absolute;top:198px;left:664px;white-space:nowrap">(</div>
+<div class="ft610" style="position:absolute;top:198px;left:668px;white-space:nowrap">f</div>
+<div class="ft612" style="position:absolute;top:198px;left:675px;white-space:nowrap">)</div>
+<div class="ft66" style="position:absolute;top:192px;left:686px;white-space:nowrap">from</div>
+<div class="ft68" style="position:absolute;top:210px;left:201px;white-space:nowrap">the consensus’ p ower entry for this validator. This is thus extremely efficient<br>p er blo ck.</div>
+<div class="ft66" style="position:absolute;top:246px;left:223px;white-space:nowrap">When withdrawing, you take the difference as b efore, which yields the amount</div>
+<div class="ft66" style="position:absolute;top:264px;left:201px;white-space:nowrap">of rewards you would have obtained with (</div>
+<div class="ft611" style="position:absolute;top:262px;left:475px;white-space:nowrap">Q</div>
+<div class="ft610" style="position:absolute;top:259px;left:489px;white-space:nowrap">beg in bonding per iod</div>
+<div class="ft612" style="position:absolute;top:271px;left:489px;white-space:nowrap">0</div>
+<div class="ft66" style="position:absolute;top:264px;left:607px;white-space:nowrap">1 +</div>
+<div class="ft69" style="position:absolute;top:264px;left:630px;white-space:nowrap">x</div>
+<div class="ft66" style="position:absolute;top:264px;left:638px;white-space:nowrap">) stake from</div>
+<div class="ft66" style="position:absolute;top:284px;left:201px;white-space:nowrap">the blo ck you b egan b onding at until now. (</div>
+<div class="ft611" style="position:absolute;top:283px;left:484px;white-space:nowrap">Q</div>
+<div class="ft610" style="position:absolute;top:280px;left:498px;white-space:nowrap">beg in bonding per iod</div>
+<div class="ft612" style="position:absolute;top:292px;left:498px;white-space:nowrap">0</div>
+<div class="ft66" style="position:absolute;top:284px;left:616px;white-space:nowrap">1 +</div>
+<div class="ft69" style="position:absolute;top:284px;left:638px;white-space:nowrap">x</div>
+<div class="ft66" style="position:absolute;top:284px;left:646px;white-space:nowrap">) is known,</div>
+<div class="ft68" style="position:absolute;top:302px;left:201px;white-space:nowrap">since its included in the state entry for when you b onded. You then divide the<br>entitled fees by (</div>
+<div class="ft611" style="position:absolute;top:319px;left:309px;white-space:nowrap">Q</div>
+<div class="ft610" style="position:absolute;top:316px;left:323px;white-space:nowrap">beg in bonding per iod</div>
+<div class="ft612" style="position:absolute;top:328px;left:323px;white-space:nowrap">0</div>
+<div class="ft66" style="position:absolute;top:320px;left:442px;white-space:nowrap">1 +</div>
+<div class="ft69" style="position:absolute;top:320px;left:465px;white-space:nowrap">x</div>
+<div class="ft66" style="position:absolute;top:320px;left:474px;white-space:nowrap">) to normalize it to b eing the amount</div>
+<div class="ft68" style="position:absolute;top:338px;left:201px;white-space:nowrap">of rewards you’re entitled to from 1 stake at that blo ck to now. Then as b efore,<br>you multiply by the amount of stake you had initially b onded.<br>TODO: (Do es the difference equating to that make sense, or should it b e shown<br>explicitly)<br>TODO: Do es this need to explain how the originally b onded tokens are refunded,<br>or is that clear?</div>
+<div class="ft66" style="position:absolute;top:446px;left:223px;white-space:nowrap">The inflation function could vary p er blo ck, and p er validator if ever a need</div>
+<div class="ft68" style="position:absolute;top:464px;left:201px;white-space:nowrap">rose. If the inflation rate is the same for everyone then there can b e a single<br>global store for the entries corresp onding to the pro duct of inflations. Inflation<br>creation can trivially b e ep o ched as long as inflation isn’t required within the<br>ep o ch, through changes to the</div>
+<div class="ft69" style="position:absolute;top:517px;left:403px;white-space:nowrap">inf l ation</div>
+<div class="ft66" style="position:absolute;top:517px;left:471px;white-space:nowrap">function.</div>
+<div class="ft65" style="position:absolute;top:557px;left:201px;white-space:nowrap">2.4</div>
+<div class="ft65" style="position:absolute;top:557px;left:247px;white-space:nowrap">Withdrawing with no iteration over slashes</div>
+<div class="ft68" style="position:absolute;top:587px;left:201px;white-space:nowrap">Notice that a slash is the same as a negative inflation rate for a validator in<br>one blo ck. For example a 20% slash is equivalent to a</div>
+<div class="ft616" style="position:absolute;top:604px;left:578px;white-space:nowrap">−</div>
+<div class="ft66" style="position:absolute;top:605px;left:590px;white-space:nowrap">20% inflation for a</div>
+<div class="ft68" style="position:absolute;top:623px;left:201px;white-space:nowrap">validator in a blo ck. Given correctness of auto-b onding inflation with different<br>inflation rates p er-validator, it follows that handling slashes can b e correctly<br>done by simply subtracting the validators inflation factor in that blo ck to b e<br>the negative of the slash factor. This significantly simplifies the withdrawal<br>pro cedure.</div>
+<div class="ft65" style="position:absolute;top:734px;left:201px;white-space:nowrap">2.5</div>
+<div class="ft65" style="position:absolute;top:734px;left:247px;white-space:nowrap">Auto b onding fees</div>
+<div class="ft68" style="position:absolute;top:764px;left:201px;white-space:nowrap">TODO: Fill this out. Core idea: you use the same mechanism as previously,<br>but you just don’t take that optimization with</div>
+<div class="ft69" style="position:absolute;top:782px;left:505px;white-space:nowrap">n</div>
+<div class="ft610" style="position:absolute;top:787px;left:514px;white-space:nowrap">i</div>
+<div class="ft66" style="position:absolute;top:782px;left:523px;white-space:nowrap">and the</div>
+<div class="ft69" style="position:absolute;top:782px;left:577px;white-space:nowrap">n</div>
+<div class="ft610" style="position:absolute;top:787px;left:586px;white-space:nowrap">star t</div>
+<div class="ft66" style="position:absolute;top:782px;left:618px;white-space:nowrap">relation. Fairly</div>
+<div class="ft66" style="position:absolute;top:800px;left:201px;white-space:nowrap">simple to do.</div>
+<div class="ft65" style="position:absolute;top:839px;left:201px;white-space:nowrap">2.6</div>
+<div class="ft65" style="position:absolute;top:839px;left:247px;white-space:nowrap">Delegation up dates</div>
+<div class="ft68" style="position:absolute;top:869px;left:201px;white-space:nowrap">Up dating your delegation amount is equivalent to withdrawing earned rewards<br>and a fully indep endent new delegation o ccurring in the same blo ck. The same<br>applies for redelegation. From the view of fee distribution, partial redelegation<br>is the same as a delegation up date + a new delegation.</div>
+<div class="ft66" style="position:absolute;top:1044px;left:455px;white-space:nowrap">6</div>
+</div>
+<!-- Page 7 -->
+<a name="7"></a>
+<style type="text/css">
+<!--
+	p {margin: 0; padding: 0;}	.ft718{font-size:12px;font-family:KAOBAT+CMTI10;color:#000000;}
+-->
+</style>
+<div id="page7-div" style="position:relative;width:918px;height:1188px;" class="page-screen">
+<img width="918" height="1188" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5YAAASkCAIAAACXfAIBAAAACXBIWXMAABCbAAAQmwF0iZxLAAAS5klEQVR42u3WMQ0AAAgEMcC/50cCM0kr4abrJAUAAH+MBAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCSgAAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsrAQAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwkoAAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALKwEAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAANwWOocMRRfj6l0AAAAASUVORK5CYII=">
+<div class="ft75" style="position:absolute;top:190px;left:201px;white-space:nowrap">2.7</div>
+<div class="ft75" style="position:absolute;top:190px;left:247px;white-space:nowrap">Jailing / b eing kicked out of the validator set</div>
+<div class="ft78" style="position:absolute;top:219px;left:201px;white-space:nowrap">This basically requires no change. In each blo ck you only iterate over the cur-<br>rently b onded validators. So you simply don’t up date the ”total accrued fees<br>this p erio d” variable for jailed / non-b onded validators. Withdrawing requires</div>
+<div class="ft718" style="position:absolute;top:273px;left:201px;white-space:nowrap">no</div>
+<div class="ft76" style="position:absolute;top:273px;left:223px;white-space:nowrap">sp ecial casing here!</div>
+<div class="ft74" style="position:absolute;top:318px;left:201px;white-space:nowrap">3</div>
+<div class="ft74" style="position:absolute;top:318px;left:237px;white-space:nowrap">State Requirements</div>
+<div class="ft78" style="position:absolute;top:355px;left:201px;white-space:nowrap">State entries can b e pruned quite effectively. Supp ose for the sake of exp osition<br>that there is at most one delegation / withdrawal to a particular validator in<br>any given blo ck. Then each delegation is resp onsible for one addition to state.<br>Only the next p erio d, and this delegator’s withdrawal could dep end on this<br>entry. Thus once this delegator withdraws, this state entry can b e pruned.<br>For the entry created by the delegator’s withdrawal, that is only required by<br>the creation of the next p erio d. Thus once the next p erio d is created, that<br>withdrawal’s p erio d can b e deleted.</div>
+<div class="ft76" style="position:absolute;top:499px;left:223px;white-space:nowrap">This can b e easily adapted to the case where there are multiple delegations /</div>
+<div class="ft78" style="position:absolute;top:517px;left:201px;white-space:nowrap">withdrawals p er blo ck, by maintaining a reference count in each p erio d starting<br>state entry.</div>
+<div class="ft76" style="position:absolute;top:553px;left:223px;white-space:nowrap">The slash entries for a validator can only b e pruned when all of that valida-</div>
+<div class="ft78" style="position:absolute;top:570px;left:201px;white-space:nowrap">tor’s delegators have their b onding p erio d starting after the slash. This seems<br>ineffective to keep track of, thus it is not worth it. Each slash should instead<br>remain in state until the validator unb onds and all delegators have their fees<br>withdrawn.</div>
+<div class="ft74" style="position:absolute;top:669px;left:201px;white-space:nowrap">4</div>
+<div class="ft74" style="position:absolute;top:669px;left:237px;white-space:nowrap">Implementers Considerations</div>
+<div class="ft76" style="position:absolute;top:706px;left:201px;white-space:nowrap">TODO: Convert this section into a prop er conclusion</div>
+<div class="ft76" style="position:absolute;top:724px;left:223px;white-space:nowrap">This is an extremely simple scheme with many nice b enefits.</div>
+<div class="ft716" style="position:absolute;top:753px;left:223px;white-space:nowrap">•</div>
+<div class="ft78" style="position:absolute;top:754px;left:238px;white-space:nowrap">The overhead p er blo ck is a simple iteration over the b onded validator<br>set, which o ccurs anyway. (Thus it can b e implemented “for-free” with<br>an optimized co de-base)</div>
+<div class="ft716" style="position:absolute;top:819px;left:223px;white-space:nowrap">•</div>
+<div class="ft78" style="position:absolute;top:820px;left:238px;white-space:nowrap">Withdrawing earned fees only requires iterating over slashes since when<br>you b onded. (Which is a negligible iteration)</div>
+<div class="ft716" style="position:absolute;top:867px;left:223px;white-space:nowrap">•</div>
+<div class="ft78" style="position:absolute;top:867px;left:238px;white-space:nowrap">There are no approximations in any of the calculations. (mo dulo minor<br>errata resulting from fixed precision decimals used in divisions)</div>
+<div class="ft716" style="position:absolute;top:914px;left:223px;white-space:nowrap">•</div>
+<div class="ft78" style="position:absolute;top:915px;left:238px;white-space:nowrap">Supp orts arbitrary inflation mo dels. (Thus could even vary up on blo ck<br>signers)</div>
+<div class="ft716" style="position:absolute;top:962px;left:223px;white-space:nowrap">•</div>
+<div class="ft78" style="position:absolute;top:963px;left:238px;white-space:nowrap">Supp orts arbitrary fee distribution amongst the validator set. (Thus can<br>account for things like only online validators get fees, which has imp ortant<br>incentivization impacts)</div>
+<div class="ft76" style="position:absolute;top:1044px;left:455px;white-space:nowrap">7</div>
+</div>
+<!-- Page 8 -->
+<a name="8"></a>
+<style type="text/css">
+<!--
+	p {margin: 0; padding: 0;}-->
+</style>
+<div id="page8-div" style="position:relative;width:918px;height:1188px;" class="page-screen">
+<img width="918" height="1188" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5YAAASkCAIAAACXfAIBAAAACXBIWXMAABCbAAAQmwF0iZxLAAAS5klEQVR42u3WMQ0AAAgEMcC/50cCM0kr4abrJAUAAH+MBAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCSgAAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsrAQAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwkoAAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALKwEAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAAAYGEBALCwAABgYQEAwMICAGBhAQDAwgIAgIUFAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAwMICAICFBQAACwsAgIUFAAALCwAAFhYAAAsLAAAWFgAALCwAABYWAAAsLAAAWFgAACwsAABYWAAAsLAAAGBhAQCwsAAAYGEBAMDCAgBgYQEAwMICAICFBQDAwgIAgIUFAAALCwCAhQUAAAsLAAAWFgAACwsAABYWAAAsLAAAFhYAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAABgYQEAsLAAAGBhAQDAwgIAYGEBAMDCAgCAhQUAAAsLAICFBQAACwsAABYWAAALCwAAFhYAACwsAAAWFgAALCwAANwWOocMRRfj6l0AAAAASUVORK5CYII=">
+<div class="ft816" style="position:absolute;top:191px;left:223px;white-space:nowrap">•</div>
+<div class="ft86" style="position:absolute;top:192px;left:238px;white-space:nowrap">The ab ove two can change on a live chain with no issues.</div>
+<div class="ft816" style="position:absolute;top:221px;left:223px;white-space:nowrap">•</div>
+<div class="ft86" style="position:absolute;top:222px;left:238px;white-space:nowrap">Validator commission rates can b e changed every blo ck</div>
+<div class="ft816" style="position:absolute;top:251px;left:223px;white-space:nowrap">•</div>
+<div class="ft86" style="position:absolute;top:252px;left:238px;white-space:nowrap">The simplicity of this scheme lends itself well to implementation</div>
+<div class="ft86" style="position:absolute;top:281px;left:223px;white-space:nowrap">Thus this scheme has efficiency improvements, simplicity improvements, and</div>
+<div class="ft88" style="position:absolute;top:299px;left:201px;white-space:nowrap">expressiveness improvements over the currently prop osed schemes. With a cor-<br>rect fee distribution amongst the validator set, this solves the existing problem<br>where one could withhold their signature for risk-free gain.</div>
+<div class="ft84" style="position:absolute;top:380px;left:201px;white-space:nowrap">5</div>
+<div class="ft84" style="position:absolute;top:380px;left:237px;white-space:nowrap">TO DOs</div>
+<div class="ft816" style="position:absolute;top:417px;left:223px;white-space:nowrap">•</div>
+<div class="ft86" style="position:absolute;top:417px;left:238px;white-space:nowrap">A global fee p o ol can b e describ ed.</div>
+<div class="ft816" style="position:absolute;top:446px;left:223px;white-space:nowrap">•</div>
+<div class="ft88" style="position:absolute;top:447px;left:238px;white-space:nowrap">Mention storage optimization for how to prune slashing entries in the<br>uniform inflation and iteration over slashing case</div>
+<div class="ft816" style="position:absolute;top:494px;left:223px;white-space:nowrap">•</div>
+<div class="ft86" style="position:absolute;top:495px;left:238px;white-space:nowrap">Add equation numb ers</div>
+<div class="ft816" style="position:absolute;top:524px;left:223px;white-space:nowrap">•</div>
+<div class="ft86" style="position:absolute;top:525px;left:238px;white-space:nowrap">p erhaps re-organize so that the no iteration</div>
+<div class="ft816" style="position:absolute;top:554px;left:223px;white-space:nowrap">•</div>
+<div class="ft88" style="position:absolute;top:555px;left:238px;white-space:nowrap">Section on decimal precision considerations (would unums help?), and<br>mitigating errors in calculation with floats and decimals. – This probably<br>b elongs in a corrollary markdown file in the implementation</div>
+<div class="ft816" style="position:absolute;top:620px;left:223px;white-space:nowrap">•</div>
+<div class="ft88" style="position:absolute;top:621px;left:238px;white-space:nowrap">Consider indicating that the withdraw action need not b e a tx typ e and<br>could instead happ en ’transparently’ when more coins are needed, if a<br>chain desired this for UX / p2p efficiency.</div>
+<div class="ft86" style="position:absolute;top:1044px;left:455px;white-space:nowrap">8</div>
+</div>
+
+
+
+
+
+</body></html>
